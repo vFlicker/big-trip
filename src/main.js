@@ -1,8 +1,8 @@
 import { creatTripInfoTemplate } from './view/trip-info';
 import { createMenuTemplate } from './view/menu';
-import { createFiltersTemplate } from './view/filters';
+import { createFilterTemplate } from './view/filter';
 import { createSortTemplate } from './view/sort';
-import { createEventsListTemplate } from './view/events-list';
+import { createEventListTemplate } from './view/event-list';
 
 const render = (container, block, position) => {
   container.insertAdjacentHTML(position, block);
@@ -15,9 +15,9 @@ const containerFilter = containerTripMain.querySelector('.trip-controls__filters
 
 render(containerTripMain, creatTripInfoTemplate(), 'afterbegin');
 render(containerMenu, createMenuTemplate(), 'beforeend');
-render(containerFilter, createFiltersTemplate(), 'beforeend');
+render(containerFilter, createFilterTemplate(), 'beforeend');
 
 // Main
 const containerTripEvents = document.querySelector('.trip-events');
 render(containerTripEvents, createSortTemplate(), 'beforeend');
-render(containerTripEvents, createEventsListTemplate(), 'beforeend');
+render(containerTripEvents, createEventListTemplate(), 'beforeend');
