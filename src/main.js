@@ -4,6 +4,7 @@ import { createFilterTemplate } from './view/filter';
 import { createSortTemplate } from './view/sort';
 import { createEventListTemplate } from './view/event-list';
 import { createEventItemTemplate } from './view/event-item';
+import { createEventItemEditTemplate } from './view/event-item-edit';
 
 const EVENT_COUNT = 3;
 
@@ -26,6 +27,7 @@ render(containerTripEvents, createSortTemplate(), 'beforeend');
 render(containerTripEvents, createEventListTemplate(), 'beforeend');
 
 const containerEventList = document.querySelector('.trip-events__list');
+render(containerEventList, createEventItemEditTemplate(), 'beforeend');
 
 for (let index = 0; index < EVENT_COUNT; index++) {
   render(containerEventList, createEventItemTemplate(), 'beforeend');
