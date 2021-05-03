@@ -5,12 +5,9 @@ import { createSortTemplate } from './view/sort';
 import { createEventListTemplate } from './view/event-list';
 import { createEventItemTemplate } from './view/event-item';
 import { createEventItemEditTemplate } from './view/event-item-edit';
+import { render } from './utils/common';
 
 const EVENT_COUNT = 3;
-
-const render = (container, block, position) => {
-  container.insertAdjacentHTML(position, block);
-};
 
 // Header
 const containerTripMain = document.querySelector('.trip-main');
