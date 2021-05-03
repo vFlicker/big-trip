@@ -1,14 +1,28 @@
-export const creatTripInfoTemplate = () => {
+import { getEventPeriod } from '../utils/date';
+
+const getTitle = (events) => {
+  if (events.length > 3) {
+    return `${events[0].destantion.name} &mdash; ... &mdash; ${events[events.length - 1].destantion.name}`;
+  }
+
+  return events.map((event) => event.destantion.name).join(' &mdash; ');
+};
+
+export const creatTripInfoTemplate = (events) => {
+  const title = getTitle(events);
+  const date = getEventPeriod(events[0], events[events.length - 1]);
+  const price = events.reduce((sum, event) => sum + event.price, 0);
+
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
-        <h1 class="trip-info__title">Amsterdam — Chamonix — Geneva</h1>
+        <h1 class="trip-info__title">${title}</h1>
 
-        <p class="trip-info__dates">Mar 18&nbsp;—&nbsp;20</p>
+        <p class="trip-info__dates">${date}</p>
       </div>
 
       <p class="trip-info__cost">
-        Total: €&nbsp;<span class="trip-info__cost-value">1230</span>
+        Total: €&nbsp;<span class="trip-info__cost-value">${price}</span>
       </p>
     </section>`
   );

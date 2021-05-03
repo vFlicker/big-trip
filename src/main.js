@@ -5,16 +5,18 @@ import { createSortTemplate } from './view/sort';
 import { createEventListTemplate } from './view/event-list';
 import { createEventItemTemplate } from './view/event-item';
 import { createEventItemEditTemplate } from './view/event-item-edit';
-import { render } from './utils/common';
+import { getEvents } from './mock/event';
+import { render } from './utils/render';
 
-const EVENT_COUNT = 3;
+const EVENT_COUNT = 5;
+const events = getEvents(EVENT_COUNT);
 
 // Header
 const containerTripMain = document.querySelector('.trip-main');
 const containerMenu = containerTripMain.querySelector('.trip-controls__navigation');
 const containerFilter = containerTripMain.querySelector('.trip-controls__filters');
 
-render(containerTripMain, creatTripInfoTemplate(), 'afterbegin');
+render(containerTripMain, creatTripInfoTemplate(events), 'afterbegin');
 render(containerMenu, createMenuTemplate(), 'beforeend');
 render(containerFilter, createFilterTemplate(), 'beforeend');
 
