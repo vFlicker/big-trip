@@ -2,6 +2,7 @@ import { creatTripInfoTemplate } from './view/trip-info';
 import { createMenuTemplate } from './view/menu';
 import { createFiltersTemplate } from './view/filters';
 import { createSortTemplate } from './view/sort';
+import { createEventsListTemplate } from './view/events-list';
 
 const render = (container, block, position) => {
   container.insertAdjacentHTML(position, block);
@@ -19,3 +20,4 @@ render(containerFilter, createFiltersTemplate(), 'beforeend');
 // Main
 const containerTripEvents = document.querySelector('.trip-events');
 render(containerTripEvents, createSortTemplate(), 'beforeend');
+render(containerTripEvents, createEventsListTemplate(), 'beforeend');
