@@ -26,7 +26,7 @@ render(containerTripEvents, createSortTemplate(), 'beforeend');
 render(containerTripEvents, createEventListTemplate(), 'beforeend');
 
 const containerEventList = document.querySelector('.trip-events__list');
-render(containerEventList, createEventItemEditTemplate(), 'beforeend');
+render(containerEventList, createEventItemEditTemplate(events[0]), 'beforeend');
 
 events.forEach((event) => {
   render(containerEventList, createEventItemTemplate(event), 'beforeend');

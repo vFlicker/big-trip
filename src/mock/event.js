@@ -3,6 +3,18 @@ import { getRandomDate } from './../utils/date';
 import { getRandomValueFromArray, getRandomInteger, MAX_PRICE, MIN_PRICE, getRandomItems } from './utils';
 import { nanoid } from 'nanoid';
 
+const availableTypes = {
+  taxi: 'Taxi',
+  bus: 'Bus',
+  train: 'Ship',
+  transport: 'Transport',
+  drive: 'Drive',
+  flight: 'Flight',
+  ['check-in']: 'Check-In',
+  sightseeing: 'Sightseeing',
+  restaurant: 'Restaurant',
+};
+
 const getType = () => {
   const types = new Set(['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant']);
   const type = getRandomValueFromArray(Array.from(types));
@@ -39,6 +51,7 @@ const getEvent = () => {
   const type = getType();
 
   return {
+    availableTypes,
     type,
     id: nanoid(),
     isFavorite: Boolean(getRandomInteger(0, 1)),
