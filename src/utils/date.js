@@ -6,12 +6,8 @@ const maxDaysOffset = 7;
 const maxHoursOffset = 23;
 const maxMinutesOffset = 59;
 
-const humanizeDay = (date) => {
-  return dayjs(date).format('DD');
-};
-
-const humanizeDate = (date) => {
-  return dayjs(date).format('MMM D');
+const humanizeDate = (date, formatter = 'DD-MM-YYYY') => {
+  return dayjs(date).format(formatter);
 };
 
 const getRandomDate = () => {
@@ -37,18 +33,28 @@ const getRandomDate = () => {
   };
 };
 
-const getEventPeriod = (startingPoint, endingPoint) => {
-  const monthStart = dayjs(startingPoint.date.start).month();
-  const monthEnd = dayjs(endingPoint.date.end).month();
+const getDuration = (dateStart, dateEnd) => {
+  const days = humanizeDate(dayjs(dateEnd).diff(dayjs(dateStart)), 'D');
+  const hours = humanizeDate(dayjs(dateEnd).diff(dayjs(dateStart)), 'HH');
+  const minutes = humanizeDate(dayjs(dateEnd).diff(dayjs(dateStart)), 'mm');
+
+  return `${days}D ${hours}H ${minutes}M`;
+};
+
+const getEventPeriod = (eventStart, eventEnd) => {
+  const monthStart = dayjs(eventStart.date.start).month();
+  const monthEnd = dayjs(eventEnd.date.end).month();
 
   if (monthStart === monthEnd) {
-    return `${humanizeDate(startingPoint.date.start)}&nbsp;&mdash;&nbsp;${humanizeDay(endingPoint.date.end)}`;
+    return `${humanizeDate(eventStart.date.start, 'MMM DD')}&nbsp;&mdash;&nbsp;${humanizeDate(eventEnd.date.end, 'DD')}`;
   }
 
-  return `${humanizeDate(startingPoint.date.start)}&nbsp;&mdash;&nbsp;${humanizeDate(endingPoint.date.end)}`;
+  return `${humanizeDate(eventStart.date.start, 'MMM DD')}&nbsp;&mdash;&nbsp;${humanizeDate(eventEnd.date.end, 'MMM DD')}`;
 };
 
 export {
+  humanizeDate,
   getRandomDate,
+  getDuration,
   getEventPeriod
 };

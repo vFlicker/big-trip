@@ -28,6 +28,6 @@ render(containerTripEvents, createEventListTemplate(), 'beforeend');
 const containerEventList = document.querySelector('.trip-events__list');
 render(containerEventList, createEventItemEditTemplate(), 'beforeend');
 
-for (let index = 0; index < EVENT_COUNT; index++) {
-  render(containerEventList, createEventItemTemplate(), 'beforeend');
-}
+events.forEach((event) => {
+  render(containerEventList, createEventItemTemplate(event), 'beforeend');
+});

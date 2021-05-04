@@ -2,8 +2,7 @@ import { getRandomValueFromArray, getRandomItems, getRandomInteger } from './uti
 
 const getName = () => {
   const destantionNames = new Set(['Amsterdam', 'Geneva', 'Chamonix', 'Saint Petersburg', 'Salzburg', 'Washington', 'Cairo', 'Galway', 'Bonn', 'La Paz', 'Kochi', 'Vancouver', 'Dubai', 'Denver']);
-  const names = Array.from(destantionNames);
-  const name = getRandomValueFromArray(names);
+  const name = getRandomValueFromArray(Array.from(destantionNames));
 
   destantionNames.delete(name);
   return name;
