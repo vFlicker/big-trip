@@ -10,7 +10,9 @@ const createOfferListTemplate = (offer) => {
   );
 };
 
-export const createEventItemTemplate = ({date, offers, isFavorite, type, destantion, price}) => {
+export const createEventItemTemplate = (event) => {
+  const {date, offers, isFavorite, type, destantion, price} = event;
+
   const timeDuration = getDuration(date.start, date.end);
 
   const offerListTemplate = offers
