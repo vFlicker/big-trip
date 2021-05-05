@@ -1,3 +1,4 @@
+import AbstractView from './abstract';
 import { getEventPeriod } from '../utils/date';
 
 const getTitle = (events) => {
@@ -8,7 +9,7 @@ const getTitle = (events) => {
   return events.map((event) => event.destantion.name).join(' &mdash; ');
 };
 
-export const creatTripInfoTemplate = (events) => {
+const creatTripInfoTemplate = (events) => {
   const title = getTitle(events);
   const date = getEventPeriod(events[0], events[events.length - 1]);
   const price = events.reduce((sum, event) => sum + event.price, 0);
@@ -27,3 +28,15 @@ export const creatTripInfoTemplate = (events) => {
     </section>`
   );
 };
+
+export default class TripInfo extends AbstractView {
+  constructor(events) {
+    super();
+
+    this._events = events;
+  }
+
+  getTemplate() {
+    return creatTripInfoTemplate(this._events);
+  }
+}

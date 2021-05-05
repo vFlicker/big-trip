@@ -1,4 +1,5 @@
-import {getDuration, humanizeDate} from '../utils/date';
+import AbstractView from './abstract';
+import { getDuration, humanizeDate } from '../utils/date';
 
 const createOfferListTemplate = (offers) => {
   const getTemplate = (offer) => {
@@ -16,7 +17,7 @@ const createOfferListTemplate = (offers) => {
     .join('');
 };
 
-export const createEventItemTemplate = (event) => {
+const createEventItemTemplate = (event) => {
   const {date, offers, isFavorite, type, destantion, price} = event;
 
   const timeDuration = getDuration(date.start, date.end);
@@ -65,3 +66,15 @@ export const createEventItemTemplate = (event) => {
     </li>`
   );
 };
+
+export default class EventItem extends AbstractView {
+  constructor(event) {
+    super();
+
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createEventItemTemplate(this._event);
+  }
+}

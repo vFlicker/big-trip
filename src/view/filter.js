@@ -1,4 +1,6 @@
-export const createFilterTemplate = () => {
+import AbstractView from './abstract';
+
+const createFilterTemplate = () => {
   return (
     `<form class="trip-filters" action="#" method="get">
       <div class="trip-filters__filter">
@@ -20,3 +22,9 @@ export const createFilterTemplate = () => {
     </form>`
   );
 };
+
+export default class Filter extends AbstractView {
+  getTemplate() {
+    return createFilterTemplate();
+  }
+}

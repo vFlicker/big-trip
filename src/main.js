@@ -1,12 +1,12 @@
-import { creatTripInfoTemplate } from './view/trip-info';
+import TripInfoView from './view/trip-info';
 import MenuView from './view/menu';
-import { createFilterTemplate } from './view/filter';
-import { createSortTemplate } from './view/sort';
-import { createEventListTemplate } from './view/event-list';
-import { createEventItemTemplate } from './view/event-item';
-import { createEventItemEditTemplate } from './view/event-item-edit';
+import FilterView from './view/filter';
+import SortView from './view/sort';
+import EventListView from './view/event-list';
+import EventItemView from './view/event-item';
+import EventItemEditView from './view/event-item-edit';
 import { getEvents } from './mock/event';
-import { renderElement, renderTemplate } from './utils/render';
+import { renderElement} from './utils/render';
 
 const EVENT_COUNT = 5;
 const events = getEvents(EVENT_COUNT);
@@ -16,18 +16,18 @@ const containerTripMain = document.querySelector('.trip-main');
 const containerMenu = containerTripMain.querySelector('.trip-controls__navigation');
 const containerFilter = containerTripMain.querySelector('.trip-controls__filters');
 
-renderTemplate(containerTripMain, creatTripInfoTemplate(events), 'afterbegin');
+renderElement(containerTripMain, new TripInfoView(events).getElement(), 'afterbegin');
 renderElement(containerMenu, new MenuView().getElement(), 'beforeend');
-renderTemplate(containerFilter, createFilterTemplate(), 'beforeend');
+renderElement(containerFilter, new FilterView().getElement(), 'beforeend');
 
 // Main
 const containerTripEvents = document.querySelector('.trip-events');
-renderTemplate(containerTripEvents, createSortTemplate(), 'beforeend');
-renderTemplate(containerTripEvents, createEventListTemplate(), 'beforeend');
+renderElement(containerTripEvents, new SortView().getElement(), 'beforeend');
+renderElement(containerTripEvents, new EventListView().getElement(), 'beforeend');
 
 const containerEventList = document.querySelector('.trip-events__list');
-renderTemplate(containerEventList, createEventItemEditTemplate(events[0]), 'beforeend');
+renderElement(containerEventList, new EventItemEditView(events[0]).getElement(), 'beforeend');
 
 events.forEach((event) => {
-  renderTemplate(containerEventList, createEventItemTemplate(event), 'beforeend');
+  renderElement(containerEventList, new EventItemView(event).getElement(), 'beforeend');
 });

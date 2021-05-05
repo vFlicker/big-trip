@@ -1,3 +1,4 @@
+import AbstractView from './abstract';
 import { humanizeDate } from '../utils/date';
 
 const createEventTypeListTemplate = (availableTypes, activeType) => {
@@ -102,7 +103,7 @@ const createSectionDestinationTemplate = (destantion) => {
   );
 };
 
-export const createEventItemEditTemplate = (event) => {
+const createEventItemEditTemplate = (event) => {
   const {availableDestantion, availableTypes, destantion, type, date, price, offers} = event;
 
   const eventTypeListTemplate = createEventTypeListTemplate(availableTypes, type);
@@ -172,3 +173,15 @@ export const createEventItemEditTemplate = (event) => {
     </li>`
   );
 };
+
+export default class EventItemEdit extends AbstractView {
+  constructor(event) {
+    super();
+
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createEventItemEditTemplate(this._event);
+  }
+}

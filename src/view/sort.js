@@ -1,4 +1,6 @@
-export const createSortTemplate = () => {
+import AbstractView from './abstract';
+
+const createSortTemplate = () => {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <div class="trip-sort__item  trip-sort__item--day">
@@ -28,3 +30,9 @@ export const createSortTemplate = () => {
   </form>`
   );
 };
+
+export default class Sort extends AbstractView {
+  getTemplate() {
+    return createSortTemplate();
+  }
+}
