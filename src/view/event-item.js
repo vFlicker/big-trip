@@ -1,13 +1,19 @@
 import {getDuration, humanizeDate} from '../utils/date';
 
-const createOfferListTemplate = (offer) => {
-  return (
-    `<li class="event__offer">
-      <span class="event__offer-title">${offer.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
-    </li>`
-  );
+const createOfferListTemplate = (offers) => {
+  const getTemplate = (offer) => {
+    return (
+      `<li class="event__offer">
+        <span class="event__offer-title">${offer.title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${offer.price}</span>
+      </li>`
+    );
+  };
+
+  return offers
+    .map(getTemplate)
+    .join('');
 };
 
 export const createEventItemTemplate = (event) => {
@@ -15,9 +21,7 @@ export const createEventItemTemplate = (event) => {
 
   const timeDuration = getDuration(date.start, date.end);
 
-  const offerListTemplate = offers
-    .map(createOfferListTemplate)
-    .join('');
+  const offerListTemplate = createOfferListTemplate(offers);
 
   const favoriteButtonClasses = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'

@@ -20,33 +20,43 @@ const createEventTypeListTemplate = (availableTypes, activeType) => {
     .join('');
 };
 
-const createEventDestinationListTemplate = (destantionName) => {
-  return (
-    `<option value="${destantionName}"></option>`
-  );
+const createEventDestinationListTemplate = (availableDestantion) => {
+  const getTemplate = (destantionName) => {
+    return (
+      `<option value="${destantionName}"></option>`
+    );
+  };
+
+  return availableDestantion
+    .map(getTemplate)
+    .join('');
 };
 
-const createEventOfferListTemplate = (offer) => {
-  const offerCheckboxStatus = offer.isChecked
-    ? 'checked'
-    : '';
+const createEventOfferListTemplate = (offers) => {
+  const getTemplate = (offer) => {
+    const offerCheckboxStatus = offer.isChecked
+      ? 'checked'
+      : '';
 
-  return (
-    `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-${offer.id}" type="checkbox" name="event-offer-${offer.type}" ${offerCheckboxStatus}>
-      <label class="event__offer-label" for="event-offer-${offer.type}-${offer.id}">
-        <span class="event__offer-title">Add ${offer.title}</span>
-        +€&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
-      </label>
-    </div>`
-  );
+    return (
+      `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-${offer.id}" type="checkbox" name="event-offer-${offer.type}" ${offerCheckboxStatus}>
+        <label class="event__offer-label" for="event-offer-${offer.type}-${offer.id}">
+          <span class="event__offer-title">Add ${offer.title}</span>
+          +€&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </label>
+      </div>`
+    );
+  };
+
+  return offers
+    .map(getTemplate)
+    .join('');
 };
 
 const createSectionOffersTemplate = (offers) => {
-  const eventOfferListTemplate = offers
-    .map(createEventOfferListTemplate)
-    .join('');
+  const eventOfferListTemplate = createEventOfferListTemplate(offers);
 
   if (offers.length > 0) {
     return (
@@ -63,16 +73,20 @@ const createSectionOffersTemplate = (offers) => {
   return '';
 };
 
-const createEventPhotoListTemplate = (photo) => {
-  return (
-    `<img class="event__photo" src="${photo}" alt="Event photo">`
-  );
+const createEventPhotoListTemplate = (photos) => {
+  const getTemplate = (photo) => {
+    return (
+      `<img class="event__photo" src="${photo}" alt="Event photo">`
+    );
+  };
+
+  return photos
+    .map(getTemplate)
+    .join('');
 };
 
 const createSectionDestinationTemplate = (destantion) => {
-  const eventPhotoListTemplate = destantion.photos
-    .map(createEventPhotoListTemplate)
-    .join('');
+  const eventPhotoListTemplate = createEventPhotoListTemplate(destantion.photos);
 
   return (
     `<section class="event__section  event__section--destination">
@@ -93,9 +107,7 @@ export const createEventItemEditTemplate = (event) => {
 
   const eventTypeListTemplate = createEventTypeListTemplate(availableTypes, type);
 
-  const eventDestinationListTemplate = availableDestantion
-    .map(createEventDestinationListTemplate)
-    .join('');
+  const eventDestinationListTemplate = createEventDestinationListTemplate(availableDestantion);
 
   const sectionOffersTemplate = createSectionOffersTemplate(offers);
 
