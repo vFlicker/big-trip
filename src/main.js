@@ -36,11 +36,20 @@ if (!EVENT_COUNT) {
     const replaceEventToForm = (evt) => {
       evt.preventDefault();
       eventListComponent.replaceChild(eventItemEditComponent.getElement(), eventItemComponent.getElement());
+      document.addEventListener('keydown', onEscKeyDown);
     };
 
     const replaceFormToEvent = (evt) => {
       evt.preventDefault();
       eventListComponent.replaceChild(eventItemComponent.getElement(), eventItemEditComponent.getElement());
+      document.removeEventListener('keydown', onEscKeyDown);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        replaceFormToEvent(evt);
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
     };
 
     eventItemComponent
@@ -52,6 +61,10 @@ if (!EVENT_COUNT) {
       .getElement()
       .querySelector('.event__rollup-btn')
       .addEventListener('click', replaceFormToEvent);
+
+    eventItemEditComponent
+      .getElement()
+      .addEventListener('submit', replaceFormToEvent);
 
     render(eventListComponent, eventItemComponent.getElement(), RenderPosition.BEFOREEND);
   };
