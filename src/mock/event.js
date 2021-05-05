@@ -14,6 +14,8 @@ const availableTypes = {
   restaurant: 'Restaurant',
 };
 
+const availableDestantion = ['Amsterdam', 'Geneva', 'Chamonix', 'Saint Petersburg', 'Salzburg', 'Washington', 'Cairo', 'Galway', 'Bonn', 'La Paz', 'Kochi', 'Vancouver', 'Dubai', 'Denver'];
+
 const getType = () => {
   const types = new Set(['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant']);
   const type = getRandomValueFromArray(Array.from(types));
@@ -41,13 +43,17 @@ const getOffers = (type) => {
 
   if (filteredOffers.length > 0) {
     filteredOffers = getRandomItems(filteredOffers);
+    filteredOffers.forEach((offer, index) => {
+      offer.id = index + 1;
+      offer.isChecked = Boolean(getRandomInteger(0, 1));
+    });
   }
 
   return filteredOffers;
 };
 
-const getName = () => {
-  const destantionNames = new Set(['Amsterdam', 'Geneva', 'Chamonix', 'Saint Petersburg', 'Salzburg', 'Washington', 'Cairo', 'Galway', 'Bonn', 'La Paz', 'Kochi', 'Vancouver', 'Dubai', 'Denver']);
+const getName = (items) => {
+  const destantionNames = new Set(items);
   const name = getRandomValueFromArray(Array.from(destantionNames));
 
   destantionNames.delete(name);
@@ -76,7 +82,7 @@ const generatePhotos = () => {
 
 const getDestantions = () => {
   return {
-    name: getName(),
+    name: getName(availableDestantion),
     description: getDescription(),
     photos: generatePhotos(),
   };
@@ -86,6 +92,7 @@ const getEvent = () => {
   const type = getType();
 
   return {
+    availableDestantion: availableDestantion.sort(),
     availableTypes,
     type,
     id: nanoid(),
