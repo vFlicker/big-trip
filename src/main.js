@@ -1,12 +1,12 @@
 import { creatTripInfoTemplate } from './view/trip-info';
-import { createMenuTemplate } from './view/menu';
+import MenuView from './view/menu';
 import { createFilterTemplate } from './view/filter';
 import { createSortTemplate } from './view/sort';
 import { createEventListTemplate } from './view/event-list';
 import { createEventItemTemplate } from './view/event-item';
 import { createEventItemEditTemplate } from './view/event-item-edit';
 import { getEvents } from './mock/event';
-import { renderTemplate } from './utils/render';
+import { renderElement, renderTemplate } from './utils/render';
 
 const EVENT_COUNT = 5;
 const events = getEvents(EVENT_COUNT);
@@ -17,7 +17,7 @@ const containerMenu = containerTripMain.querySelector('.trip-controls__navigatio
 const containerFilter = containerTripMain.querySelector('.trip-controls__filters');
 
 renderTemplate(containerTripMain, creatTripInfoTemplate(events), 'afterbegin');
-renderTemplate(containerMenu, createMenuTemplate(), 'beforeend');
+renderElement(containerMenu, new MenuView().getElement(), 'beforeend');
 renderTemplate(containerFilter, createFilterTemplate(), 'beforeend');
 
 // Main
