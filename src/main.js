@@ -7,7 +7,7 @@ import EventListView from './view/event-list';
 import EventItemView from './view/event-item';
 import EventItemEditView from './view/event-item-edit';
 import { getEvents } from './mock/event';
-import { render, RenderPosition } from './utils/render';
+import { render, RenderPosition, replace } from './utils/render';
 
 const EVENT_COUNT = 5;
 const events = getEvents(EVENT_COUNT);
@@ -17,17 +17,17 @@ const containerTripMain = document.querySelector('.trip-main');
 const containerMenu = containerTripMain.querySelector('.trip-controls__navigation');
 const containerFilter = containerTripMain.querySelector('.trip-controls__filters');
 
-render(containerTripMain, new TripInfoView(events).getElement(), RenderPosition.AFTERBEGIN);
-render(containerMenu, new MenuView().getElement(), RenderPosition.BEFOREEND);
-render(containerFilter, new FilterView().getElement(), RenderPosition.BEFOREEND);
+render(containerTripMain, new TripInfoView(events), RenderPosition.AFTERBEGIN);
+render(containerMenu, new MenuView(), RenderPosition.BEFOREEND);
+render(containerFilter, new FilterView(), RenderPosition.BEFOREEND);
 
 // Main
 const containerMainContent = document.querySelector('.trip-events');
 
 if (!EVENT_COUNT) {
-  render(containerMainContent, new NoEventView().getElement(), RenderPosition.BEFOREEND);
+  render(containerMainContent, new NoEventView(), RenderPosition.BEFOREEND);
 } else {
-  render(containerMainContent, new SortView().getElement(), RenderPosition.BEFOREEND);
+  render(containerMainContent, new SortView(), RenderPosition.BEFOREEND);
 
   const renderEvent = (eventListComponent, event) => {
     const eventItemComponent = new EventItemView(event);
@@ -35,13 +35,13 @@ if (!EVENT_COUNT) {
 
     const replaceEventToForm = (evt) => {
       evt.preventDefault();
-      eventListComponent.replaceChild(eventItemEditComponent.getElement(), eventItemComponent.getElement());
+      replace(eventItemEditComponent, eventItemComponent);
       document.addEventListener('keydown', onEscKeyDown);
     };
 
     const replaceFormToEvent = (evt) => {
       evt.preventDefault();
-      eventListComponent.replaceChild(eventItemComponent.getElement(), eventItemEditComponent.getElement());
+      replace(eventItemComponent, eventItemEditComponent);
       document.removeEventListener('keydown', onEscKeyDown);
     };
 
@@ -66,10 +66,10 @@ if (!EVENT_COUNT) {
       .getElement()
       .addEventListener('submit', replaceFormToEvent);
 
-    render(eventListComponent, eventItemComponent.getElement(), RenderPosition.BEFOREEND);
+    render(eventListComponent, eventItemComponent, RenderPosition.BEFOREEND);
   };
 
-  const eventListComponent = new EventListView().getElement();
+  const eventListComponent = new EventListView();
   render(containerMainContent, eventListComponent, RenderPosition.BEFOREEND);
 
   events.forEach((event) => renderEvent(eventListComponent, event));
