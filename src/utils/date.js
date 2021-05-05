@@ -42,14 +42,18 @@ const getDuration = (dateStart, dateEnd) => {
 };
 
 const getEventPeriod = (eventStart, eventEnd) => {
-  const monthStart = dayjs(eventStart.date.start).month();
-  const monthEnd = dayjs(eventEnd.date.end).month();
+  if (eventStart && eventEnd) {
+    const monthStart = dayjs(eventStart.date.start).month();
+    const monthEnd = dayjs(eventEnd.date.end).month();
 
-  if (monthStart === monthEnd) {
-    return `${humanizeDate(eventStart.date.start, 'MMM DD')}&nbsp;&mdash;&nbsp;${humanizeDate(eventEnd.date.end, 'DD')}`;
+    if (monthStart === monthEnd) {
+      return `${humanizeDate(eventStart.date.start, 'MMM DD')}&nbsp;&mdash;&nbsp;${humanizeDate(eventEnd.date.end, 'DD')}`;
+    }
+
+    return `${humanizeDate(eventStart.date.start, 'MMM DD')}&nbsp;&mdash;&nbsp;${humanizeDate(eventEnd.date.end, 'MMM DD')}`;
   }
 
-  return `${humanizeDate(eventStart.date.start, 'MMM DD')}&nbsp;&mdash;&nbsp;${humanizeDate(eventEnd.date.end, 'MMM DD')}`;
+  return 'trip date';
 };
 
 export {
