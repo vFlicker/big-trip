@@ -9,7 +9,7 @@ import EventItemEditView from './view/event-item-edit';
 import { getEvents } from './mock/event';
 import { render, RenderPosition } from './utils/render';
 
-const EVENT_COUNT = 0;
+const EVENT_COUNT = 5;
 const events = getEvents(EVENT_COUNT);
 
 // Header
@@ -22,19 +22,42 @@ render(containerMenu, new MenuView().getElement(), RenderPosition.BEFOREEND);
 render(containerFilter, new FilterView().getElement(), RenderPosition.BEFOREEND);
 
 // Main
-const containerTripEvents = document.querySelector('.trip-events');
+const containerMainContent = document.querySelector('.trip-events');
 
 if (!EVENT_COUNT) {
-  render(containerTripEvents, new NoEventView().getElement(), RenderPosition.BEFOREEND);
+  render(containerMainContent, new NoEventView().getElement(), RenderPosition.BEFOREEND);
 } else {
-  const containerTripEvents = document.querySelector('.trip-events');
-  render(containerTripEvents, new SortView().getElement(), RenderPosition.BEFOREEND);
-  render(containerTripEvents, new EventListView().getElement(), RenderPosition.BEFOREEND);
+  render(containerMainContent, new SortView().getElement(), RenderPosition.BEFOREEND);
 
-  const containerEventList = document.querySelector('.trip-events__list');
-  render(containerEventList, new EventItemEditView(events[0]).getElement(), RenderPosition.BEFOREEND);
+  const renderEvent = (eventListComponent, event) => {
+    const eventItemComponent = new EventItemView(event);
+    const eventItemEditComponent = new EventItemEditView(event);
 
-  events.forEach((event) => {
-    render(containerEventList, new EventItemView(event).getElement(), RenderPosition.BEFOREEND);
-  });
+    const replaceEventToForm = (evt) => {
+      evt.preventDefault();
+      eventListComponent.replaceChild(eventItemEditComponent.getElement(), eventItemComponent.getElement());
+    };
+
+    const replaceFormToEvent = (evt) => {
+      evt.preventDefault();
+      eventListComponent.replaceChild(eventItemComponent.getElement(), eventItemEditComponent.getElement());
+    };
+
+    eventItemComponent
+      .getElement()
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', replaceEventToForm);
+
+    eventItemEditComponent
+      .getElement()
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', replaceFormToEvent);
+
+    render(eventListComponent, eventItemComponent.getElement(), RenderPosition.BEFOREEND);
+  };
+
+  const eventListComponent = new EventListView().getElement();
+  render(containerMainContent, eventListComponent, RenderPosition.BEFOREEND);
+
+  events.forEach((event) => renderEvent(eventListComponent, event));
 }
