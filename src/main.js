@@ -6,7 +6,7 @@ import { createEventListTemplate } from './view/event-list';
 import { createEventItemTemplate } from './view/event-item';
 import { createEventItemEditTemplate } from './view/event-item-edit';
 import { getEvents } from './mock/event';
-import { render } from './utils/render';
+import { renderTemplate } from './utils/render';
 
 const EVENT_COUNT = 5;
 const events = getEvents(EVENT_COUNT);
@@ -16,18 +16,18 @@ const containerTripMain = document.querySelector('.trip-main');
 const containerMenu = containerTripMain.querySelector('.trip-controls__navigation');
 const containerFilter = containerTripMain.querySelector('.trip-controls__filters');
 
-render(containerTripMain, creatTripInfoTemplate(events), 'afterbegin');
-render(containerMenu, createMenuTemplate(), 'beforeend');
-render(containerFilter, createFilterTemplate(), 'beforeend');
+renderTemplate(containerTripMain, creatTripInfoTemplate(events), 'afterbegin');
+renderTemplate(containerMenu, createMenuTemplate(), 'beforeend');
+renderTemplate(containerFilter, createFilterTemplate(), 'beforeend');
 
 // Main
 const containerTripEvents = document.querySelector('.trip-events');
-render(containerTripEvents, createSortTemplate(), 'beforeend');
-render(containerTripEvents, createEventListTemplate(), 'beforeend');
+renderTemplate(containerTripEvents, createSortTemplate(), 'beforeend');
+renderTemplate(containerTripEvents, createEventListTemplate(), 'beforeend');
 
 const containerEventList = document.querySelector('.trip-events__list');
-render(containerEventList, createEventItemEditTemplate(events[0]), 'beforeend');
+renderTemplate(containerEventList, createEventItemEditTemplate(events[0]), 'beforeend');
 
 events.forEach((event) => {
-  render(containerEventList, createEventItemTemplate(event), 'beforeend');
+  renderTemplate(containerEventList, createEventItemTemplate(event), 'beforeend');
 });

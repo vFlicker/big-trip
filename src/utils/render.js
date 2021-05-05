@@ -1,3 +1,3 @@
-export const render = (container, block, position) => {
+export const renderTemplate = (container, block, position) => {
   container.insertAdjacentHTML(position, block);
 };
