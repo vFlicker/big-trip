@@ -33,14 +33,12 @@ if (!EVENT_COUNT) {
     const eventItemComponent = new EventItemView(event);
     const eventItemEditComponent = new EventItemEditView(event);
 
-    const replaceEventToForm = (evt) => {
-      evt.preventDefault();
+    const replaceEventToForm = () => {
       replace(eventItemEditComponent, eventItemComponent);
       document.addEventListener('keydown', onEscKeyDown);
     };
 
-    const replaceFormToEvent = (evt) => {
-      evt.preventDefault();
+    const replaceFormToEvent = () => {
       replace(eventItemComponent, eventItemEditComponent);
       document.removeEventListener('keydown', onEscKeyDown);
     };
@@ -52,19 +50,9 @@ if (!EVENT_COUNT) {
       }
     };
 
-    eventItemComponent
-      .getElement()
-      .querySelector('.event__rollup-btn')
-      .addEventListener('click', replaceEventToForm);
-
-    eventItemEditComponent
-      .getElement()
-      .querySelector('.event__rollup-btn')
-      .addEventListener('click', replaceFormToEvent);
-
-    eventItemEditComponent
-      .getElement()
-      .addEventListener('submit', replaceFormToEvent);
+    eventItemComponent.setEditClickHandler(replaceEventToForm);
+    eventItemEditComponent.setEditClickHandler(replaceFormToEvent);
+    eventItemEditComponent.setFormSubmitHandler(replaceFormToEvent);
 
     render(eventListComponent, eventItemComponent, RenderPosition.BEFOREEND);
   };
