@@ -28,44 +28,54 @@ export default class Board {
     render(this._boardComponent, this._noEventComponent, RenderPosition.BEFOREEND);
   }
 
+  _renderSort() {
+    render(this._boardComponent, this._sortComponent, RenderPosition.BEFOREEND);
+  }
+
+  _renderEventList() {
+    render(this._boardComponent, this._eventListComponent, RenderPosition.BEFOREEND);
+  }
+
+  _renderEvent(event) {
+    const eventItemComponent = new EventItemView(event);
+    const eventItemEditComponent = new EventItemEditView(event);
+
+    const replaceEventToForm = () => {
+      replace(eventItemEditComponent, eventItemComponent);
+      document.addEventListener('keydown', onEscKeyDown);
+    };
+
+    const replaceFormToEvent = () => {
+      replace(eventItemComponent, eventItemEditComponent);
+      document.removeEventListener('keydown', onEscKeyDown);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        replaceFormToEvent();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    eventItemComponent.setEditClickHandler(replaceEventToForm);
+    eventItemEditComponent.setEditClickHandler(replaceFormToEvent);
+    eventItemEditComponent.setFormSubmitHandler(replaceFormToEvent);
+
+    render(this._eventListComponent, eventItemComponent, RenderPosition.BEFOREEND);
+  }
+
+  _renderEvents() {
+    this._boardEvents.forEach((event) => this._renderEvent(event));
+  }
+
   _renderBoard() {
     if (this._boardEvents.length === 0) {
       this._renderNoEvent();
       return;
     }
 
-    render(this._boardComponent, this._sortComponent, RenderPosition.BEFOREEND);
-
-    const renderEvent = (eventListComponent, event) => {
-      const eventItemComponent = new EventItemView(event);
-      const eventItemEditComponent = new EventItemEditView(event);
-
-      const replaceEventToForm = () => {
-        replace(eventItemEditComponent, eventItemComponent);
-        document.addEventListener('keydown', onEscKeyDown);
-      };
-
-      const replaceFormToEvent = () => {
-        replace(eventItemComponent, eventItemEditComponent);
-        document.removeEventListener('keydown', onEscKeyDown);
-      };
-
-      const onEscKeyDown = (evt) => {
-        if (evt.key === 'Escape' || evt.key === 'Esc') {
-          replaceFormToEvent();
-          document.removeEventListener('keydown', onEscKeyDown);
-        }
-      };
-
-      eventItemComponent.setEditClickHandler(replaceEventToForm);
-      eventItemEditComponent.setEditClickHandler(replaceFormToEvent);
-      eventItemEditComponent.setFormSubmitHandler(replaceFormToEvent);
-
-      render(eventListComponent, eventItemComponent, RenderPosition.BEFOREEND);
-    };
-
-
-    render(this._boardComponent, this._eventListComponent, RenderPosition.BEFOREEND);
-    this._boardEvents.forEach((event) => renderEvent(this._eventListComponent, event));
+    this._renderSort();
+    this._renderEventList();
+    this._renderEvents();
   }
 }
