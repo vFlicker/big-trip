@@ -45,7 +45,7 @@ if (!EVENT_COUNT) {
 
     const onEscKeyDown = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
-        replaceFormToEvent(evt);
+        replaceFormToEvent();
         document.removeEventListener('keydown', onEscKeyDown);
       }
     };
