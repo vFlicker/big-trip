@@ -1,6 +1,6 @@
 import EventItemView from '../view/event-item';
 import EventItemEditView from '../view/event-item-edit';
-import { render, RenderPosition, replace } from '../utils/render';
+import { render, RenderPosition, replace, remove } from '../utils/render';
 
 export default class Event {
   constructor(eventListContainer) {
@@ -55,5 +55,10 @@ export default class Event {
 
   _handleItmeEditSubmit() {
     this.replaceFormToEvent();
+  }
+
+  destroy() {
+    remove(this._eventItemComponent);
+    remove(this._eventItemEditComponent);
   }
 }

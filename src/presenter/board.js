@@ -2,14 +2,14 @@ import BoardView from '../view/board';
 import NoEventView from '../view/no-event';
 import SortView from '../view/sort';
 import EventListView from '../view/event-list';
-import EventItemView from '../view/event-item';
-import EventItemEditView from '../view/event-item-edit';
 import EventPresenter from './event';
-import { render, RenderPosition, replace } from '../utils/render';
+import { render, RenderPosition } from '../utils/render';
 
 export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
+
+    this._boardPresenters = {};
 
     this._boardComponent = new BoardView();
     this._noEventComponent = new NoEventView();
@@ -40,6 +40,7 @@ export default class Board {
   _renderEvent(event) {
     const eventPresenter = new EventPresenter(this._eventListComponent);
     eventPresenter.init(event);
+    this._boardPresenters[event.id] = eventPresenter;
   }
 
   _renderEvents() {
@@ -55,5 +56,13 @@ export default class Board {
     this._renderSort();
     this._renderEventList();
     this._renderEvents();
+  }
+
+  _clearTaskList() {
+    Object
+      .values(this._boardPresenters)
+      .forEach((presenter) => presenter.destroy());
+
+    this._boardPresenters = {};
   }
 }
