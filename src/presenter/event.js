@@ -5,39 +5,55 @@ import { render, RenderPosition, replace } from '../utils/render';
 export default class Event {
   constructor(eventListContainer) {
     this._eventListContainer = eventListContainer;
+
+    this._eventItemComponent = null;
+    this._eventItemEditComponent = null;
+
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleItemRollupClick = this._handleItemRollupClick.bind(this);
+    this._handleItemEditRollupClick = this._handleItemEditRollupClick.bind(this);
+    this._handleItmeEditSubmit = this._handleItmeEditSubmit.bind(this);
   }
 
   init(event) {
     this._event = event;
 
-    this._renderEvent();
+    this._eventItemComponent = new EventItemView(event);
+    this._eventItemEditComponent = new EventItemEditView(event);
+
+    this._eventItemComponent.setRollupClickHandler(this._handleItemRollupClick);
+    this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
+    this._eventItemEditComponent.setFormSubmitHandler(this._handleItmeEditSubmit);
+
+    render(this._eventListContainer, this._eventItemComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderEvent() {
-    const eventItemComponent = new EventItemView(this._event);
-    const eventItemEditComponent = new EventItemEditView(this._event);
+  _escKeyDownHandler(evt) {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.replaceFormToEvent();
+    }
+  }
 
-    const replaceEventToForm = () => {
-      replace(eventItemEditComponent, eventItemComponent);
-      document.addEventListener('keydown', onEscKeyDown);
-    };
+  replaceEventToForm() {
+    replace(this._eventItemEditComponent, this._eventItemComponent);
+    document.addEventListener('keydown', this._escKeyDownHandler);
+  }
 
-    const replaceFormToEvent = () => {
-      replace(eventItemComponent, eventItemEditComponent);
-      document.removeEventListener('keydown', onEscKeyDown);
-    };
+  replaceFormToEvent() {
+    replace(this._eventItemComponent, this._eventItemEditComponent);
+    document.removeEventListener('keydown', this._escKeyDownHandler);
+  }
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        replaceFormToEvent();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
+  _handleItemRollupClick() {
+    this.replaceEventToForm();
+  }
 
-    eventItemComponent.setEditClickHandler(replaceEventToForm);
-    eventItemEditComponent.setEditClickHandler(replaceFormToEvent);
-    eventItemEditComponent.setFormSubmitHandler(replaceFormToEvent);
+  _handleItemEditRollupClick() {
+    this.replaceFormToEvent();
+  }
 
-    render(this._eventListContainer, eventItemComponent, RenderPosition.BEFOREEND);
+  _handleItmeEditSubmit() {
+    this.replaceFormToEvent();
   }
 }
