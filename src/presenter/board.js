@@ -18,6 +18,7 @@ export default class Board {
     this._eventListComponent = new EventListView();
 
     this._handleEventChange = this._handleEventChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(boardEvents) {
@@ -33,6 +34,12 @@ export default class Board {
     this._eventPresenter[updateEvent.id].init(updateEvent);
   }
 
+  _handleModeChange() {
+    Object
+      .values(this._eventPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
   _renderNoEvent() {
     render(this._boardComponent, this._noEventComponent, RenderPosition.BEFOREEND);
   }
@@ -46,7 +53,7 @@ export default class Board {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListComponent, this._handleEventChange);
+    const eventPresenter = new EventPresenter(this._eventListComponent, this._handleEventChange, this._handleModeChange);
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
