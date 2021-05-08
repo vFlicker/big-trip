@@ -11,6 +11,7 @@ export default class Event {
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleItemRollupClick = this._handleItemRollupClick.bind(this);
+    this._handleItemFavoriteClick = this._handleItemFavoriteClick.bind(this);
     this._handleItemEditRollupClick = this._handleItemEditRollupClick.bind(this);
     this._handleItmeEditSubmit = this._handleItmeEditSubmit.bind(this);
   }
@@ -22,6 +23,7 @@ export default class Event {
     this._eventItemEditComponent = new EventItemEditView(event);
 
     this._eventItemComponent.setRollupClickHandler(this._handleItemRollupClick);
+    this._eventItemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);
     this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
     this._eventItemEditComponent.setFormSubmitHandler(this._handleItmeEditSubmit);
 
@@ -47,6 +49,16 @@ export default class Event {
 
   _handleItemRollupClick() {
     this.replaceEventToForm();
+  }
+
+  _handleItemFavoriteClick() {
+    Object.assign(
+      {},
+      this._event,
+      {
+        isFavorite: !this._event.isFavorite,
+      },
+    );
   }
 
   _handleItemEditRollupClick() {
