@@ -20,6 +20,9 @@ export default class Event {
   init(event) {
     this._event = event;
 
+    const prevEventItemComponent = this._eventItemComponent;
+    const prevEventItemEditComponent = this._eventItemEditComponent;
+
     this._eventItemComponent = new EventItemView(event);
     this._eventItemEditComponent = new EventItemEditView(event);
 
@@ -28,7 +31,21 @@ export default class Event {
     this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
     this._eventItemEditComponent.setFormSubmitHandler(this._handleItmeEditSubmit);
 
-    render(this._eventListContainer, this._eventItemComponent, RenderPosition.BEFOREEND);
+    if (prevEventItemComponent === null || prevEventItemEditComponent === null) {
+      render(this._eventListContainer, this._eventItemComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this._eventListContainer.getElement().contains(prevEventItemComponent.getElement())) {
+      replace(this._eventItemComponent, prevEventItemComponent);
+    }
+
+    if (this._eventListContainer.getElement().contains(prevEventItemEditComponent.getElement())) {
+      replace(this._eventItemEditComponent, prevEventItemEditComponent);
+    }
+
+    remove(prevEventItemComponent);
+    remove(prevEventItemEditComponent);
   }
 
   _escKeyDownHandler(evt) {
