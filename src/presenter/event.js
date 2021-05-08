@@ -3,8 +3,9 @@ import EventItemEditView from '../view/event-item-edit';
 import { render, RenderPosition, replace, remove } from '../utils/render';
 
 export default class Event {
-  constructor(eventListContainer) {
+  constructor(eventListContainer, changeData) {
     this._eventListContainer = eventListContainer;
+    this._changeData = changeData;
 
     this._eventItemComponent = null;
     this._eventItemEditComponent = null;
@@ -52,12 +53,14 @@ export default class Event {
   }
 
   _handleItemFavoriteClick() {
-    Object.assign(
-      {},
-      this._event,
-      {
-        isFavorite: !this._event.isFavorite,
-      },
+    this._changeData(
+      Object.assign(
+        {},
+        this._event,
+        {
+          isFavorite: !this._event.isFavorite,
+        },
+      ),
     );
   }
 

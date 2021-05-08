@@ -4,17 +4,20 @@ import SortView from '../view/sort';
 import EventListView from '../view/event-list';
 import EventPresenter from './event';
 import { render, RenderPosition } from '../utils/render';
+import { updateItem } from './../utils/common';
 
 export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
 
-    this._boardPresenters = {};
+    this._eventPresenter = {};
 
     this._boardComponent = new BoardView();
     this._noEventComponent = new NoEventView();
     this._sortComponent = new SortView();
     this._eventListComponent = new EventListView();
+
+    this._handleEventChange = this._handleEventChange.bind(this);
   }
 
   init(boardEvents) {
@@ -23,6 +26,11 @@ export default class Board {
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderBoard();
+  }
+
+  _handleEventChange(updateEvent) {
+    this._boardEvents = updateItem(this._boardEvents, updateEvent);
+    this._eventPresenter[updateEvent.id].init(updateEvent);
   }
 
   _renderNoEvent() {
@@ -38,9 +46,9 @@ export default class Board {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListComponent);
+    const eventPresenter = new EventPresenter(this._eventListComponent, this._handleEventChange);
     eventPresenter.init(event);
-    this._boardPresenters[event.id] = eventPresenter;
+    this._eventPresenter[event.id] = eventPresenter;
   }
 
   _renderEvents() {
@@ -60,9 +68,9 @@ export default class Board {
 
   _clearTaskList() {
     Object
-      .values(this._boardPresenters)
+      .values(this._eventPresenter)
       .forEach((presenter) => presenter.destroy());
 
-    this._boardPresenters = {};
+    this._eventPresenter = {};
   }
 }
