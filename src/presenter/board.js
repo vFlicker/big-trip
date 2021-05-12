@@ -17,6 +17,7 @@ export default class Board {
     this._sortComponent = new SortView();
     this._eventListComponent = new EventListView();
 
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleEventChange = this._handleEventChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
   }
@@ -27,6 +28,9 @@ export default class Board {
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderBoard();
+  }
+
+  _handleSortTypeChange(sortType) {
   }
 
   _handleEventChange(updateEvent) {
@@ -46,6 +50,7 @@ export default class Board {
 
   _renderSort() {
     render(this._boardComponent, this._sortComponent, RenderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderEventList() {
