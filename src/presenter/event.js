@@ -21,7 +21,7 @@ export default class Event {
     this._handleItemRollupClick = this._handleItemRollupClick.bind(this);
     this._handleItemFavoriteClick = this._handleItemFavoriteClick.bind(this);
     this._handleItemEditRollupClick = this._handleItemEditRollupClick.bind(this);
-    this._handleItmeEditSubmit = this._handleItmeEditSubmit.bind(this);
+    this._handleItemEditSubmit = this._handleItemEditSubmit.bind(this);
   }
 
   init(event) {
@@ -36,7 +36,7 @@ export default class Event {
     this._eventItemComponent.setRollupClickHandler(this._handleItemRollupClick);
     this._eventItemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);
     this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
-    this._eventItemEditComponent.setFormSubmitHandler(this._handleItmeEditSubmit);
+    this._eventItemEditComponent.setFormSubmitHandler(this._handleItemEditSubmit);
 
     if (prevEventItemComponent === null || prevEventItemEditComponent === null) {
       render(this._eventListContainer, this._eventItemComponent, RenderPosition.BEFOREEND);
@@ -58,18 +58,18 @@ export default class Event {
   _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this.replaceFormToEvent();
+      this._replaceFormToEvent();
     }
   }
 
-  replaceEventToForm() {
+  _replaceEventToForm() {
     replace(this._eventItemEditComponent, this._eventItemComponent);
     document.addEventListener('keydown', this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
 
-  replaceFormToEvent() {
+  _replaceFormToEvent() {
     replace(this._eventItemComponent, this._eventItemEditComponent);
     document.removeEventListener('keydown', this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
@@ -77,12 +77,12 @@ export default class Event {
 
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
-      this.replaceFormToEvent();
+      this._replaceFormToEvent();
     }
   }
 
   _handleItemRollupClick() {
-    this.replaceEventToForm();
+    this._replaceEventToForm();
   }
 
   _handleItemFavoriteClick() {
@@ -98,11 +98,11 @@ export default class Event {
   }
 
   _handleItemEditRollupClick() {
-    this.replaceFormToEvent();
+    this._replaceFormToEvent();
   }
 
-  _handleItmeEditSubmit() {
-    this.replaceFormToEvent();
+  _handleItemEditSubmit() {
+    this._replaceFormToEvent();
   }
 
   destroy() {

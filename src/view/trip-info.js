@@ -3,10 +3,10 @@ import { getEventPeriod } from '../utils/date';
 
 const getTitle = (events) => {
   if (events.length > 3) {
-    return `${events[0].destantion.name} &mdash; ... &mdash; ${events[events.length - 1].destantion.name}`;
+    return `${events[0].destination.name} &mdash; ... &mdash; ${events[events.length - 1].destination.name}`;
   }
 
-  return events.map((event) => event.destantion.name).join(' &mdash; ');
+  return events.map((event) => event.destination.name).join(' &mdash; ');
 };
 
 const creatTripInfoTemplate = (events) => {

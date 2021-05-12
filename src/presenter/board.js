@@ -4,7 +4,7 @@ import SortView from '../view/sort';
 import EventListView from '../view/event-list';
 import EventPresenter from './event';
 import { render, RenderPosition } from '../utils/render';
-import { updateItem } from './../utils/common';
+import { updateItem } from '../utils/common';
 
 export default class Board {
   constructor(boardContainer) {

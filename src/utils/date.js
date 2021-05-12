@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getRandomInteger } from './../mock/utils';
+import { getRandomInteger } from '../mock/utils';
 
 const minDaysOffset = -7;
 const maxDaysOffset = 7;

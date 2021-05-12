@@ -1,4 +1,4 @@
-import { getRandomDate } from './../utils/date';
+import { getRandomDate } from '../utils/date';
 import { getRandomValueFromArray, getRandomItems, getRandomInteger, MIN_PRICE, MAX_PRICE } from './utils';
 import { nanoid } from 'nanoid';
 
@@ -14,13 +14,11 @@ const availableTypes = {
   restaurant: 'Restaurant',
 };
 
-const availableDestantion = ['Amsterdam', 'Geneva', 'Chamonix', 'Saint Petersburg', 'Salzburg', 'Washington', 'Cairo', 'Galway', 'Bonn', 'La Paz', 'Kochi', 'Vancouver', 'Dubai', 'Denver'];
+const availableDestination = ['Amsterdam', 'Geneva', 'Chamonix', 'Saint Petersburg', 'Salzburg', 'Washington', 'Cairo', 'Galway', 'Bonn', 'La Paz', 'Kochi', 'Vancouver', 'Dubai', 'Denver'];
 
 const getType = () => {
   const types = new Set(['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant']);
-  const type = getRandomValueFromArray(Array.from(types));
-
-  return type;
+  return getRandomValueFromArray(Array.from(types));
 };
 
 const getOffers = (type) => {
@@ -53,10 +51,10 @@ const getOffers = (type) => {
 };
 
 const getName = (items) => {
-  const destantionNames = new Set(items);
-  const name = getRandomValueFromArray(Array.from(destantionNames));
+  const destinationNames = new Set(items);
+  const name = getRandomValueFromArray(Array.from(destinationNames));
 
-  destantionNames.delete(name);
+  destinationNames.delete(name);
   return name;
 };
 
@@ -80,9 +78,9 @@ const generatePhotos = () => {
     .map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
 };
 
-const getDestantions = () => {
+const getDestinations = () => {
   return {
-    name: getName(availableDestantion),
+    name: getName(availableDestination),
     description: getDescription(),
     photos: generatePhotos(),
   };
@@ -92,23 +90,21 @@ const getEvent = () => {
   const type = getType();
 
   return {
-    availableDestantion: availableDestantion.sort(),
+    availableDestination: availableDestination.sort(),
     availableTypes,
     type,
     id: nanoid(),
     isFavorite: Boolean(getRandomInteger(0, 1)),
     date: getRandomDate(),
-    destantion: getDestantions(),
+    destination: getDestinations(),
     price: getRandomInteger(MIN_PRICE, MAX_PRICE),
     offers: getOffers(type),
   };
 };
 
 export const getEvents = (eventCount) => {
-  const events = new Array(eventCount)
+  return new Array(eventCount)
     .fill()
     .map(getEvent)
     .sort((firstEvent, secondEvent) => firstEvent.date.start - secondEvent.date.start);
-
-  return events;
 };

@@ -18,7 +18,7 @@ const createOfferListTemplate = (offers) => {
 };
 
 const createEventItemTemplate = (event) => {
-  const {date, offers, isFavorite, type, destantion, price} = event;
+  const {date, offers, isFavorite, type, destination, price} = event;
 
   const timeDuration = getDuration(date.start, date.end);
 
@@ -35,7 +35,7 @@ const createEventItemTemplate = (event) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
         </div>
-        <h3 class="event__title">${type} ${destantion.name}</h3>
+        <h3 class="event__title">${type} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${humanizeDate(date.start, 'YYYY-MM-DD')}T${humanizeDate(date.start, 'HH:mm')}">

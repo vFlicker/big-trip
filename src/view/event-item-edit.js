@@ -21,14 +21,14 @@ const createEventTypeListTemplate = (availableTypes, activeType) => {
     .join('');
 };
 
-const createEventDestinationListTemplate = (availableDestantion) => {
-  const getTemplate = (destantionName) => {
+const createEventDestinationListTemplate = (availableDestination) => {
+  const getTemplate = (destinationName) => {
     return (
-      `<option value="${destantionName}"></option>`
+      `<option value="${destinationName}"></option>`
     );
   };
 
-  return availableDestantion
+  return availableDestination
     .map(getTemplate)
     .join('');
 };
@@ -86,13 +86,13 @@ const createEventPhotoListTemplate = (photos) => {
     .join('');
 };
 
-const createSectionDestinationTemplate = (destantion) => {
-  const eventPhotoListTemplate = createEventPhotoListTemplate(destantion.photos);
+const createSectionDestinationTemplate = (destination) => {
+  const eventPhotoListTemplate = createEventPhotoListTemplate(destination.photos);
 
   return (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destantion.description}</p>
+      <p class="event__destination-description">${destination.description}</p>
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
@@ -104,15 +104,15 @@ const createSectionDestinationTemplate = (destantion) => {
 };
 
 const createEventItemEditTemplate = (event) => {
-  const {availableDestantion, availableTypes, destantion, type, date, price, offers} = event;
+  const {availableDestination, availableTypes, destination, type, date, price, offers} = event;
 
   const eventTypeListTemplate = createEventTypeListTemplate(availableTypes, type);
 
-  const eventDestinationListTemplate = createEventDestinationListTemplate(availableDestantion);
+  const eventDestinationListTemplate = createEventDestinationListTemplate(availableDestination);
 
   const sectionOffersTemplate = createSectionOffersTemplate(offers);
 
-  const sectionDestinationTemplate = createSectionDestinationTemplate(destantion);
+  const sectionDestinationTemplate = createSectionDestinationTemplate(destination);
 
   return (
     `<li class="trip-events__item">
@@ -137,7 +137,7 @@ const createEventItemEditTemplate = (event) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destantion.name}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
             <datalist id="destination-list-1">
               ${eventDestinationListTemplate}
             </datalist>
