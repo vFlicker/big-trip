@@ -11,3 +11,11 @@ export const updateItem = (items, update) => {
     ...items.slice(index + 1),
   ];
 };
+
+export const ucFirst = (string) => {
+  if (!string) {
+    return string;
+  }
+
+  return string[0].toUpperCase() + string.slice(1);
+};
