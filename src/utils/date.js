@@ -6,10 +6,6 @@ const maxDaysOffset = 7;
 const maxHoursOffset = 23;
 const maxMinutesOffset = 59;
 
-export const humanizeDate = (date, formatter = 'DD-MM-YYYY') => {
-  return dayjs(date).format(formatter);
-};
-
 export const getRandomDate = () => {
   const days = getRandomInteger(minDaysOffset, maxDaysOffset);
   const hours = getRandomInteger(0, maxHoursOffset);
@@ -33,10 +29,18 @@ export const getRandomDate = () => {
   };
 };
 
-export const getDuration = (dateStart, dateEnd) => {
-  const days = humanizeDate(dayjs(dateEnd).diff(dayjs(dateStart)), 'D');
-  const hours = humanizeDate(dayjs(dateEnd).diff(dayjs(dateStart)), 'HH');
-  const minutes = humanizeDate(dayjs(dateEnd).diff(dayjs(dateStart)), 'mm');
+export const getDuration = (firstDuration, secondDuration) => {
+  return dayjs(firstDuration).diff(dayjs(secondDuration));
+};
+
+export const humanizeDate = (date, formatter = 'DD-MM-YYYY') => {
+  return dayjs(date).format(formatter);
+};
+
+export const humanizeDuration = (dateStart, dateEnd) => {
+  const days = humanizeDate(getDuration(dateEnd, dateStart), 'D');
+  const hours = humanizeDate(getDuration(dateEnd, dateStart), 'HH');
+  const minutes = humanizeDate(getDuration(dateEnd, dateStart), 'mm');
 
   return `${days}D ${hours}H ${minutes}M`;
 };

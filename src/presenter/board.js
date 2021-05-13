@@ -3,18 +3,21 @@ import NoEventView from '../view/no-event';
 import SortView from '../view/sort';
 import EventListView from '../view/event-list';
 import EventPresenter from './event';
-import { render, RenderPosition } from '../utils/render';
+import {remove, render, RenderPosition} from '../utils/render';
+import {SortType} from '../utils/const';
+import {sortByPrice, sortByTime} from '../utils/event';
 import { updateItem } from '../utils/common';
 
 export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
 
+    this._currentSortType = SortType.DAY;
     this._eventPresenter = {};
 
     this._boardComponent = new BoardView();
     this._noEventComponent = new NoEventView();
-    this._sortComponent = new SortView();
+    this._sortComponent = null;
     this._eventListComponent = new EventListView();
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
@@ -24,13 +27,46 @@ export default class Board {
 
   init(boardEvents) {
     this._boardEvents = boardEvents.slice();
+    this._sourcedBoardEvents = boardEvents.slice();
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderBoard();
   }
 
+  _sortEvents(sortType) {
+    switch (sortType) {
+      case SortType.TIME:
+        this._boardEvents.sort(sortByTime);
+        break;
+      case SortType.PRICE:
+        this._boardEvents.sort(sortByPrice);
+        break;
+      default:
+        this._boardEvents = this._sourcedBoardEvents.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _clearTaskList() {
+    Object
+      .values(this._eventPresenter)
+      .forEach((presenter) => presenter.destroy());
+
+    this._eventPresenter = {};
+
+    remove(this._sortComponent);
+  }
+
   _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortEvents(sortType);
+    this._clearTaskList();
+    this._renderBoard();
   }
 
   _handleEventChange(updateEvent) {
@@ -49,6 +85,7 @@ export default class Board {
   }
 
   _renderSort() {
+    this._sortComponent = new SortView(this._currentSortType);
     render(this._boardComponent, this._sortComponent, RenderPosition.BEFOREEND);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
@@ -76,13 +113,5 @@ export default class Board {
     this._renderSort();
     this._renderEventList();
     this._renderEvents();
-  }
-
-  _clearTaskList() {
-    Object
-      .values(this._eventPresenter)
-      .forEach((presenter) => presenter.destroy());
-
-    this._eventPresenter = {};
   }
 }

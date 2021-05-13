@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import { getDuration, humanizeDate } from '../utils/date';
+import { humanizeDuration, humanizeDate } from '../utils/date';
 
 const createOfferListTemplate = (offers) => {
   const getTemplate = (offer) => {
@@ -20,7 +20,7 @@ const createOfferListTemplate = (offers) => {
 const createEventItemTemplate = (event) => {
   const {date, offers, isFavorite, type, destination, price} = event;
 
-  const timeDuration = getDuration(date.start, date.end);
+  const timeDuration = humanizeDuration(date.start, date.end);
 
   const offerListTemplate = createOfferListTemplate(offers);
 
