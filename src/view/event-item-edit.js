@@ -104,7 +104,7 @@ const createSectionDestinationTemplate = (destination) => {
 };
 
 const createEventItemEditTemplate = (event) => {
-  const {availableDestination, availableTypes, destination, type, date, price, offers} = event;
+  const {availableDestination, availableTypes, destination, type, dateStart, dateEnd, price, offers} = event;
 
   const eventTypeListTemplate = createEventTypeListTemplate(availableTypes, type);
 
@@ -145,10 +145,10 @@ const createEventItemEditTemplate = (event) => {
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDate(date.start, 'YY/MM/DD HH:mm')}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDate(dateStart, 'YY/MM/DD HH:mm')}">
             —
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDate(date.end, 'YY/MM/DD HH:mm')}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDate(dateEnd, 'YY/MM/DD HH:mm')}">
           </div>
 
           <div class="event__field-group  event__field-group--price">

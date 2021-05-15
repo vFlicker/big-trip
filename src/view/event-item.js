@@ -18,9 +18,9 @@ const createOfferListTemplate = (offers) => {
 };
 
 const createEventItemTemplate = (event) => {
-  const {date, offers, isFavorite, type, destination, price} = event;
+  const {dateStart, dateEnd, offers, isFavorite, type, destination, price} = event;
 
-  const timeDuration = humanizeDuration(date.start, date.end);
+  const timeDuration = humanizeDuration(dateStart, dateEnd);
 
   const offerListTemplate = createOfferListTemplate(offers);
 
@@ -31,19 +31,19 @@ const createEventItemTemplate = (event) => {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${humanizeDate(date.start, 'YYYY-MM-DD')}">${humanizeDate(date.start, 'MMM D')}</time>
+        <time class="event__date" datetime="${humanizeDate(dateStart, 'YYYY-MM-DD')}">${humanizeDate(dateStart, 'MMM D')}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
         </div>
         <h3 class="event__title">${type} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${humanizeDate(date.start, 'YYYY-MM-DD')}T${humanizeDate(date.start, 'HH:mm')}">
-              ${humanizeDate(date.start, 'HH:mm')}
+            <time class="event__start-time" datetime="${humanizeDate(dateStart, 'YYYY-MM-DD')}T${humanizeDate(dateStart, 'HH:mm')}">
+              ${humanizeDate(dateStart, 'HH:mm')}
             </time>
             &mdash;
-            <time class="event__end-time" datetime="${humanizeDate(date.end, 'YYYY-MM-DD')}T${humanizeDate(date.end, 'HH:mm')}">
-              ${humanizeDate(date.end, 'HH:mm')}
+            <time class="event__end-time" datetime="${humanizeDate(dateEnd, 'YYYY-MM-DD')}T${humanizeDate(dateEnd, 'HH:mm')}">
+              ${humanizeDate(dateEnd, 'HH:mm')}
             </time>
           </p>
           <p class="event__duration">${timeDuration}</p>

@@ -1,8 +1,8 @@
 import {getDuration} from './date';
 
 export const sortByTime = (firstEvent, secondEvent) => {
-  const firstDuration = getDuration(firstEvent.date.end, firstEvent.date.start);
-  const secondDuration = getDuration(secondEvent.date.end, secondEvent.date.start);
+  const firstDuration = getDuration(firstEvent.dateEnd, firstEvent.dateStart);
+  const secondDuration = getDuration(secondEvent.dateEnd, secondEvent.dateStart);
 
   return firstDuration - secondDuration;
 };

@@ -1,4 +1,4 @@
-import { getRandomDate } from '../utils/date';
+import {getDateEnd, getDateStart} from '../utils/date';
 import { getRandomValueFromArray, getRandomItems, getRandomInteger, MIN_PRICE, MAX_PRICE } from './utils';
 import { nanoid } from 'nanoid';
 
@@ -87,6 +87,7 @@ const getDestinations = () => {
 };
 
 const getEvent = () => {
+  const dateStart = getDateStart();
   const type = getType();
 
   return {
@@ -95,7 +96,8 @@ const getEvent = () => {
     type,
     id: nanoid(),
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    date: getRandomDate(),
+    dateStart,
+    dateEnd: getDateEnd(dateStart),
     destination: getDestinations(),
     price: getRandomInteger(MIN_PRICE, MAX_PRICE),
     offers: getOffers(type),
@@ -106,5 +108,5 @@ export const getEvents = (eventCount) => {
   return new Array(eventCount)
     .fill()
     .map(getEvent)
-    .sort((firstEvent, secondEvent) => firstEvent.date.start - secondEvent.date.start);
+    .sort((firstEvent, secondEvent) => firstEvent.dateStart - secondEvent.dateStart);
 };
