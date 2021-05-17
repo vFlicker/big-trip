@@ -220,6 +220,16 @@ export default class EventItemEdit extends AbstractView {
     return createEventItemEditTemplate(this._data, this._availableDestination, this._availableTypes, this._availableOffers);
   }
 
+  updateElement() {
+    const prevElement = this.getElement();
+    const parent = prevElement.parentElement;
+    this.removeElement();
+
+    const newElement = this.getElement();
+
+    parent.replaceChild(newElement, prevElement);
+  }
+
   _rollupClickHandler(evt) {
     evt.preventDefault();
     this._callback.rollupClick();
