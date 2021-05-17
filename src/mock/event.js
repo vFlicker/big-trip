@@ -1,62 +1,6 @@
-import {getDateEnd, getDateStart} from '../utils/date';
-import { getRandomValueFromArray, getRandomItems, getRandomInteger, MIN_PRICE, MAX_PRICE } from './utils';
+import { getDateStart, getDateEnd } from '../utils/date';
+import { getRandomValueFromArray, getRandomInteger, getRandomItems, MIN_PRICE, MAX_PRICE } from './utils';
 import { nanoid } from 'nanoid';
-
-const availableTypes = {
-  taxi: 'Taxi',
-  bus: 'Bus',
-  train: 'Ship',
-  transport: 'Transport',
-  drive: 'Drive',
-  flight: 'Flight',
-  ['check-in']: 'Check-In',
-  sightseeing: 'Sightseeing',
-  restaurant: 'Restaurant',
-};
-
-const availableDestination = ['Amsterdam', 'Geneva', 'Chamonix', 'Saint Petersburg', 'Salzburg', 'Washington', 'Cairo', 'Galway', 'Bonn', 'La Paz', 'Kochi', 'Vancouver', 'Dubai', 'Denver'];
-
-const getType = () => {
-  const types = new Set(['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant']);
-  return getRandomValueFromArray(Array.from(types));
-};
-
-const getOffers = (type) => {
-  const offers = [
-    {type: 'check-in', title: 'Add breakfast', price: 50},
-    {type: 'check-in', title: 'Switch to comfort class', price: 100},
-    {type: 'drive', title: 'Rent a car', price: 200},
-    {type: 'flight', title: 'Switch to comfort', price: 80},
-    {type: 'flight', title: 'Add luggage', price: 50},
-    {type: 'flight', title: 'Add meal', price: 15},
-    {type: 'flight', title: 'Choose seats', price: 5},
-    {type: 'sightseeing', title: 'Add meal', price: 15},
-    {type: 'sightseeing', title: 'Lunch in city', price: 30},
-    {type: 'sightseeing', title: 'Book tickets', price: 40},
-    {type: 'taxi', title: 'Order Uber', price: 20},
-    {type: 'train', title: 'Travel by train', price: 40},
-  ];
-
-  let filteredOffers = offers.filter((offer) => offer.type === type);
-
-  if (filteredOffers.length > 0) {
-    filteredOffers = getRandomItems(filteredOffers);
-    filteredOffers.forEach((offer, index) => {
-      offer.id = index + 1;
-      offer.isChecked = Boolean(getRandomInteger(0, 1));
-    });
-  }
-
-  return filteredOffers;
-};
-
-const getName = (items) => {
-  const destinationNames = new Set(items);
-  const name = getRandomValueFromArray(Array.from(destinationNames));
-
-  destinationNames.delete(name);
-  return name;
-};
 
 const getDescription = () => {
   const description = [
@@ -78,12 +22,43 @@ const generatePhotos = () => {
     .map(() => `http://picsum.photos/248/152?r=${Math.random()}`);
 };
 
-const getDestinations = () => {
-  return {
-    name: getName(availableDestination),
-    description: getDescription(),
-    photos: generatePhotos(),
-  };
+const getAvailableDestinations = () => {
+  const destinations = [];
+  const names = ['Amsterdam', 'Geneva', 'Chamonix', 'Saint Petersburg', 'Salzburg', 'Washington', 'Cairo', 'Galway', 'Bonn', 'La Paz', 'Kochi', 'Vancouver', 'Dubai', 'Denver'];
+
+  for (const name of names) {
+    destinations.push(
+      {
+        name: name,
+        description: getDescription(),
+        photos: generatePhotos(),
+      },
+    );
+  }
+
+  return destinations;
+};
+
+const getDestination = () => {
+  const availableDestinations = getAvailableDestinations();
+
+  return getRandomValueFromArray(availableDestinations);
+};
+
+const getOffers = (type) => {
+  const filteredOffers = [...availableOffers[type]];
+
+  if (filteredOffers.length > 0) {
+    filteredOffers.forEach((offer) => {
+      offer.isChecked = Boolean(getRandomInteger(0, 1));
+    });
+  }
+
+  return filteredOffers;
+};
+
+const getType = () => {
+  return getRandomValueFromArray(availableTypes);
 };
 
 const getEvent = () => {
@@ -91,14 +66,12 @@ const getEvent = () => {
   const type = getType();
 
   return {
-    availableDestination: availableDestination.sort(),
-    availableTypes,
+    dateStart,
     type,
     id: nanoid(),
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    dateStart,
     dateEnd: getDateEnd(dateStart),
-    destination: getDestinations(),
+    destination: getDestination(),
     price: getRandomInteger(MIN_PRICE, MAX_PRICE),
     offers: getOffers(type),
   };
@@ -109,4 +82,44 @@ export const getEvents = (eventCount) => {
     .fill()
     .map(getEvent)
     .sort((firstEvent, secondEvent) => firstEvent.dateStart - secondEvent.dateStart);
+};
+
+export const availableDestination = getAvailableDestinations();
+
+export const availableTypes = ['taxi', 'bus', 'train', 'transport', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+
+export const availableOffers = {
+  taxi: [
+    {id: 1, title: 'Order Uber', price: 20, isActive: false},
+  ],
+  bus: [
+    {id: 1, title: 'Choose seats', price: 2, isActive: false},
+  ],
+  train: [
+    {id: 1, title: 'Travel by train', price: 40, isActive: false},
+  ],
+  transport: [],
+  ship: [],
+  drive: [
+    {id: 1, title: 'Rent a car', price: 200, isActive: false},
+  ],
+  flight: [
+    {id: 1, title: 'Switch to comfort', price: 80, isActive: false},
+    {id: 2, title: 'Add luggage', price: 50, isActive: false},
+    {id: 3, title: 'Add meal', price: 15, isActive: false},
+    {id: 4, title: 'Choose seats', price: 5, isActive: false},
+  ],
+  'check-in': [
+    {id: 1, title: 'Add breakfast', price: 50, isActive: false},
+    {id: 2, title: 'Switch to comfort class', price: 100, isActive: false},
+  ],
+  sightseeing: [
+    {id: 1, title: 'Add meal', price: 15, isActive: false},
+    {id: 2, title: 'Lunch in city', price: 30, isActive: false},
+    {id: 3, title: 'Book tickets', price: 40, isActive: false},
+  ],
+  restaurant: [
+    {id: 1,title: 'Add luggage', price: 45, isActive: false},
+    {id: 2, title: 'Add meal', price: 15, isActive: false},
+  ],
 };
