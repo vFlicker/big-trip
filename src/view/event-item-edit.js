@@ -230,6 +230,20 @@ export default class EventItemEdit extends AbstractView {
     parent.replaceChild(newElement, prevElement);
   }
 
+  updateData(update) {
+    if (!update) {
+      return;
+    }
+
+    this._data = Object.assign(
+      {},
+      this._data,
+      update,
+    );
+
+    this.updateElement();
+  }
+
   _rollupClickHandler(evt) {
     evt.preventDefault();
     this._callback.rollupClick();
