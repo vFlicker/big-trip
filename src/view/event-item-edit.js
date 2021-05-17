@@ -65,10 +65,10 @@ const createEventOfferListTemplate = (type, offers) => {
     .join('');
 };
 
-const createSectionOffersTemplate = (type, offers) => {
-  const eventOfferListTemplate = createEventOfferListTemplate(type, offers);
+const createSectionOffersTemplate = (type, offers, hasOffers) => {
+  const eventOfferListTemplate = createEventOfferListTemplate(type, offers, hasOffers);
 
-  if (offers.length > 0) {
+  if (hasOffers) {
     return (
       `<section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -112,14 +112,14 @@ const createSectionDestinationTemplate = (destination) => {
   );
 };
 
-const createEventItemEditTemplate = (event, availableDestination, availableTypes) => {
-  const {destination, type, dateStart, dateEnd, price, offers} = event;
+const createEventItemEditTemplate = (data, availableDestination, availableTypes) => {
+  const {destination, type, dateStart, dateEnd, price, offers, hasOffers} = data;
 
   const eventTypeListTemplate = createEventTypeListTemplate(type, availableTypes);
 
   const eventDestinationListTemplate = createEventDestinationListTemplate(availableDestination);
 
-  const sectionOffersTemplate = createSectionOffersTemplate(type, offers);
+  const sectionOffersTemplate = createSectionOffersTemplate(type, offers, hasOffers);
 
   const sectionDestinationTemplate = createSectionDestinationTemplate(destination);
 
@@ -210,13 +210,14 @@ export default class EventItemEdit extends AbstractView {
     this._availableDestination = availableDestination;
     this._availableTypes = availableTypes;
     this._availableOffers = availableOffers;
+    this._data = EventItemEdit.parseEventToData(event);
 
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
-    return createEventItemEditTemplate(this._event, this._availableDestination, this._availableTypes, this._availableOffers);
+    return createEventItemEditTemplate(this._data, this._availableDestination, this._availableTypes, this._availableOffers);
   }
 
   _rollupClickHandler(evt) {
@@ -244,5 +245,15 @@ export default class EventItemEdit extends AbstractView {
     this
       .getElement()
       .addEventListener('submit', this._formSubmitHandler);
+  }
+
+  static parseEventToData(event) {
+    return Object.assign(
+      {},
+      event,
+      {
+        hasOffers: event.offers.length > 0,
+      },
+    );
   }
 }
