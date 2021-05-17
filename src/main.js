@@ -2,9 +2,8 @@ import TripInfoView from './view/trip-info';
 import MenuView from './view/menu';
 import FilterView from './view/filter';
 import BoardPresenter from './presenter/board';
-import { getEvents } from './mock/event';
+import { getEvents, availableDestination, availableTypes, availableOffers } from './mock/event';
 import { render, RenderPosition } from './utils/render';
-
 
 const EVENT_COUNT = 5;
 const events = getEvents(EVENT_COUNT);
@@ -22,4 +21,5 @@ render(containerFilter, new FilterView(), RenderPosition.BEFOREEND);
 const containerMainContent = document.querySelector('.page-main .page-body__container');
 
 const boardPresenter = new BoardPresenter(containerMainContent);
-boardPresenter.init(events);
+boardPresenter.init(events, availableDestination, availableTypes, availableOffers);
+

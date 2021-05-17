@@ -24,14 +24,14 @@ export default class Event {
     this._handleItemEditSubmit = this._handleItemEditSubmit.bind(this);
   }
 
-  init(event) {
+  init(event, availableDestination,  availableTypes, availableOffers) {
     this._event = event;
 
     const prevEventItemComponent = this._eventItemComponent;
     const prevEventItemEditComponent = this._eventItemEditComponent;
 
-    this._eventItemComponent = new EventItemView(event);
-    this._eventItemEditComponent = new EventItemEditView(event);
+    this._eventItemComponent = new EventItemView(event, availableDestination, availableTypes, availableOffers);
+    this._eventItemEditComponent = new EventItemEditView(event, availableDestination, availableTypes, availableOffers);
 
     this._eventItemComponent.setRollupClickHandler(this._handleItemRollupClick);
     this._eventItemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);

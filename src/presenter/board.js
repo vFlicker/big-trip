@@ -25,9 +25,12 @@ export default class Board {
     this._handleModeChange = this._handleModeChange.bind(this);
   }
 
-  init(boardEvents) {
+  init(boardEvents, availableDestination, availableTypes, availableOffers) {
     this._boardEvents = boardEvents.slice();
     this._sourcedBoardEvents = boardEvents.slice();
+    this._availableDestination = availableDestination;
+    this._availableTypes = availableTypes;
+    this._availableOffers = availableOffers;
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
@@ -96,7 +99,7 @@ export default class Board {
 
   _renderEvent(event) {
     const eventPresenter = new EventPresenter(this._eventListComponent, this._handleEventChange, this._handleModeChange);
-    eventPresenter.init(event);
+    eventPresenter.init(event, this._availableDestination, this._availableTypes, this._availableOffers);
     this._eventPresenter[event.id] = eventPresenter;
   }
 

@@ -1,39 +1,45 @@
 import AbstractView from './abstract';
 import { humanizeDate } from '../utils/date';
+import { ucFirst } from '../utils/common';
 
-const createEventTypeListTemplate = (availableTypes, activeType) => {
-  const getTemplate = ([typeName, typeText]) => {
-    const typeInputStatus = typeName === activeType
+const createEventTypeListTemplate = (activeType, availableTypes) => {
+  const getTemplate = (type) => {
+    const typeInputStatus = type === activeType
       ? 'checked'
       : '';
 
     return (
       `<div class="event__type-item">
-        <input id="event-type-${typeName}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeName}" ${typeInputStatus}>
-        <label class="event__type-label  event__type-label--${typeName}" for="event-type-${typeName}-1">${typeText}</label>
+        <input id="event-type-${type}-1"
+            class="event__type-input  visually-hidden"
+            type="radio" name="event-type"
+            value="${type}" ${typeInputStatus}>
+        <label class="event__type-label  event__type-label--${type}"
+            for="event-type-${type}-1">${ucFirst(type)}
+        </label>
       </div>`
     );
   };
 
-  return Object
-    .entries(availableTypes)
+  return availableTypes
     .map(getTemplate)
     .join('');
 };
 
 const createEventDestinationListTemplate = (availableDestination) => {
-  const getTemplate = (destinationName) => {
+  const getTemplate = ({name}) => {
     return (
-      `<option value="${destinationName}"></option>`
+      `<option value="${name}"></option>`
     );
   };
 
-  return availableDestination
+  return Object
+    .values(availableDestination)
     .map(getTemplate)
     .join('');
 };
 
-const createEventOfferListTemplate = (offers) => {
+const createEventOfferListTemplate = (type, offers) => {
   const getTemplate = (offer) => {
     const offerCheckboxStatus = offer.isChecked
       ? 'checked'
@@ -41,7 +47,10 @@ const createEventOfferListTemplate = (offers) => {
 
     return (
       `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-${offer.id}" type="checkbox" name="event-offer-${offer.type}" ${offerCheckboxStatus}>
+        <input class="event__offer-checkbox  visually-hidden"
+            id="event-offer-${type}-${offer.id}"
+            type="checkbox"
+            name="event-offer-${type}" ${offerCheckboxStatus}>
         <label class="event__offer-label" for="event-offer-${offer.type}-${offer.id}">
           <span class="event__offer-title">Add ${offer.title}</span>
           +€&nbsp;
@@ -56,8 +65,8 @@ const createEventOfferListTemplate = (offers) => {
     .join('');
 };
 
-const createSectionOffersTemplate = (offers) => {
-  const eventOfferListTemplate = createEventOfferListTemplate(offers);
+const createSectionOffersTemplate = (type, offers) => {
+  const eventOfferListTemplate = createEventOfferListTemplate(type, offers);
 
   if (offers.length > 0) {
     return (
@@ -103,14 +112,14 @@ const createSectionDestinationTemplate = (destination) => {
   );
 };
 
-const createEventItemEditTemplate = (event) => {
-  const {availableDestination, availableTypes, destination, type, dateStart, dateEnd, price, offers} = event;
+const createEventItemEditTemplate = (event, availableDestination, availableTypes) => {
+  const {destination, type, dateStart, dateEnd, price, offers} = event;
 
-  const eventTypeListTemplate = createEventTypeListTemplate(availableTypes, type);
+  const eventTypeListTemplate = createEventTypeListTemplate(type, availableTypes);
 
   const eventDestinationListTemplate = createEventDestinationListTemplate(availableDestination);
 
-  const sectionOffersTemplate = createSectionOffersTemplate(offers);
+  const sectionOffersTemplate = createSectionOffersTemplate(type, offers);
 
   const sectionDestinationTemplate = createSectionDestinationTemplate(destination);
 
@@ -121,7 +130,11 @@ const createEventItemEditTemplate = (event) => {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event ${type} icon">
+              <img class="event__type-icon"
+                width="17"
+                height="17"
+                src="img/icons/${type}.png"
+                alt="Event ${type} icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -137,7 +150,12 @@ const createEventItemEditTemplate = (event) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+            <input class="event__input  event__input--destination"
+                id="event-destination-1"
+                type="text"
+                name="event-destination"
+                value="${destination.name}"
+                list="destination-list-1">
             <datalist id="destination-list-1">
               ${eventDestinationListTemplate}
             </datalist>
@@ -145,10 +163,20 @@ const createEventItemEditTemplate = (event) => {
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDate(dateStart, 'YY/MM/DD HH:mm')}">
+            <input class="event__input  event__input--time"
+              id="event-start-time-1"
+              type="text"
+              name="event-start-time"
+              value="${humanizeDate(dateStart, 'YY/MM/DD HH:mm')}"
+             >
             —
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDate(dateEnd, 'YY/MM/DD HH:mm')}">
+            <input class="event__input  event__input--time"
+              id="event-end-time-1"
+              type="text"
+              name="event-end-time"
+              value="${humanizeDate(dateEnd, 'YY/MM/DD HH:mm')}"
+             >
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -175,17 +203,20 @@ const createEventItemEditTemplate = (event) => {
 };
 
 export default class EventItemEdit extends AbstractView {
-  constructor(event) {
+  constructor(event, availableDestination, availableTypes, availableOffers) {
     super();
 
     this._event = event;
+    this._availableDestination = availableDestination;
+    this._availableTypes = availableTypes;
+    this._availableOffers = availableOffers;
 
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
-    return createEventItemEditTemplate(this._event);
+    return createEventItemEditTemplate(this._event, this._availableDestination, this._availableTypes, this._availableOffers);
   }
 
   _rollupClickHandler(evt) {
