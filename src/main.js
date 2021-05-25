@@ -22,4 +22,3 @@ const containerMainContent = document.querySelector('.page-main .page-body__cont
 
 const boardPresenter = new BoardPresenter(containerMainContent);
 boardPresenter.init(events, availableDestination, availableTypes, availableOffers);
-

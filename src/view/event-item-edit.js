@@ -12,8 +12,11 @@ const createEventTypeListTemplate = (activeType, availableTypes) => {
       `<div class="event__type-item">
         <input id="event-type-${type}-1"
             class="event__type-input  visually-hidden"
-            type="radio" name="event-type"
-            value="${type}" ${typeInputStatus}>
+            type="radio"
+            name="event-type"
+            value="${type}" ${typeInputStatus}
+            data-event-type="${type}"
+          >
         <label class="event__type-label  event__type-label--${type}"
             for="event-type-${type}-1">${ucFirst(type)}
         </label>
@@ -214,6 +217,12 @@ export default class EventItemEdit extends AbstractView {
 
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+
+    this
+      .getElement()
+      .querySelector('.event__type-list')
+      .addEventListener('click', this._typeChangeHandler);
   }
 
   getTemplate() {
@@ -252,6 +261,20 @@ export default class EventItemEdit extends AbstractView {
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit();
+  }
+
+  _typeChangeHandler(evt) {
+    if (evt.target.tagName !== 'INPUT') {
+      return;
+    }
+
+    const eventType = evt.target.dataset.eventType;
+
+    this.updateData({
+      type: eventType,
+      offers: this._availableOffers[eventType],
+      hasOffers: this._availableOffers[eventType].length > 0,
+    });
   }
 
   setRollupClickHandler(callback) {
