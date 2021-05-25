@@ -218,11 +218,17 @@ export default class EventItemEdit extends AbstractView {
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
 
     this
       .getElement()
       .querySelector('.event__type-list')
       .addEventListener('click', this._typeChangeHandler);
+
+    this
+      .getElement()
+      .querySelector('.event__input--destination')
+      .addEventListener('change', this._destinationChangeHandler);
   }
 
   getTemplate() {
@@ -274,6 +280,18 @@ export default class EventItemEdit extends AbstractView {
       type: eventType,
       offers: this._availableOffers[eventType],
       hasOffers: this._availableOffers[eventType].length > 0,
+    });
+  }
+
+  _destinationChangeHandler(evt) {
+    const destination = this._availableDestination.find((item) => item.name === evt.target.value);
+
+    if (!destination) {
+      return;
+    }
+
+    this.updateData({
+      destination,
     });
   }
 
