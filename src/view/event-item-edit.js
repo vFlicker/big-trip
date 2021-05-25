@@ -15,7 +15,6 @@ const createEventTypeListTemplate = (activeType, availableTypes) => {
             type="radio"
             name="event-type"
             value="${type}" ${typeInputStatus}
-            data-event-type="${type}"
           >
         <label class="event__type-label  event__type-label--${type}"
             for="event-type-${type}-1">${ucFirst(type)}
@@ -274,7 +273,7 @@ export default class EventItemEdit extends AbstractView {
       return;
     }
 
-    const eventType = evt.target.dataset.eventType;
+    const eventType = evt.target.value;
 
     this.updateData({
       type: eventType,
