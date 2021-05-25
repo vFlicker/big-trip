@@ -74,7 +74,7 @@ export default class Board {
 
   _handleEventChange(updateEvent) {
     this._boardEvents = updateItem(this._boardEvents, updateEvent);
-    this._eventPresenter[updateEvent.id].init(updateEvent);
+    this._eventPresenter[updateEvent.id].init(updateEvent, this._availableDestination, this._availableTypes, this._availableOffers);
   }
 
   _handleModeChange() {
