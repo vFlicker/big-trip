@@ -224,7 +224,7 @@ export default class EventItemEdit extends AbstractView {
     this
       .getElement()
       .querySelector('.event__type-list')
-      .addEventListener('click', this._typeChangeHandler);
+      .addEventListener('change', this._typeChangeHandler);
 
     this
       .getElement()
@@ -282,6 +282,7 @@ export default class EventItemEdit extends AbstractView {
       return;
     }
 
+    evt.preventDefault();
     const eventType = evt.target.value;
 
     this.updateData({
@@ -292,6 +293,7 @@ export default class EventItemEdit extends AbstractView {
   }
 
   _destinationChangeHandler(evt) {
+    evt.preventDefault();
     const destination = this._availableDestination.find((item) => item.name === evt.target.value);
 
     if (!destination) {
