@@ -90,36 +90,36 @@ export const availableTypes = ['taxi', 'bus', 'train', 'transport', 'ship', 'dri
 
 export const availableOffers = {
   taxi: [
-    {id: 1, title: 'Order Uber', price: 20, isActive: false},
+    {id: 1, title: 'Order Uber', price: 20, isChecked: false},
   ],
   bus: [
-    {id: 1, title: 'Choose seats', price: 2, isActive: false},
+    {id: 1, title: 'Choose seats', price: 2, isChecked: false},
   ],
   train: [
-    {id: 1, title: 'Travel by train', price: 40, isActive: false},
+    {id: 1, title: 'Travel by train', price: 40, isChecked: false},
   ],
   transport: [],
   ship: [],
   drive: [
-    {id: 1, title: 'Rent a car', price: 200, isActive: false},
+    {id: 1, title: 'Rent a car', price: 200, isChecked: false},
   ],
   flight: [
-    {id: 1, title: 'Switch to comfort', price: 80, isActive: false},
-    {id: 2, title: 'Add luggage', price: 50, isActive: false},
-    {id: 3, title: 'Add meal', price: 15, isActive: false},
-    {id: 4, title: 'Choose seats', price: 5, isActive: false},
+    {id: 1, title: 'Switch to comfort', price: 80, isChecked: false},
+    {id: 2, title: 'Add luggage', price: 50, isChecked: false},
+    {id: 3, title: 'Add meal', price: 15, isChecked: false},
+    {id: 4, title: 'Choose seats', price: 5, isChecked: false},
   ],
   'check-in': [
-    {id: 1, title: 'Add breakfast', price: 50, isActive: false},
-    {id: 2, title: 'Switch to comfort class', price: 100, isActive: false},
+    {id: 1, title: 'Add breakfast', price: 50, isChecked: false},
+    {id: 2, title: 'Switch to comfort class', price: 100, isChecked: false},
   ],
   sightseeing: [
-    {id: 1, title: 'Add meal', price: 15, isActive: false},
-    {id: 2, title: 'Lunch in city', price: 30, isActive: false},
-    {id: 3, title: 'Book tickets', price: 40, isActive: false},
+    {id: 1, title: 'Add meal', price: 15, isChecked: false},
+    {id: 2, title: 'Lunch in city', price: 30, isChecked: false},
+    {id: 3, title: 'Book tickets', price: 40, isChecked: false},
   ],
   restaurant: [
-    {id: 1,title: 'Add luggage', price: 45, isActive: false},
-    {id: 2, title: 'Add meal', price: 15, isActive: false},
+    {id: 1,title: 'Add luggage', price: 45, isChecked: false},
+    {id: 2, title: 'Add meal', price: 15, isChecked: false},
   ],
 };

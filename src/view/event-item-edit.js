@@ -50,10 +50,11 @@ const createEventOfferListTemplate = (type, offers) => {
     return (
       `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden"
-            id="event-offer-${type}-${offer.id}"
-            type="checkbox"
-            name="event-offer-${type}" ${offerCheckboxStatus}>
-        <label class="event__offer-label" for="event-offer-${offer.type}-${offer.id}">
+          id="event-offer-${type}-${offer.id}"
+          type="checkbox"
+          name="event-offer-${type}" ${offerCheckboxStatus}
+          data-event-offer-id="${offer.id}">
+        <label class="event__offer-label" for="event-offer-${type}-${offer.id}">
           <span class="event__offer-title">Add ${offer.title}</span>
           +€&nbsp;
           <span class="event__offer-price">${offer.price}</span>
@@ -218,6 +219,7 @@ export default class EventItemEdit extends AbstractView {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._offerChangeHandler = this._offerChangeHandler.bind(this);
 
     this
       .getElement()
@@ -228,6 +230,13 @@ export default class EventItemEdit extends AbstractView {
       .getElement()
       .querySelector('.event__input--destination')
       .addEventListener('change', this._destinationChangeHandler);
+
+    if (this._data.hasOffers) {
+      this
+        .getElement()
+        .querySelector('.event__available-offers')
+        .addEventListener('change', this._offerChangeHandler);
+    }
   }
 
   getTemplate() {
@@ -291,6 +300,27 @@ export default class EventItemEdit extends AbstractView {
 
     this.updateData({
       destination,
+    });
+  }
+
+  _offerChangeHandler(evt) {
+    if (evt.target.tagName !== 'INPUT') {
+      return;
+    }
+
+    evt.preventDefault();
+    const currentOfferId = Number(evt.target.dataset.eventOfferId);
+    const offers = this._data.offers;
+
+    for (const offer of offers) {
+      if (offer.id === currentOfferId) {
+        offer.isChecked = !offer.isChecked;
+        break;
+      }
+    }
+
+    this.updateData({
+      offers,
     });
   }
 
