@@ -222,27 +222,7 @@ export default class EventItemEdit extends AbstractView {
     this._offerChangeHandler = this._offerChangeHandler.bind(this);
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
 
-    this
-      .getElement()
-      .querySelector('.event__type-list')
-      .addEventListener('change', this._typeChangeHandler);
-
-    this
-      .getElement()
-      .querySelector('.event__input--destination')
-      .addEventListener('input', this._destinationChangeHandler);
-
-    if (this._data.hasOffers) {
-      this
-        .getElement()
-        .querySelector('.event__available-offers')
-        .addEventListener('change', this._offerChangeHandler);
-    }
-
-    this
-      .getElement()
-      .querySelector('.event__input--price')
-      .addEventListener('input', this._priceChangeHandler);
+    this._setInnerHandlers();
   }
 
   getTemplate() {
@@ -257,6 +237,8 @@ export default class EventItemEdit extends AbstractView {
     const newElement = this.getElement();
 
     parent.replaceChild(newElement, prevElement);
+
+    this.restoreHandlers();
   }
 
   updateData(update) {
@@ -349,6 +331,30 @@ export default class EventItemEdit extends AbstractView {
     });
   }
 
+  _setInnerHandlers() {
+    this
+      .getElement()
+      .querySelector('.event__type-list')
+      .addEventListener('change', this._typeChangeHandler);
+
+    this
+      .getElement()
+      .querySelector('.event__input--destination')
+      .addEventListener('input', this._destinationChangeHandler);
+
+    if (this._data.hasOffers) {
+      this
+        .getElement()
+        .querySelector('.event__available-offers')
+        .addEventListener('change', this._offerChangeHandler);
+    }
+
+    this
+      .getElement()
+      .querySelector('.event__input--price')
+      .addEventListener('input', this._priceChangeHandler);
+  }
+
   setRollupClickHandler(callback) {
     this._callback.rollupClick = callback;
 
@@ -364,6 +370,12 @@ export default class EventItemEdit extends AbstractView {
     this
       .getElement()
       .addEventListener('submit', this._formSubmitHandler);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setRollupClickHandler(this._callback.rollupClick);
+    this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
   static parseEventToData(event) {
