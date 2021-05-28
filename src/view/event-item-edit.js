@@ -230,7 +230,7 @@ export default class EventItemEdit extends AbstractView {
     this
       .getElement()
       .querySelector('.event__input--destination')
-      .addEventListener('change', this._destinationChangeHandler);
+      .addEventListener('input', this._destinationChangeHandler);
 
     if (this._data.hasOffers) {
       this
@@ -242,7 +242,7 @@ export default class EventItemEdit extends AbstractView {
     this
       .getElement()
       .querySelector('.event__input--price')
-      .addEventListener('change', this._priceChangeHandler);
+      .addEventListener('input', this._priceChangeHandler);
   }
 
   getTemplate() {
@@ -303,6 +303,8 @@ export default class EventItemEdit extends AbstractView {
     const destination = this._availableDestination.find((item) => item.name === evt.target.value);
 
     if (!destination) {
+      evt.target.setCustomValidity('The destination is unavailable');
+      evt.target.reportValidity();
       return;
     }
 
@@ -337,6 +339,8 @@ export default class EventItemEdit extends AbstractView {
     const price = Number(evt.target.value);
 
     if (isNaN(price) || !price) {
+      evt.target.setCustomValidity('Invalid price value');
+      evt.target.reportValidity();
       return;
     }
 
