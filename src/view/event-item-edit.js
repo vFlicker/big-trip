@@ -391,4 +391,16 @@ export default class EventItemEdit extends AbstractView {
       },
     );
   }
+
+  static parseStateToEvent(state) {
+    state = Object.assign({}, state);
+
+    if (!state.hasOffers) {
+      state.hasOffers = null;
+    }
+
+    delete state.hasOffers;
+
+    return state;
+  }
 }
