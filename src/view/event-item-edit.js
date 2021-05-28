@@ -266,7 +266,7 @@ export default class EventItemEdit extends AbstractView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(EventItemEdit.parseStateToEvent(this._state));
   }
 
   _typeChangeHandler(evt) {

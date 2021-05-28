@@ -101,7 +101,8 @@ export default class Event {
     this._replaceFormToEvent();
   }
 
-  _handleItemEditSubmit() {
+  _handleItemEditSubmit(event) {
+    this._changeData(event);
     this._replaceFormToEvent();
   }
 
