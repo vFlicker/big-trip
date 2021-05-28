@@ -376,6 +376,10 @@ export default class EventItemEdit extends AbstractView {
       .addEventListener('submit', this._formSubmitHandler);
   }
 
+  reset(event) {
+    this.updateState(EventItemEdit.parseStateToEvent(event));
+  }
+
   restoreHandlers() {
     this._setInnerHandlers();
     this.setRollupClickHandler(this._callback.rollupClick);
