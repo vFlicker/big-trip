@@ -209,7 +209,6 @@ export default class EventItemEdit extends AbstractView {
   constructor(event, availableDestination, availableTypes, availableOffers) {
     super();
 
-    this._event = event;
     this._availableDestination = availableDestination;
     this._availableTypes = availableTypes;
     this._availableOffers = availableOffers;
@@ -257,16 +256,6 @@ export default class EventItemEdit extends AbstractView {
     }
 
     this.updateElement();
-  }
-
-  _rollupClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.rollupClick();
-  }
-
-  _formSubmitHandler(evt) {
-    evt.preventDefault();
-    this._callback.formSubmit(EventItemEdit.parseStateToEvent(this._state));
   }
 
   _typeChangeHandler(evt) {
@@ -357,6 +346,16 @@ export default class EventItemEdit extends AbstractView {
       .getElement()
       .querySelector('.event__input--price')
       .addEventListener('input', this._priceChangeHandler);
+  }
+
+  _rollupClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.rollupClick();
+  }
+
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit(EventItemEdit.parseStateToEvent(this._state));
   }
 
   setRollupClickHandler(callback) {
