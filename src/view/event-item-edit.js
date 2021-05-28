@@ -241,7 +241,7 @@ export default class EventItemEdit extends AbstractView {
     this.restoreHandlers();
   }
 
-  updateData(update) {
+  updateData(update, justDataUpdating) {
     if (!update) {
       return;
     }
@@ -251,6 +251,10 @@ export default class EventItemEdit extends AbstractView {
       this._data,
       update,
     );
+
+    if (justDataUpdating) {
+      return;
+    }
 
     this.updateElement();
   }
@@ -292,7 +296,7 @@ export default class EventItemEdit extends AbstractView {
 
     this.updateData({
       destination,
-    });
+    }, true);
   }
 
   _offerChangeHandler(evt) {
@@ -328,7 +332,7 @@ export default class EventItemEdit extends AbstractView {
 
     this.updateData({
       price,
-    });
+    }, true);
   }
 
   _setInnerHandlers() {
