@@ -115,8 +115,8 @@ const createSectionDestinationTemplate = (destination) => {
   );
 };
 
-const createEventItemEditTemplate = (data, availableDestination, availableTypes) => {
-  const {destination, type, dateStart, dateEnd, price, offers, hasOffers} = data;
+const createEventItemEditTemplate = (state, availableDestination, availableTypes) => {
+  const {destination, type, dateStart, dateEnd, price, offers, hasOffers} = state;
 
   const eventTypeListTemplate = createEventTypeListTemplate(type, availableTypes);
 
@@ -213,7 +213,7 @@ export default class EventItemEdit extends AbstractView {
     this._availableDestination = availableDestination;
     this._availableTypes = availableTypes;
     this._availableOffers = availableOffers;
-    this._data = EventItemEdit.parseEventToData(event);
+    this._state = EventItemEdit.parseEventToState(event);
 
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -226,7 +226,7 @@ export default class EventItemEdit extends AbstractView {
   }
 
   getTemplate() {
-    return createEventItemEditTemplate(this._data, this._availableDestination, this._availableTypes, this._availableOffers);
+    return createEventItemEditTemplate(this._state, this._availableDestination, this._availableTypes, this._availableOffers);
   }
 
   updateElement() {
@@ -241,18 +241,18 @@ export default class EventItemEdit extends AbstractView {
     this.restoreHandlers();
   }
 
-  updateData(update, justDataUpdating) {
+  updateState(update, justStateUpdating) {
     if (!update) {
       return;
     }
 
-    this._data = Object.assign(
+    this._state = Object.assign(
       {},
-      this._data,
+      this._state,
       update,
     );
 
-    if (justDataUpdating) {
+    if (justStateUpdating) {
       return;
     }
 
@@ -277,7 +277,7 @@ export default class EventItemEdit extends AbstractView {
     evt.preventDefault();
     const eventType = evt.target.value;
 
-    this.updateData({
+    this.updateState({
       type: eventType,
       offers: this._availableOffers[eventType],
       hasOffers: this._availableOffers[eventType].length > 0,
@@ -294,7 +294,7 @@ export default class EventItemEdit extends AbstractView {
       return;
     }
 
-    this.updateData({
+    this.updateState({
       destination,
     }, true);
   }
@@ -306,7 +306,7 @@ export default class EventItemEdit extends AbstractView {
 
     evt.preventDefault();
     const currentOfferId = Number(evt.target.dataset.eventOfferId);
-    const offers = this._data.offers;
+    const offers = this._state.offers;
 
     for (const offer of offers) {
       if (offer.id === currentOfferId) {
@@ -315,7 +315,7 @@ export default class EventItemEdit extends AbstractView {
       }
     }
 
-    this.updateData({
+    this.updateState({
       offers,
     });
   }
@@ -330,7 +330,7 @@ export default class EventItemEdit extends AbstractView {
       return;
     }
 
-    this.updateData({
+    this.updateState({
       price,
     }, true);
   }
@@ -346,7 +346,7 @@ export default class EventItemEdit extends AbstractView {
       .querySelector('.event__input--destination')
       .addEventListener('input', this._destinationChangeHandler);
 
-    if (this._data.hasOffers) {
+    if (this._state.hasOffers) {
       this
         .getElement()
         .querySelector('.event__available-offers')
@@ -382,7 +382,7 @@ export default class EventItemEdit extends AbstractView {
     this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
-  static parseEventToData(event) {
+  static parseEventToState(event) {
     return Object.assign(
       {},
       event,
