@@ -220,6 +220,7 @@ export default class EventItemEdit extends AbstractView {
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._offerChangeHandler = this._offerChangeHandler.bind(this);
+    this._priceChangeHandler = this._priceChangeHandler.bind(this);
 
     this
       .getElement()
@@ -237,6 +238,11 @@ export default class EventItemEdit extends AbstractView {
         .querySelector('.event__available-offers')
         .addEventListener('change', this._offerChangeHandler);
     }
+
+    this
+      .getElement()
+      .querySelector('.event__input--price')
+      .addEventListener('change', this._priceChangeHandler);
   }
 
   getTemplate() {
@@ -323,6 +329,19 @@ export default class EventItemEdit extends AbstractView {
 
     this.updateData({
       offers,
+    });
+  }
+
+  _priceChangeHandler(evt) {
+    evt.preventDefault();
+    const price = Number(evt.target.value);
+
+    if (isNaN(price) || !price) {
+      return;
+    }
+
+    this.updateData({
+      price,
     });
   }
 
