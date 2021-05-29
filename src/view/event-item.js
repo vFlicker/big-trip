@@ -33,18 +33,18 @@ const createEventItemTemplate = (event) => {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${humanizeDate(dateStart, 'YYYY-MM-DD')}">${humanizeDate(dateStart, 'MMM D')}</time>
+        <time class="event__date" datetime="${humanizeDate(dateStart, 'MM-DD-YYYY')}">${humanizeDate(dateStart, 'MMM D')}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
         </div>
         <h3 class="event__title">${type} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${humanizeDate(dateStart, 'YYYY-MM-DD')}T${humanizeDate(dateStart, 'HH:mm')}">
+            <time class="event__start-time" datetime="${humanizeDate(dateStart, 'MM-DD-YYYY')}T${humanizeDate(dateStart, 'HH:mm')}">
               ${humanizeDate(dateStart, 'HH:mm')}
             </time>
             &mdash;
-            <time class="event__end-time" datetime="${humanizeDate(dateEnd, 'YYYY-MM-DD')}T${humanizeDate(dateEnd, 'HH:mm')}">
+            <time class="event__end-time" datetime="${humanizeDate(dateEnd, 'MM-DD-YYYY')}T${humanizeDate(dateEnd, 'HH:mm')}">
               ${humanizeDate(dateEnd, 'HH:mm')}
             </time>
           </p>

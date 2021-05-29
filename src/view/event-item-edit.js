@@ -170,7 +170,7 @@ const createEventItemEditTemplate = (state, availableDestination, availableTypes
               id="event-start-time-1"
               type="text"
               name="event-start-time"
-              value="${humanizeDate(dateStart, 'YY/MM/DD HH:mm')}"
+              value="${humanizeDate(dateStart, 'MM/DD/YY HH:mm')}"
              >
             —
             <label class="visually-hidden" for="event-end-time-1">To</label>
@@ -178,7 +178,7 @@ const createEventItemEditTemplate = (state, availableDestination, availableTypes
               id="event-end-time-1"
               type="text"
               name="event-end-time"
-              value="${humanizeDate(dateEnd, 'YY/MM/DD HH:mm')}"
+              value="${humanizeDate(dateEnd, 'MM/DD/YY HH:mm')}"
              >
           </div>
 

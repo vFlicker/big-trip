@@ -34,7 +34,7 @@ export const getDuration = (firstDuration, secondDuration) => {
   return dayjs(firstDuration).diff(dayjs(secondDuration));
 };
 
-export const humanizeDate = (date, formatter = 'DD-MM-YYYY') => {
+export const humanizeDate = (date, formatter = 'MM-DD-YYYY') => {
   return dayjs(date).format(formatter);
 };
 
