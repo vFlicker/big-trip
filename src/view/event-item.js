@@ -3,13 +3,15 @@ import { humanizeDuration, humanizeDate } from '../utils/date';
 
 const createOfferListTemplate = (offers) => {
   const getTemplate = (offer) => {
-    return (
-      `<li class="event__offer">
-        <span class="event__offer-title">${offer.title}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
-      </li>`
-    );
+    if(offer.isChecked) {
+      return (
+        `<li class="event__offer">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </li>`
+      );
+    }
   };
 
   return offers

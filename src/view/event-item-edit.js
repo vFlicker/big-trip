@@ -295,7 +295,8 @@ export default class EventItemEdit extends AbstractView {
 
     evt.preventDefault();
     const currentOfferId = Number(evt.target.dataset.eventOfferId);
-    const offers = this._state.offers;
+
+    const offers = this._state.offers.map((obj) => Object.assign({}, obj));
 
     for (const offer of offers) {
       if (offer.id === currentOfferId) {
