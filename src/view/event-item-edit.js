@@ -285,7 +285,7 @@ export default class EventItemEdit extends AbstractView {
 
     this.updateState({
       destination,
-    }, true);
+    });
   }
 
   _offerChangeHandler(evt) {
