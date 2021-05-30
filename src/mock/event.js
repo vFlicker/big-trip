@@ -1,5 +1,6 @@
 import { getDateStart, getDateEnd } from '../utils/date';
-import { getRandomValueFromArray, getRandomInteger, getRandomItems, MIN_PRICE, MAX_PRICE } from './utils';
+import { getRandomItems, getRandomInteger, getRandomValueFromArray, MIN_PRICE, MAX_PRICE } from './utils';
+import { cloneArrayOfObjects } from '../utils/common';
 import { nanoid } from 'nanoid';
 
 const getDescription = () => {
@@ -46,7 +47,7 @@ const getDestination = () => {
 };
 
 const getOffers = (type) => {
-  const filteredOffers = [...availableOffers[type]];
+  const filteredOffers = cloneArrayOfObjects(availableOffers[type]);
 
   if (filteredOffers.length > 0) {
     filteredOffers.forEach((offer) => {

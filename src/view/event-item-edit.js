@@ -1,5 +1,6 @@
 import AbstractView from './abstract';
 import { humanizeDate } from '../utils/date';
+import { ucFirst, cloneArrayOfObjects } from '../utils/common';
 import { DATEPICKER_BASIC_SETTINGS } from '../utils/const';
 import flatpickr from 'flatpickr';
 
@@ -305,7 +306,7 @@ export default class EventItemEdit extends AbstractView {
     evt.preventDefault();
     const currentOfferId = Number(evt.target.dataset.eventOfferId);
 
-    const offers = this._state.offers.map((obj) => Object.assign({}, obj));
+    const offers = cloneArrayOfObjects(this._state.offers);
 
     for (const offer of offers) {
       if (offer.id === currentOfferId) {
