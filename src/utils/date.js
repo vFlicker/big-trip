@@ -1,10 +1,21 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import { getRandomInteger } from '../mock/utils';
+
+dayjs.extend(duration)
 
 const minDaysOffset = -7;
 const maxDaysOffset = 7;
 const maxHoursOffset = 23;
 const maxMinutesOffset = 59;
+
+const getDuration = (ms) => {
+  return dayjs.duration(ms);
+};
+
+const getDurationBetweenDates = (dateStart, dateEnd) => {
+  return getDuration(getDateDifference(dateStart, dateEnd));
+}
 
 export const getDateStart = () => {
   const days = getRandomInteger(minDaysOffset, maxDaysOffset);
@@ -30,20 +41,30 @@ export const getDateEnd = (dateStart) => {
     .toDate();
 };
 
-export const getDuration = (firstDuration, secondDuration) => {
-  return dayjs(firstDuration).diff(dayjs(secondDuration));
+export const getDateDifference = (dateStart, dateEnd) => {
+  return dayjs(dateEnd).diff(dayjs(dateStart));
+};
+
+export const humanizeDurationBetweenDates = (dateStart, dateEnd) => {
+  const durationBetweenDates = getDurationBetweenDates(dateStart, dateEnd);
+
+  const days = durationBetweenDates.days();
+  const hours = durationBetweenDates.hours();
+  const minutes = durationBetweenDates.minutes();
+
+  if (days) {
+    return `${days}D ${hours}H ${minutes}M`;
+  }
+
+  if (hours) {
+    return `${hours}H ${minutes}M`;
+  }
+
+  return `${minutes}M`;
 };
 
 export const humanizeDate = (date, formatter = 'MM-DD-YYYY') => {
   return dayjs(date).format(formatter);
-};
-
-export const humanizeDuration = (dateStart, dateEnd) => {
-  const days = humanizeDate(getDuration(dateEnd, dateStart), 'D');
-  const hours = humanizeDate(getDuration(dateEnd, dateStart), 'HH');
-  const minutes = humanizeDate(getDuration(dateEnd, dateStart), 'mm');
-
-  return `${days}D ${hours}H ${minutes}M`;
 };
 
 export const getEventPeriod = (eventStart, eventEnd) => {

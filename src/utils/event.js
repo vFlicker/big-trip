@@ -1,8 +1,8 @@
-import {getDuration} from './date';
+import {getDateDifference} from './date';
 
 export const sortByTime = (firstEvent, secondEvent) => {
-  const firstDuration = getDuration(firstEvent.dateEnd, firstEvent.dateStart);
-  const secondDuration = getDuration(secondEvent.dateEnd, secondEvent.dateStart);
+  const firstDuration = getDateDifference(firstEvent.dateEnd, firstEvent.dateStart);
+  const secondDuration = getDateDifference(secondEvent.dateEnd, secondEvent.dateStart);
 
   return firstDuration - secondDuration;
 };
