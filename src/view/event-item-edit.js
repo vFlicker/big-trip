@@ -1,6 +1,9 @@
 import AbstractView from './abstract';
 import { humanizeDate } from '../utils/date';
-import { ucFirst } from '../utils/common';
+import { DATEPICKER_BASIC_SETTINGS } from '../utils/const';
+import flatpickr from 'flatpickr';
+
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const createEventTypeListTemplate = (activeType, availableTypes) => {
   const getTemplate = (type) => {
@@ -209,19 +212,25 @@ export default class EventItemEdit extends AbstractView {
   constructor(event, availableDestination, availableTypes, availableOffers) {
     super();
 
+    this._state = EventItemEdit.parseEventToState(event);
     this._availableDestination = availableDestination;
     this._availableTypes = availableTypes;
     this._availableOffers = availableOffers;
-    this._state = EventItemEdit.parseEventToState(event);
+    this._startDatePicker = null;
+    this._endDatePicker = null;
 
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
+    this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._offerChangeHandler = this._offerChangeHandler.bind(this);
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setStartDatePicker();
+    this._setEndDatePicker();
   }
 
   getTemplate() {
@@ -349,6 +358,64 @@ export default class EventItemEdit extends AbstractView {
       .addEventListener('input', this._priceChangeHandler);
   }
 
+  _startDateChangeHandler([userDate]) {
+    this.updateState({
+      dateStart: userDate,
+    });
+  }
+
+  _endDateChangeHandler([userDate]) {
+    this.updateState({
+      dateEnd: userDate,
+    });
+  }
+
+  _setStartDatePicker() {
+    if (this._startDatePicker) {
+      this._startDatePicker.destroy();
+      this._startDatePicker = null;
+    }
+
+    this._startDatePicker = flatpickr(
+      this
+        .getElement()
+        .querySelector('.event__field-group--time input[name=event-start-time]'),
+
+      Object.assign(
+        {},
+        DATEPICKER_BASIC_SETTINGS,
+        {
+          minDate: Date.now(),
+          defaultDate: this._state.dateStart,
+          onClose: this._startDateChangeHandler,
+        }
+      )
+    )
+  }
+
+  _setEndDatePicker() {
+    if (this._endDatePicker) {
+      this._endDatePicker.destroy();
+      this._endDatePicker = null;
+    }
+
+    this._endDatePicker = flatpickr(
+      this
+        .getElement()
+        .querySelector('.event__field-group--time input[name=event-end-time]'),
+
+      Object.assign(
+        {},
+        DATEPICKER_BASIC_SETTINGS,
+        {
+          minDate: this._state.dateStart,
+          defaultDate: this._state.dateEnd,
+          onClose: this._endDateChangeHandler,
+        }
+      )
+    )
+  }
+
   _rollupClickHandler(evt) {
     evt.preventDefault();
     this._callback.rollupClick();
@@ -382,6 +449,8 @@ export default class EventItemEdit extends AbstractView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setStartDatePicker();
+    this._setEndDatePicker();
     this.setRollupClickHandler(this._callback.rollupClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
   }
