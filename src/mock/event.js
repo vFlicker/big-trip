@@ -31,8 +31,8 @@ const getAvailableDestinations = () => {
     destinations.push(
       {
         name: name,
-        description: getDescription(),
-        photos: generatePhotos(),
+        description: Boolean(getRandomInteger(0, 1)) ? getDescription() : '',
+        photos: Boolean(getRandomInteger(0, 1)) ? generatePhotos() : [],
       },
     );
   }

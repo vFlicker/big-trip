@@ -72,10 +72,10 @@ const createEventOfferListTemplate = (type, offers) => {
     .join('');
 };
 
-const createSectionOffersTemplate = (type, offers, hasOffers) => {
-  const eventOfferListTemplate = createEventOfferListTemplate(type, offers, hasOffers);
-
+const createSectionOffersTemplate = (hasOffers, type, offers) => {
   if (hasOffers) {
+    const eventOfferListTemplate = createEventOfferListTemplate(type, offers);
+
     return (
       `<section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -102,33 +102,69 @@ const createEventPhotoListTemplate = (photos) => {
     .join('');
 };
 
-const createSectionDestinationTemplate = (destination) => {
-  const eventPhotoListTemplate = createEventPhotoListTemplate(destination.photos);
+const createContainerPhotosTemplate = (hasPhotos, photos) => {
+  if (hasPhotos) {
+    const eventPhotoListTemplate = createEventPhotoListTemplate(photos);
 
-  return (
-    `<section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destination.description}</p>
-
-      <div class="event__photos-container">
+    return (
+      `<div class="event__photos-container">
         <div class="event__photos-tape">
           ${eventPhotoListTemplate}
         </div>
-      </div>
-    </section>`
-  );
+      </div>`
+    );
+  }
+
+  return '';
+}
+
+const createSectionDestinationTemplate = (hasDestination, destination, hasDescription, hasPhotos) => {
+  if (hasDestination) {
+    const {photos, description} = destination;
+
+    const descriptionTemplate = hasDescription
+      ? `<p class="event__destination-description">${description}</p>`
+      : ''
+
+    const containerPhotosTemplate = createContainerPhotosTemplate(hasPhotos, photos);
+
+    return (
+      `<section class="event__section  event__section--destination">
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        ${descriptionTemplate}
+        ${containerPhotosTemplate}
+      </section>`
+    );
+  }
+
+  return '';
 };
 
-const createEventItemEditTemplate = (state, availableDestination, availableTypes) => {
-  const {destination, type, dateStart, dateEnd, price, offers, hasOffers} = state;
+const createSectionDetailsTemplate = (hasDetails, hasOffers, type, offers, hasDestination, destination, hasDescription, hasPhotos) => {
+  if (hasDetails) {
+    const sectionOffersTemplate = createSectionOffersTemplate(hasOffers, type, offers);
+
+    const sectionDestinationTemplate = createSectionDestinationTemplate(hasDestination, destination, hasDescription, hasPhotos);
+
+    return (
+      `<section class="event__details">
+        ${sectionOffersTemplate}
+        ${sectionDestinationTemplate}
+      </section>`
+    )
+  }
+
+  return '';
+}
+
+const createEventItemEditTemplate = (state, availableTypes, availableDestination) => {
+  const {destination, type, dateStart, dateEnd, price, offers, hasOffers, hasDescription, hasPhotos, hasDestination, hasDetails} = state;
 
   const eventTypeListTemplate = createEventTypeListTemplate(type, availableTypes);
 
   const eventDestinationListTemplate = createEventDestinationListTemplate(availableDestination);
 
-  const sectionOffersTemplate = createSectionOffersTemplate(type, offers, hasOffers);
-
-  const sectionDestinationTemplate = createSectionDestinationTemplate(destination);
+  const sectionDetailsTemplate = createSectionDetailsTemplate(hasDetails, hasOffers, type, offers, hasDestination, destination, hasDescription, hasPhotos);
 
   return (
     `<li class="trip-events__item">
@@ -200,10 +236,8 @@ const createEventItemEditTemplate = (state, availableDestination, availableTypes
             <span class="visually-hidden">Open event</span>
           </button>
         </header>
-        <section class="event__details">
-          ${sectionOffersTemplate}
-          ${sectionDestinationTemplate}
-        </section>
+
+        ${sectionDetailsTemplate}
       </form>
     </li>`
   );
@@ -235,7 +269,7 @@ export default class EventItemEdit extends AbstractView {
   }
 
   getTemplate() {
-    return createEventItemEditTemplate(this._state, this._availableDestination, this._availableTypes, this._availableOffers);
+    return createEventItemEditTemplate(this._state, this._availableTypes, this._availableDestination);
   }
 
   updateElement() {
@@ -275,17 +309,20 @@ export default class EventItemEdit extends AbstractView {
 
     evt.preventDefault();
     const eventType = evt.target.value;
+    const hasOffers = this._availableOffers[eventType].length !== 0;
 
     this.updateState({
       type: eventType,
       offers: this._availableOffers[eventType],
-      hasOffers: this._availableOffers[eventType].length > 0,
+      hasOffers,
+      hasDetails: hasOffers || this._state.hasDestination,
     });
   }
 
   _destinationChangeHandler(evt) {
     evt.preventDefault();
-    const destination = this._availableDestination.find((item) => item.name === evt.target.value);
+    const destination = this._availableDestination
+      .find((destination) => destination.name === evt.target.value);
 
     if (!destination) {
       evt.target.setCustomValidity('The destination is unavailable');
@@ -293,8 +330,16 @@ export default class EventItemEdit extends AbstractView {
       return;
     }
 
+    const hasDescription = destination.description.length !== 0;
+    const hasPhotos = destination.photos.length !== 0;
+    const hasDestination = hasDescription || hasPhotos;
+
     this.updateState({
       destination,
+      hasDescription,
+      hasPhotos,
+      hasDestination,
+      hasDetails: this._state.hasOffers || hasDestination,
     });
   }
 
@@ -457,11 +502,20 @@ export default class EventItemEdit extends AbstractView {
   }
 
   static parseEventToState(event) {
+    const hasOffers = event.offers.length !== 0;
+    const hasDescription = event.destination.description.length !== 0;
+    const hasPhotos = event.destination.photos.length !== 0;
+    const hasDestination = hasDescription || hasPhotos;
+
     return Object.assign(
       {},
       event,
       {
-        hasOffers: event.offers.length > 0,
+        hasOffers,
+        hasDescription,
+        hasPhotos,
+        hasDestination,
+        hasDetails: hasOffers || hasDestination,
       },
     );
   }
@@ -473,7 +527,27 @@ export default class EventItemEdit extends AbstractView {
       state.hasOffers = null;
     }
 
+    if (!state.hasDescription) {
+      state.hasDescription = null;
+    }
+
+    if (!state.hasPhotos) {
+      state.hasPhotos = null;
+    }
+
+    if (!state.hasDestination) {
+      state.hasDestination = null;
+    }
+
+    if (!state.hasDetails) {
+      state.hasDetails = null;
+    }
+
     delete state.hasOffers;
+    delete state.hasDescription;
+    delete state.hasPhotos;
+    delete state.hasDestination;
+    delete state.hasDetails;
 
     return state;
   }
