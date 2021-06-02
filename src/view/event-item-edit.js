@@ -116,7 +116,7 @@ const createContainerPhotosTemplate = (hasPhotos, photos) => {
   }
 
   return '';
-}
+};
 
 const createSectionDestinationTemplate = (hasDestination, destination, hasDescription, hasPhotos) => {
   if (hasDestination) {
@@ -124,7 +124,7 @@ const createSectionDestinationTemplate = (hasDestination, destination, hasDescri
 
     const descriptionTemplate = hasDescription
       ? `<p class="event__destination-description">${description}</p>`
-      : ''
+      : '';
 
     const containerPhotosTemplate = createContainerPhotosTemplate(hasPhotos, photos);
 
@@ -151,11 +151,11 @@ const createSectionDetailsTemplate = (hasDetails, hasOffers, type, offers, hasDe
         ${sectionOffersTemplate}
         ${sectionDestinationTemplate}
       </section>`
-    )
+    );
   }
 
   return '';
-}
+};
 
 const createEventItemEditTemplate = (state, availableTypes, availableDestination) => {
   const {destination, type, dateStart, dateEnd, price, offers, hasOffers, hasDescription, hasPhotos, hasDestination, hasDetails} = state;
@@ -434,9 +434,9 @@ export default class EventItemEdit extends AbstractView {
           minDate: Date.now(),
           defaultDate: this._state.dateStart,
           onClose: this._startDateChangeHandler,
-        }
-      )
-    )
+        },
+      ),
+    );
   }
 
   _setEndDatePicker() {
@@ -457,9 +457,9 @@ export default class EventItemEdit extends AbstractView {
           minDate: this._state.dateStart,
           defaultDate: this._state.dateEnd,
           onClose: this._endDateChangeHandler,
-        }
-      )
-    )
+        },
+      ),
+    );
   }
 
   _rollupClickHandler(evt) {

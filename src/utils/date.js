@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { getRandomInteger } from '../mock/utils';
 
-dayjs.extend(duration)
+dayjs.extend(duration);
 
 const minDaysOffset = -7;
 const maxDaysOffset = 7;
@@ -15,7 +15,7 @@ const getDuration = (ms) => {
 
 const getDurationBetweenDates = (dateStart, dateEnd) => {
   return getDuration(getDateDifference(dateStart, dateEnd));
-}
+};
 
 export const getDateStart = () => {
   const days = getRandomInteger(minDaysOffset, maxDaysOffset);
