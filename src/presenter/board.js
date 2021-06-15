@@ -9,8 +9,9 @@ import {sortByPrice, sortByTime} from '../utils/event';
 import { updateItem } from '../utils/common';
 
 export default class Board {
-  constructor(boardContainer) {
+  constructor(boardContainer, eventsModel) {
     this._boardContainer = boardContainer;
+    this._eventsModel = eventsModel;
 
     this._currentSortType = SortType.DAY;
     this._eventPresenter = {};
@@ -37,22 +38,18 @@ export default class Board {
     this._renderBoard();
   }
 
-  _sortEvents(sortType) {
-    switch (sortType) {
+  _getEvents() {
+    switch (this._currentSortType) {
       case SortType.TIME:
-        this._boardEvents.sort(sortByTime);
-        break;
+        return this._eventsModel.getEvents().slice().sort(sortByTime);
       case SortType.PRICE:
-        this._boardEvents.sort(sortByPrice);
-        break;
-      default:
-        this._boardEvents = this._sourcedBoardEvents.slice();
+        return this._eventsModel.getEvents().slice().sort(sortByPrice);
     }
 
-    this._currentSortType = sortType;
+    return this._eventsModel.getEvents();
   }
 
-  _clearTaskList() {
+  _clearEventList() {
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.destroy());
@@ -67,8 +64,8 @@ export default class Board {
       return;
     }
 
-    this._sortEvents(sortType);
-    this._clearTaskList();
+    this._currentSortType = sortType;
+    this._clearEventList();
     this._renderBoard();
   }
 
@@ -89,8 +86,9 @@ export default class Board {
 
   _renderSort() {
     this._sortComponent = new SortView(this._currentSortType);
-    render(this._boardComponent, this._sortComponent, RenderPosition.BEFOREEND);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+
+    render(this._boardComponent, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
   _renderEventList() {
@@ -103,18 +101,21 @@ export default class Board {
     this._eventPresenter[event.id] = eventPresenter;
   }
 
-  _renderEvents() {
-    this._boardEvents.forEach((event) => this._renderEvent(event));
+  _renderEvents(events) {
+    events.forEach((event) => this._renderEvent(event));
   }
 
   _renderBoard() {
-    if (this._boardEvents.length === 0) {
+    const events = this._getEvents();
+    const eventCount = events.length;
+
+    if (eventCount === 0) {
       this._renderNoEvent();
       return;
     }
 
     this._renderSort();
     this._renderEventList();
-    this._renderEvents();
+    this._renderEvents(events);
   }
 }

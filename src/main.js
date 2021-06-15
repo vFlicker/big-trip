@@ -24,5 +24,5 @@ render(containerFilter, new FilterView(), RenderPosition.BEFOREEND);
 // Main
 const containerMainContent = document.querySelector('.page-main .page-body__container');
 
-const boardPresenter = new BoardPresenter(containerMainContent);
+const boardPresenter = new BoardPresenter(containerMainContent, eventsModel);
 boardPresenter.init(events, availableDestination, availableTypes, availableOffers);
