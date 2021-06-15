@@ -1,3 +1,4 @@
+import EventsModel from './model/events';
 import TripInfoView from './view/trip-info';
 import MenuView from './view/menu';
 import FilterView from './view/filter';
@@ -7,6 +8,9 @@ import { render, RenderPosition } from './utils/render';
 
 const EVENT_COUNT = 5;
 const events = getEvents(EVENT_COUNT);
+
+const eventsModel = new EventsModel();
+eventsModel.setEvents(events);
 
 // Header
 const containerTripMain = document.querySelector('.trip-main');
