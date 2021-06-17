@@ -1,6 +1,7 @@
 import EventItemView from '../view/event-item';
 import EventItemEditView from '../view/event-item-edit';
 import { render, RenderPosition, replace, remove } from '../utils/render';
+import {UpdateType, UserAction} from '../utils/const';
 
 const Mode = {
   DEFAULT: 'default',
@@ -24,7 +25,7 @@ export default class Event {
     this._handleItemEditSubmit = this._handleItemEditSubmit.bind(this);
   }
 
-  init(event, availableDestination,  availableTypes, availableOffers) {
+  init(event, availableDestination, availableTypes, availableOffers) {
     this._event = event;
 
     const prevEventItemComponent = this._eventItemComponent;
@@ -88,6 +89,8 @@ export default class Event {
 
   _handleItemFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_EVENT,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._event,
@@ -104,7 +107,11 @@ export default class Event {
   }
 
   _handleItemEditSubmit(event) {
-    this._changeData(event);
+    this._changeData(
+      UserAction.UPDATE_EVENT,
+      UpdateType.MINOR,
+      event,
+    );
     this._replaceFormToEvent();
   }
 

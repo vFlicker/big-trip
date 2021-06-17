@@ -11,3 +11,12 @@ export const DATEPICKER_BASIC_SETTINGS = {
   time_24hr: true,
   dateFormat: 'd/m/y H:i',
 };
+
+export const UserAction = {
+  UPDATE_EVENT: 'UPDATE_EVENT',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+};

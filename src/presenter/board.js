@@ -4,9 +4,8 @@ import SortView from '../view/sort';
 import EventListView from '../view/event-list';
 import EventPresenter from './event';
 import {remove, render, RenderPosition} from '../utils/render';
-import {SortType} from '../utils/const';
+import {SortType, UpdateType, UserAction} from '../utils/const';
 import {sortByPrice, sortByTime} from '../utils/event';
-import { updateItem } from '../utils/common';
 
 export default class Board {
   constructor(boardContainer, eventsModel) {
@@ -22,13 +21,14 @@ export default class Board {
     this._eventListComponent = new EventListView();
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._handleEventChange = this._handleEventChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+
+    this._eventsModel.addObserver(this._handleModelEvent);
   }
 
-  init(boardEvents, availableDestination, availableTypes, availableOffers) {
-    this._boardEvents = boardEvents.slice();
-    this._sourcedBoardEvents = boardEvents.slice();
+  init(availableDestination, availableTypes, availableOffers) {
     this._availableDestination = availableDestination;
     this._availableTypes = availableTypes;
     this._availableOffers = availableOffers;
@@ -69,9 +69,24 @@ export default class Board {
     this._renderBoard();
   }
 
-  _handleEventChange(updateEvent) {
-    this._boardEvents = updateItem(this._boardEvents, updateEvent);
-    this._eventPresenter[updateEvent.id].init(updateEvent, this._availableDestination, this._availableTypes, this._availableOffers);
+  _handleViewAction(actionType, updateType, update) {
+    switch (actionType) {
+      case UserAction.UPDATE_EVENT:
+        this._eventsModel.updateEvent(updateType, update);
+        break;
+    }
+  }
+
+  _handleModelEvent(updateType, data) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._eventPresenter[data.id].init(data, this._availableDestination, this._availableTypes, this._availableOffers);
+        break;
+      case UpdateType.MINOR:
+        this._clearEventList();
+        this._renderBoard();
+        break;
+    }
   }
 
   _handleModeChange() {
@@ -96,7 +111,7 @@ export default class Board {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListComponent, this._handleEventChange, this._handleModeChange);
+    const eventPresenter = new EventPresenter(this._eventListComponent, this._handleViewAction, this._handleModeChange);
     eventPresenter.init(event, this._availableDestination, this._availableTypes, this._availableOffers);
     this._eventPresenter[event.id] = eventPresenter;
   }
