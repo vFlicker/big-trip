@@ -23,6 +23,7 @@ export default class Event {
     this._handleItemFavoriteClick = this._handleItemFavoriteClick.bind(this);
     this._handleItemEditRollupClick = this._handleItemEditRollupClick.bind(this);
     this._handleItemEditSubmit = this._handleItemEditSubmit.bind(this);
+    this._handleItemEditDeleteClick = this._handleItemEditDeleteClick.bind(this);
   }
 
   init(event, availableDestination, availableTypes, availableOffers) {
@@ -38,6 +39,7 @@ export default class Event {
     this._eventItemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);
     this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
     this._eventItemEditComponent.setFormSubmitHandler(this._handleItemEditSubmit);
+    this._eventItemEditComponent.setDeleteClickHandler(this._handleItemEditDeleteClick);
 
     if (prevEventItemComponent === null || prevEventItemEditComponent === null) {
       render(this._eventListContainer, this._eventItemComponent, RenderPosition.BEFOREEND);
@@ -113,6 +115,14 @@ export default class Event {
       event,
     );
     this._replaceFormToEvent();
+  }
+
+  _handleItemEditDeleteClick(event) {
+    this._changeData(
+      UserAction.DELETE_EVENT,
+      UpdateType.MINOR,
+      event,
+    );
   }
 
   destroy() {

@@ -74,6 +74,9 @@ export default class Board {
       case UserAction.UPDATE_EVENT:
         this._eventsModel.updateEvent(updateType, update);
         break;
+      case UserAction.DELETE_EVENT:
+        this._eventsModel.deleteEvent(updateType, update);
+        break;
     }
   }
 

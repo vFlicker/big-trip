@@ -256,6 +256,7 @@ export default class EventItemEdit extends AbstractView {
 
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
@@ -472,6 +473,11 @@ export default class EventItemEdit extends AbstractView {
     this._callback.formSubmit(EventItemEdit.parseStateToEvent(this._state));
   }
 
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EventItemEdit.parseStateToEvent(this._state));
+  }
+
   setRollupClickHandler(callback) {
     this._callback.rollupClick = callback;
 
@@ -487,6 +493,15 @@ export default class EventItemEdit extends AbstractView {
     this
       .getElement()
       .addEventListener('submit', this._formSubmitHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+
+    this
+      .getElement()
+      .querySelector('.event__reset-btn')
+      .addEventListener('click', this._formDeleteClickHandler);
   }
 
   reset(event) {

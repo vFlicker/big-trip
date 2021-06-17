@@ -14,6 +14,7 @@ export const DATEPICKER_BASIC_SETTINGS = {
 
 export const UserAction = {
   UPDATE_EVENT: 'UPDATE_EVENT',
+  DELETE_EVENT: 'DELETE_EVENT',
 };
 
 export const UpdateType = {
