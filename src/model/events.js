@@ -1,5 +1,9 @@
-export default class Events {
+import Observer from '../utils/observer';
+
+export default class Events extends Observer{
   constructor() {
+    super();
+
     this._events = [];
   }
 
