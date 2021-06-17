@@ -1,4 +1,5 @@
 import EventsModel from './model/events';
+import Filter from './model/filter';
 import TripInfoView from './view/trip-info';
 import MenuView from './view/menu';
 import FilterView from './view/filter';
@@ -11,6 +12,8 @@ const events = getEvents(EVENT_COUNT);
 
 const eventsModel = new EventsModel();
 eventsModel.setEvents(events);
+
+const filterModel = new Filter();
 
 // Header
 const containerTripMain = document.querySelector('.trip-main');

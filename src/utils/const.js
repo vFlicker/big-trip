@@ -21,3 +21,9 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
 };
+
+export const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
+};
