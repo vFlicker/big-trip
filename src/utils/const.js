@@ -9,7 +9,7 @@ export const SortType = {
 export const DATEPICKER_BASIC_SETTINGS = {
   enableTime: true,
   time_24hr: true,
-  dateFormat: 'd/m/y H:i',
+  dateFormat: 'm/d/y H:i',
 };
 
 export const UserAction = {

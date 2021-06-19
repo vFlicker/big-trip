@@ -89,3 +89,7 @@ export const isPastDate = (date) => {
 export const isFutureDate  = (date) => {
   return dayjs().isBefore(date, 'day') || dayjs().isSame(date, 'day');
 };
+
+export const compareDates = (dateStart, dateEnd) => {
+  return dayjs(dateStart).isAfter(dateEnd);
+};
