@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import { humanizeDate } from '../utils/date';
+import { humanizeDate, compareDates } from '../utils/date';
 import { ucFirst, cloneArrayOfObjects } from '../utils/common';
 import { DATEPICKER_BASIC_SETTINGS } from '../utils/const';
 import flatpickr from 'flatpickr';
@@ -273,6 +273,13 @@ export default class EventItemEdit extends AbstractView {
     return createEventItemEditTemplate(this._state, this._availableTypes, this._availableDestination);
   }
 
+  removeElement() {
+    super.removeElement();
+
+    this._removeStartDatePicker();
+    this._removeEndDatePicker();
+  }
+
   updateElement() {
     const prevElement = this.getElement();
     const parent = prevElement.parentElement;
@@ -405,6 +412,20 @@ export default class EventItemEdit extends AbstractView {
       .addEventListener('input', this._priceChangeHandler);
   }
 
+  _removeStartDatePicker() {
+    if (this._startDatePicker) {
+      this._startDatePicker.destroy();
+      this._startDatePicker = null;
+    }
+  }
+
+  _removeEndDatePicker() {
+    if (this._endDatePicker) {
+      this._endDatePicker.destroy();
+      this._endDatePicker = null;
+    }
+  }
+
   _startDateChangeHandler([userDate]) {
     this.updateState({
       dateStart: userDate,
@@ -418,10 +439,7 @@ export default class EventItemEdit extends AbstractView {
   }
 
   _setStartDatePicker() {
-    if (this._startDatePicker) {
-      this._startDatePicker.destroy();
-      this._startDatePicker = null;
-    }
+    this._removeStartDatePicker();
 
     this._startDatePicker = flatpickr(
       this
@@ -441,10 +459,9 @@ export default class EventItemEdit extends AbstractView {
   }
 
   _setEndDatePicker() {
-    if (this._endDatePicker) {
-      this._endDatePicker.destroy();
-      this._endDatePicker = null;
-    }
+    const isDateStartOver = compareDates(this._state.dateStart, this._state.dateEnd);
+
+    this._removeEndDatePicker();
 
     this._endDatePicker = flatpickr(
       this
@@ -456,7 +473,7 @@ export default class EventItemEdit extends AbstractView {
         DATEPICKER_BASIC_SETTINGS,
         {
           minDate: this._state.dateStart,
-          defaultDate: this._state.dateEnd,
+          defaultDate: isDateStartOver ? this._state.dateStart : this._state.dateEnd,
           onClose: this._endDateChangeHandler,
         },
       ),
