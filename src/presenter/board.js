@@ -15,6 +15,7 @@ export default class Board {
     this._currentSortType = SortType.DAY;
     this._eventPresenter = {};
 
+    this._sortComponent = null;
     this._boardComponent = new BoardView();
     this._noEventComponent = new NoEventView();
     this._sortComponent = null;
@@ -45,18 +46,6 @@ export default class Board {
       case SortType.PRICE:
         return this._eventsModel.getEvents().slice().sort(sortByPrice);
     }
-
-    return this._eventsModel.getEvents();
-  }
-
-  _clearEventList() {
-    Object
-      .values(this._eventPresenter)
-      .forEach((presenter) => presenter.destroy());
-
-    this._eventPresenter = {};
-
-    remove(this._sortComponent);
   }
 
   _handleSortTypeChange(sortType) {
@@ -65,7 +54,7 @@ export default class Board {
     }
 
     this._currentSortType = sortType;
-    this._clearEventList();
+    this._clearBoard();
     this._renderBoard();
   }
 
@@ -86,7 +75,11 @@ export default class Board {
         this._eventPresenter[data.id].init(data, this._availableDestination, this._availableTypes, this._availableOffers);
         break;
       case UpdateType.MINOR:
-        this._clearEventList();
+        this._clearBoard();
+        this._renderBoard();
+        break;
+      case UpdateType.MAJOR:
+        this._clearBoard({resetSortType: true});
         this._renderBoard();
         break;
     }
@@ -103,6 +96,10 @@ export default class Board {
   }
 
   _renderSort() {
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+
     this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
 
@@ -121,6 +118,21 @@ export default class Board {
 
   _renderEvents(events) {
     events.forEach((event) => this._renderEvent(event));
+  }
+
+  _clearBoard({resetSortType = false} = {}) {
+    Object
+      .values(this._eventPresenter)
+      .forEach((presenter) => presenter.destroy());
+
+    this._eventPresenter = {};
+
+    remove(this._sortComponent);
+    remove(this._noEventComponent);
+
+    if (resetSortType) {
+      this._currentSortType = SortType.DAY;
+    }
   }
 
   _renderBoard() {
