@@ -81,3 +81,11 @@ export const getEventPeriod = (eventStart, eventEnd) => {
 
   return 'trip date';
 };
+
+export const isPastDate = (date) => {
+  return dayjs().isAfter(date);
+};
+
+export const isFutureDate  = (date) => {
+  return dayjs().isBefore(date, 'day') || dayjs().isSame(date, 'day');
+};
