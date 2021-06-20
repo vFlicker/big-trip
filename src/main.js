@@ -2,6 +2,7 @@ import EventsModel from './model/events';
 import FilterModel from './model/filter';
 import TripInfoView from './view/trip-info';
 import MenuView from './view/menu';
+import NewEventButtonView from './view/new-event-button';
 import BoardPresenter from './presenter/board';
 import FilterPresenter from './presenter/filter';
 import { getEvents, availableDestination, availableTypes, availableOffers } from './mock/event';
@@ -22,6 +23,14 @@ const containerFilter = containerTripMain.querySelector('.trip-controls__filters
 
 render(containerTripMain, new TripInfoView(events), RenderPosition.AFTERBEGIN);
 render(containerMenu, new MenuView(), RenderPosition.BEFOREEND);
+
+const handleEventButtonClick = () => {
+  boardPresenter.createEvent();
+};
+
+const newEventButtonComponent = new NewEventButtonView();
+newEventButtonComponent.setButtonClickHandler(handleEventButtonClick);
+render(containerTripMain, newEventButtonComponent, RenderPosition.BEFOREEND);
 
 // Main
 const containerMainContent = document.querySelector('.page-main .page-body__container');

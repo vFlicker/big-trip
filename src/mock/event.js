@@ -68,12 +68,12 @@ const getEvent = () => {
 
   return {
     dateStart,
-    type,
-    id: nanoid(),
-    isFavorite: Boolean(getRandomInteger(0, 1)),
     dateEnd: getDateEnd(dateStart),
     destination: getDestination(),
+    id: nanoid(),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
     price: getRandomInteger(MIN_PRICE, MAX_PRICE),
+    type,
     offers: getOffers(type),
   };
 };

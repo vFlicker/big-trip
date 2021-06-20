@@ -3,8 +3,9 @@ import NoEventView from '../view/no-event';
 import SortView from '../view/sort';
 import EventListView from '../view/event-list';
 import EventPresenter from './event';
+import EventNewPresenter from './event-new';
 import {remove, render, RenderPosition} from '../utils/render';
-import {SortType, UpdateType, UserAction} from '../utils/const';
+import {FilterType, SortType, UpdateType, UserAction} from '../utils/const';
 import {sortByPrice, sortByTime, sortByDate} from '../utils/event';
 import { filter } from './../utils/filter';
 
@@ -29,6 +30,8 @@ export default class Board {
 
     this._eventsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+
+    this._eventNewPresenter = new EventNewPresenter(this._eventListComponent, this._handleViewAction);
   }
 
   init(availableDestination, availableTypes, availableOffers) {
@@ -39,6 +42,12 @@ export default class Board {
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderBoard();
+  }
+
+  createEvent() {
+    this._currentSortType = SortType.DAY;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._eventNewPresenter.init(this._availableDestination, this._availableTypes, this._availableOffers);
   }
 
   _getEvents() {
@@ -71,6 +80,9 @@ export default class Board {
       case UserAction.UPDATE_EVENT:
         this._eventsModel.updateEvent(updateType, update);
         break;
+      case UserAction.ADD_EVENT:
+        this._eventsModel.addEvent(updateType, update);
+        break;
       case UserAction.DELETE_EVENT:
         this._eventsModel.deleteEvent(updateType, update);
         break;
@@ -94,6 +106,8 @@ export default class Board {
   }
 
   _handleModeChange() {
+    this._eventNewPresenter.destroy();
+
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -129,6 +143,8 @@ export default class Board {
   }
 
   _clearBoard({resetSortType = false} = {}) {
+    this._eventNewPresenter.destroy();
+
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.destroy());

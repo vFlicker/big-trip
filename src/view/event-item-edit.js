@@ -1,7 +1,7 @@
 import AbstractView from './abstract';
 import { humanizeDate, compareDates } from '../utils/date';
 import { ucFirst, cloneArrayOfObjects } from '../utils/common';
-import { DATEPICKER_BASIC_SETTINGS } from '../utils/const';
+import { DATEPICKER_BASIC_SETTINGS, DEFAULT_EVENT } from '../utils/const';
 import flatpickr from 'flatpickr';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
@@ -244,7 +244,7 @@ const createEventItemEditTemplate = (state, availableTypes, availableDestination
 };
 
 export default class EventItemEdit extends AbstractView {
-  constructor(event, availableDestination, availableTypes, availableOffers) {
+  constructor(event = DEFAULT_EVENT, availableDestination, availableTypes, availableOffers) {
     super();
 
     this._state = EventItemEdit.parseEventToState(event);
