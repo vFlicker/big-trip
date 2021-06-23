@@ -1,7 +1,7 @@
 import SmartView from './smart';
 import { humanizeDate, compareDates } from '../utils/date';
 import { ucFirst, cloneArrayOfObjects } from '../utils/common';
-import { DATEPICKER_BASIC_SETTINGS, DEFAULT_EVENT } from '../utils/const';
+import { DATEPICKER_BASIC_SETTINGS, Mode } from '../utils/const';
 import flatpickr from 'flatpickr';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
@@ -157,7 +157,19 @@ const createSectionDetailsTemplate = (hasDetails, hasOffers, type, offers, hasDe
   return '';
 };
 
-const createEventItemEditTemplate = (state, availableTypes, availableDestination) => {
+const createRollupButtonTemplate = (mode) => {
+  if (mode === Mode.EDIT) {
+    return (
+      `<button class="event__rollup-btn" type="button">
+        <span class="visually-hidden">Open event</span>
+      </button>`
+    );
+  }
+
+  return '';
+};
+
+const createEventItemEditTemplate = (state, mode, availableTypes, availableDestination) => {
   const {destination, type, dateStart, dateEnd, price, offers, hasOffers, hasDescription, hasPhotos, hasDestination, hasDetails} = state;
 
   const eventTypeListTemplate = createEventTypeListTemplate(type, availableTypes);
@@ -165,6 +177,8 @@ const createEventItemEditTemplate = (state, availableTypes, availableDestination
   const eventDestinationListTemplate = createEventDestinationListTemplate(availableDestination);
 
   const sectionDetailsTemplate = createSectionDetailsTemplate(hasDetails, hasOffers, type, offers, hasDestination, destination, hasDescription, hasPhotos);
+
+  const rollupButtonTemplate = createRollupButtonTemplate(mode);
 
   return (
     `<li class="trip-events__item">
@@ -231,10 +245,8 @@ const createEventItemEditTemplate = (state, availableTypes, availableDestination
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
-            <span class="visually-hidden">Open event</span>
-          </button>
+          <button class="event__reset-btn" type="reset">${mode === Mode.EDIT ? 'Delete' : 'Сancel'}</button>
+          ${rollupButtonTemplate}
         </header>
 
         ${sectionDetailsTemplate}
@@ -244,10 +256,11 @@ const createEventItemEditTemplate = (state, availableTypes, availableDestination
 };
 
 export default class EventItemEdit extends SmartView {
-  constructor(event = DEFAULT_EVENT, availableDestination, availableTypes, availableOffers) {
+  constructor(event, mode, availableDestination, availableTypes, availableOffers) {
     super();
 
     this._state = EventItemEdit.parseEventToState(event);
+    this._mode = mode;
     this._availableDestination = availableDestination;
     this._availableTypes = availableTypes;
     this._availableOffers = availableOffers;
@@ -270,7 +283,7 @@ export default class EventItemEdit extends SmartView {
   }
 
   getTemplate() {
-    return createEventItemEditTemplate(this._state, this._availableTypes, this._availableDestination);
+    return createEventItemEditTemplate(this._state, this._mode, this._availableTypes, this._availableDestination);
   }
 
   removeElement() {
@@ -466,12 +479,13 @@ export default class EventItemEdit extends SmartView {
   }
 
   setRollupClickHandler(callback) {
-    this._callback.rollupClick = callback;
+    const rollupButton = this.getElement().querySelector('.event__rollup-btn');
 
-    this
-      .getElement()
-      .querySelector('.event__rollup-btn')
-      .addEventListener('click', this._rollupClickHandler);
+    if (rollupButton) {
+      this._callback.rollupClick = callback;
+
+      rollupButton.addEventListener('click', this._rollupClickHandler);
+    }
   }
 
   setFormSubmitHandler(callback) {

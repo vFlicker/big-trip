@@ -1,6 +1,6 @@
 import EventItemEditView from '../view/event-item-edit';
 import { render, RenderPosition, remove } from '../utils/render';
-import { UpdateType, UserAction } from './../utils/const';
+import { DEFAULT_EVENT, Mode, UpdateType, UserAction } from './../utils/const';
 import { nanoid } from 'nanoid';
 
 export default class EventNew {
@@ -23,7 +23,7 @@ export default class EventNew {
     this._renderEventList = renderEventList;
     this._renderNoEvents = renderNoEvents;
 
-    this._eventItemEditComponent = new EventItemEditView(undefined, availableDestination, availableTypes, availableOffers);
+    this._eventItemEditComponent = new EventItemEditView(DEFAULT_EVENT, Mode.ADD, availableDestination, availableTypes, availableOffers);
     this._eventItemEditComponent.setFormSubmitHandler(this._handleItemEditSubmit);
     this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
     this._eventItemEditComponent.setDeleteClickHandler(this._handleItemEditDeleteClick);

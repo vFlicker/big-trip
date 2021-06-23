@@ -5,7 +5,7 @@ import EventListView from '../view/event-list';
 import EventPresenter from './event';
 import EventNewPresenter from './event-new';
 import {remove, render, RenderPosition} from '../utils/render';
-import {FilterType, SortType, UpdateType, UserAction} from '../utils/const';
+import {FilterType, Mode, SortType, UpdateType, UserAction} from '../utils/const';
 import {sortByPrice, sortByTime, sortByDate} from '../utils/event';
 import { filter } from './../utils/filter';
 
@@ -156,7 +156,7 @@ export default class Board {
 
   _renderEvent(event) {
     const eventPresenter = new EventPresenter(this._eventListComponent, this._handleViewAction, this._handleModeChange);
-    eventPresenter.init(event, this._availableDestination, this._availableTypes, this._availableOffers);
+    eventPresenter.init(event, Mode.EDIT, this._availableDestination, this._availableTypes, this._availableOffers);
     this._eventPresenter[event.id] = eventPresenter;
   }
 

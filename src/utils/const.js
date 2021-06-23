@@ -47,3 +47,8 @@ export const MenuItem = {
   TABLE: 'table',
   STATS: 'stats',
 };
+
+export const Mode = {
+  EDIT: 'edit',
+  ADD: 'add',
+};
