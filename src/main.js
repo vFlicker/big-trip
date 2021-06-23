@@ -3,10 +3,12 @@ import FilterModel from './model/filter';
 import TripInfoView from './view/trip-info';
 import MenuView from './view/menu';
 import NewEventButtonView from './view/new-event-button';
+import StatisticsView from './view/statistic';
 import BoardPresenter from './presenter/board';
 import FilterPresenter from './presenter/filter';
 import { getEvents, availableDestination, availableTypes, availableOffers } from './mock/event';
-import { render, RenderPosition } from './utils/render';
+import {remove, render, RenderPosition} from './utils/render';
+import {FilterType, MenuItem, UpdateType} from './utils/const';
 
 const EVENT_COUNT = 5;
 const events = getEvents(EVENT_COUNT);
@@ -20,16 +22,41 @@ const filterModel = new FilterModel();
 const containerTripMain = document.querySelector('.trip-main');
 const containerMenu = containerTripMain.querySelector('.trip-controls__navigation');
 const containerFilter = containerTripMain.querySelector('.trip-controls__filters');
-
 render(containerTripMain, new TripInfoView(events), RenderPosition.AFTERBEGIN);
-render(containerMenu, new MenuView(), RenderPosition.BEFOREEND);
+
+const menuComponent = new MenuView();
+const newEventButtonComponent = new NewEventButtonView();
+let statisticsComponent = null;
+
+const handleMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.TABLE:
+      menuComponent.setMenuItem(menuItem);
+      boardPresenter.init(availableDestination, availableTypes, availableOffers);
+      remove(statisticsComponent);
+      break;
+    case MenuItem.STATS:
+      menuComponent.setMenuItem(menuItem);
+      boardPresenter.destroy();
+      statisticsComponent = new StatisticsView();
+      render(containerMainContent, statisticsComponent, RenderPosition.BEFOREEND);
+      break;
+  }
+};
 
 const handleEventButtonClick = () => {
+  remove(statisticsComponent);
+  boardPresenter.destroy();
+  menuComponent.setMenuItem(MenuItem.TABLE);
+  filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+  boardPresenter.init(availableDestination, availableTypes, availableOffers);
   boardPresenter.createEvent();
 };
 
-const newEventButtonComponent = new NewEventButtonView();
+menuComponent.setMenuClickHandler(handleMenuClick);
 newEventButtonComponent.setButtonClickHandler(handleEventButtonClick);
+
+render(containerMenu, menuComponent, RenderPosition.BEFOREEND);
 render(containerTripMain, newEventButtonComponent, RenderPosition.BEFOREEND);
 
 // Main

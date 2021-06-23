@@ -41,7 +41,20 @@ export default class Board {
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
+    this._eventsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderBoard();
+  }
+
+  destroy() {
+    this._clearBoard({resetSortType: true});
+
+    remove(this._eventListComponent);
+    remove(this._boardComponent);
+
+    this._eventsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   createEvent() {

@@ -42,3 +42,8 @@ export const DEFAULT_EVENT = {
   type: 'taxi',
   offers: availableOffers['taxi'],
 };
+
+export const MenuItem = {
+  TABLE: 'table',
+  STATS: 'stats',
+};
