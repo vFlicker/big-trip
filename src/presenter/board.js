@@ -28,8 +28,8 @@ export default class Board {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._eventsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
+    this._renderEventList = this._renderEventList.bind(this);
+    this._renderNoEvent = this._renderNoEvent.bind(this);
 
     this._eventNewPresenter = new EventNewPresenter(this._eventListComponent, this._handleViewAction);
   }
@@ -58,6 +58,15 @@ export default class Board {
   }
 
   createEvent() {
+    const events = this._getEvents();
+    const eventCount = events.length;
+
+    if (eventCount === 0) {
+      remove(this._noEventComponent);
+      this._eventNewPresenter.init(this._availableDestination, this._availableTypes, this._availableOffers, this._renderEventList, this._renderNoEvent);
+      return;
+    }
+
     this._currentSortType = SortType.DAY;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._eventNewPresenter.init(this._availableDestination, this._availableTypes, this._availableOffers);
