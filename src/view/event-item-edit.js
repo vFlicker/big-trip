@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import SmartView from './smart';
 import { humanizeDate, compareDates } from '../utils/date';
 import { ucFirst, cloneArrayOfObjects } from '../utils/common';
 import { DATEPICKER_BASIC_SETTINGS, DEFAULT_EVENT } from '../utils/const';
@@ -243,7 +243,7 @@ const createEventItemEditTemplate = (state, availableTypes, availableDestination
   );
 };
 
-export default class EventItemEdit extends AbstractView {
+export default class EventItemEdit extends SmartView {
   constructor(event = DEFAULT_EVENT, availableDestination, availableTypes, availableOffers) {
     super();
 
@@ -278,36 +278,6 @@ export default class EventItemEdit extends AbstractView {
 
     this._removeStartDatePicker();
     this._removeEndDatePicker();
-  }
-
-  updateElement() {
-    const prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
-
-    this.restoreHandlers();
-  }
-
-  updateState(update, justStateUpdating) {
-    if (!update) {
-      return;
-    }
-
-    this._state = Object.assign(
-      {},
-      this._state,
-      update,
-    );
-
-    if (justStateUpdating) {
-      return;
-    }
-
-    this.updateElement();
   }
 
   _typeChangeHandler(evt) {
