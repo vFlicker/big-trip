@@ -44,17 +44,20 @@ const handleMenuClick = (menuItem) => {
   }
 };
 
-const handleEventButtonClick = () => {
+const handleEventNewClose = () => {
+  newEventButtonComponent.getElement().disabled = false;
+};
+
+menuComponent.setMenuClickHandler(handleMenuClick);
+newEventButtonComponent.setButtonClickHandler(() => {
   remove(statisticsComponent);
   boardPresenter.destroy();
   menuComponent.setMenuItem(MenuItem.TABLE);
   filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
   boardPresenter.init(availableDestination, availableTypes, availableOffers);
-  boardPresenter.createEvent();
-};
-
-menuComponent.setMenuClickHandler(handleMenuClick);
-newEventButtonComponent.setButtonClickHandler(handleEventButtonClick);
+  boardPresenter.createEvent(handleEventNewClose);
+  newEventButtonComponent.getElement().disabled = true;
+});
 
 render(containerMenu, menuComponent, RenderPosition.BEFOREEND);
 render(containerTripMain, newEventButtonComponent, RenderPosition.BEFOREEND);

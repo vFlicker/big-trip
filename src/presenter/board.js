@@ -57,19 +57,19 @@ export default class Board {
     this._filterModel.removeObserver(this._handleModelEvent);
   }
 
-  createEvent() {
+  createEvent(callback) {
     const events = this._getEvents();
     const eventCount = events.length;
 
     if (eventCount === 0) {
       remove(this._noEventComponent);
-      this._eventNewPresenter.init(this._availableDestination, this._availableTypes, this._availableOffers, this._renderEventList, this._renderNoEvent);
+      this._eventNewPresenter.init(this._availableDestination, this._availableTypes, this._availableOffers, callback, this._renderEventList, this._renderNoEvent);
       return;
     }
 
     this._currentSortType = SortType.DAY;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._eventNewPresenter.init(this._availableDestination, this._availableTypes, this._availableOffers);
+    this._eventNewPresenter.init(this._availableDestination, this._availableTypes, this._availableOffers, callback);
   }
 
   _getEvents() {

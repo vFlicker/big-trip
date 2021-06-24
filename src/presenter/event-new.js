@@ -8,30 +8,35 @@ export default class EventNew {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;
 
+    this._destroyCallback = null;
+    this._renderEventList = null;
+    this._renderNoEvents = null;
     this._eventItemEditComponent = null;
+
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleItemEditRollupClick = this._handleItemEditRollupClick.bind(this);
     this._handleItemEditSubmit = this._handleItemEditSubmit.bind(this);
     this._handleItemEditDeleteClick = this._handleItemEditDeleteClick.bind(this);
   }
 
-  init(availableDestination, availableTypes, availableOffers, renderEventList = null, renderNoEvents = null) {
+  init(availableDestination, availableTypes, availableOffers, callback, renderEventList, renderNoEvents) {
+    this._destroyCallback = callback;
+    this._renderEventList = renderEventList;
+    this._renderNoEvents = renderNoEvents;
+
     if (this._eventItemEditComponent !== null) {
       return;
     }
 
-    this._renderEventList = renderEventList;
-    this._renderNoEvents = renderNoEvents;
+    if (this._renderEventList) {
+      this._renderEventList();
+      this._renderEventList = null;
+    }
 
     this._eventItemEditComponent = new EventItemEditView(DEFAULT_EVENT, Mode.ADD, availableDestination, availableTypes, availableOffers);
     this._eventItemEditComponent.setFormSubmitHandler(this._handleItemEditSubmit);
     this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
     this._eventItemEditComponent.setDeleteClickHandler(this._handleItemEditDeleteClick);
-
-    if (this._renderEventList !== null) {
-      this._renderEventList();
-      this._renderEventList = null;
-    }
 
     render(this._eventListContainer, this._eventItemEditComponent, RenderPosition.AFTERBEGIN);
 
@@ -43,15 +48,19 @@ export default class EventNew {
       return;
     }
 
+    if (this._renderNoEvents) {
+      this._renderNoEvents();
+      this._renderNoEvents = null;
+    }
+
+    if (this._destroyCallback) {
+      this._destroyCallback();
+    }
+
     remove(this._eventItemEditComponent);
     this._eventItemEditComponent = null;
 
     document.removeEventListener('keydown', this._escKeyDownHandler);
-
-    if (this._renderNoEvents !== null) {
-      this._renderNoEvents();
-      this._renderNoEvents = null;
-    }
   }
 
   _escKeyDownHandler(evt) {
