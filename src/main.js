@@ -31,14 +31,14 @@ let statisticsComponent = null;
 const handleMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
+      remove(statisticsComponent);
       menuComponent.setMenuItem(menuItem);
       boardPresenter.init(availableDestination, availableTypes, availableOffers);
-      remove(statisticsComponent);
       break;
     case MenuItem.STATS:
-      menuComponent.setMenuItem(menuItem);
       boardPresenter.destroy();
-      statisticsComponent = new StatisticsView();
+      menuComponent.setMenuItem(menuItem);
+      statisticsComponent = new StatisticsView(eventsModel.getEvents());
       render(containerMainContent, statisticsComponent, RenderPosition.BEFOREEND);
       break;
   }
