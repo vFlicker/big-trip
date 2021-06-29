@@ -1,28 +1,32 @@
+import Api from './api/api';
+import DestinationsModel from './model/destinations';
 import EventsModel from './model/events';
 import FilterModel from './model/filter';
+import OffersModel from './model/offers';
 import TripInfoView from './view/trip-info';
 import MenuView from './view/menu';
 import NewEventButtonView from './view/new-event-button';
 import StatisticsView from './view/statistic';
 import BoardPresenter from './presenter/board';
 import FilterPresenter from './presenter/filter';
-import { getEvents, availableDestination, availableTypes, availableOffers } from './mock/event';
+import { availableDestination, availableTypes, availableOffers } from './mock/event';
 import {remove, render, RenderPosition} from './utils/render';
 import {FilterType, MenuItem, UpdateType} from './utils/const';
 
-const EVENT_COUNT = 5;
-const events = getEvents(EVENT_COUNT);
+const AUTHORIZATION = 'Basic 48avd2449w934avd';
+const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 
+const api = new Api(END_POINT, AUTHORIZATION);
+
+const destinationModel = new DestinationsModel();
 const eventsModel = new EventsModel();
-eventsModel.setEvents(events);
-
 const filterModel = new FilterModel();
+const offersModel = new OffersModel();
 
 // Header
 const containerTripMain = document.querySelector('.trip-main');
 const containerMenu = containerTripMain.querySelector('.trip-controls__navigation');
 const containerFilter = containerTripMain.querySelector('.trip-controls__filters');
-render(containerTripMain, new TripInfoView(events), RenderPosition.AFTERBEGIN);
 
 const menuComponent = new MenuView();
 const newEventButtonComponent = new NewEventButtonView();
@@ -70,3 +74,11 @@ boardPresenter.init(availableDestination, availableTypes, availableOffers);
 
 const filterPresenter = new FilterPresenter(containerFilter, filterModel, eventsModel);
 filterPresenter.init();
+
+Promise.all([api.getDestinations(), api.getEvents(), api.getOffers()])
+  .then(([destinations, events, offers]) => {
+    destinationModel.setDestinations(destinations);
+    offersModel.setOffers(offers);
+    eventsModel.setEvents(UpdateType.INIT, events);
+    render(containerTripMain, new TripInfoView(events), RenderPosition.AFTERBEGIN);
+  });

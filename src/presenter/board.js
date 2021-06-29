@@ -2,6 +2,7 @@ import BoardView from '../view/board';
 import NoEventView from '../view/no-event';
 import SortView from '../view/sort';
 import EventListView from '../view/event-list';
+import LoadingView from '../view/loading';
 import EventPresenter from './event';
 import EventNewPresenter from './event-new';
 import {remove, render, RenderPosition} from '../utils/render';
@@ -17,10 +18,12 @@ export default class Board {
 
     this._currentSortType = SortType.DAY;
     this._eventPresenter = {};
+    this._isLoading = true;
 
     this._sortComponent = null;
     this._boardComponent = new BoardView();
     this._noEventComponent = new NoEventView();
+    this._loadingComponent = new LoadingView();
     this._eventListComponent = new EventListView();
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
@@ -124,6 +127,11 @@ export default class Board {
         this._clearBoard({resetSortType: true});
         this._renderBoard();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        this._clearBoard({resetSortType: true});
+        this._renderBoard();
+        break;
     }
   }
 
@@ -133,6 +141,10 @@ export default class Board {
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.resetView());
+  }
+
+  _renderLoading() {
+    render(this._boardComponent, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 
   _renderNoEvent() {
@@ -174,6 +186,7 @@ export default class Board {
     this._eventPresenter = {};
 
     remove(this._sortComponent);
+    remove(this._loadingComponent);
     remove(this._noEventComponent);
 
     if (resetSortType) {
@@ -182,6 +195,11 @@ export default class Board {
   }
 
   _renderBoard() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const events = this._getEvents();
     const eventCount = events.length;
 
