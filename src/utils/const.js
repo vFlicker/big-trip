@@ -49,11 +49,6 @@ export const MenuItem = {
   STATS: 'stats',
 };
 
-export const Mode = {
-  EDIT: 'edit',
-  ADD: 'add',
-};
-
 export const STATISTICS_SETTINGS = {
   type: 'horizontalBar',
   backgroundColor: '#ffffff',
