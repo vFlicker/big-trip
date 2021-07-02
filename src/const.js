@@ -31,6 +31,11 @@ export const MenuItem = {
   STATS: 'stats',
 };
 
+export const Mode = {
+  DEFAULT: 'default',
+  EDITING: 'editing',
+};
+
 export const ResetButtonText = {
   ADD: 'Cancel',
   EDIT: 'Delete',

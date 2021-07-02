@@ -7,6 +7,26 @@ export const RenderPosition = {
   AFTEREND: 'afterend',
 };
 
+export const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export const remove = (component) => {
+  if (component === null) {
+    return;
+  }
+
+  if (!(component instanceof Abstract)) {
+    throw new Error('Can remove only components');
+  }
+
+  component.getElement().remove();
+  component.removeElement();
+};
+
 export const render = (container, child, place) => {
   if (container instanceof Abstract) {
     container = container.getElement();
@@ -32,13 +52,6 @@ export const render = (container, child, place) => {
   }
 };
 
-export const createElement = (template) => {
-  const newElement = document.createElement('div');
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
 export const replace = (newChild, oldChild) => {
   if (oldChild instanceof Abstract) {
     oldChild = oldChild.getElement();
@@ -55,17 +68,4 @@ export const replace = (newChild, oldChild) => {
   }
 
   parent.replaceChild(newChild, oldChild);
-};
-
-export const remove = (component) => {
-  if (component === null) {
-    return;
-  }
-
-  if (!(component instanceof Abstract)) {
-    throw new Error('Can remove only components');
-  }
-
-  component.getElement().remove();
-  component.removeElement();
 };

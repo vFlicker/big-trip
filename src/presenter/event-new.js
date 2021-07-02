@@ -1,7 +1,7 @@
 import EventItemEditView from '../view/event-item-edit';
-import { render, RenderPosition, remove } from '../utils/render';
-import { DEFAULT_EVENT, UpdateType, UserAction } from '../const';
-import { nanoid } from 'nanoid';
+import {remove, render, RenderPosition} from '../utils/render';
+import {DEFAULT_EVENT, UpdateType, UserAction} from '../const';
+import {nanoid} from 'nanoid';
 
 export default class EventNew {
   constructor(eventListContainer, destinationModel, offersModel, changeData) {
@@ -16,9 +16,9 @@ export default class EventNew {
     this._eventItemEditComponent = null;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleItemEditDeleteClick = this._handleItemEditDeleteClick.bind(this);
     this._handleItemEditRollupClick = this._handleItemEditRollupClick.bind(this);
     this._handleItemEditSubmit = this._handleItemEditSubmit.bind(this);
-    this._handleItemEditDeleteClick = this._handleItemEditDeleteClick.bind(this);
   }
 
   init(callback, renderEventList, renderNoEvents) {
@@ -72,6 +72,14 @@ export default class EventNew {
     }
   }
 
+  _handleItemEditDeleteClick() {
+    this.destroy();
+  }
+
+  _handleItemEditRollupClick() {
+    this.destroy();
+  }
+
   _handleItemEditSubmit(event) {
     this._changeData(
       UserAction.ADD_EVENT,
@@ -82,14 +90,6 @@ export default class EventNew {
         {id: nanoid()},
       ),
     );
-    this.destroy();
-  }
-
-  _handleItemEditRollupClick() {
-    this.destroy();
-  }
-
-  _handleItemEditDeleteClick() {
     this.destroy();
   }
 }

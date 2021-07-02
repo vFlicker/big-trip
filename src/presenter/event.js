@@ -1,12 +1,7 @@
 import EventItemView from '../view/event-item';
 import EventItemEditView from '../view/event-item-edit';
-import { render, RenderPosition, replace, remove } from '../utils/render';
-import {UpdateType, UserAction} from '../const';
-
-const Mode = {
-  DEFAULT: 'default',
-  EDITING: 'editing',
-};
+import {remove, render, RenderPosition, replace} from '../utils/render';
+import {Mode, UpdateType, UserAction} from '../const';
 
 export default class Event {
   constructor(eventListContainer, destinationModel, offersModel, changeData, changeMode) {
@@ -21,11 +16,11 @@ export default class Event {
     this._mode = Mode.DEFAULT;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
-    this._handleItemRollupClick = this._handleItemRollupClick.bind(this);
-    this._handleItemFavoriteClick = this._handleItemFavoriteClick.bind(this);
+    this._handleItemEditDeleteClick = this._handleItemEditDeleteClick.bind(this);
     this._handleItemEditRollupClick = this._handleItemEditRollupClick.bind(this);
     this._handleItemEditSubmit = this._handleItemEditSubmit.bind(this);
-    this._handleItemEditDeleteClick = this._handleItemEditDeleteClick.bind(this);
+    this._handleItemFavoriteClick = this._handleItemFavoriteClick.bind(this);
+    this._handleItemRollupClick = this._handleItemRollupClick.bind(this);
   }
 
   init(event) {
@@ -35,7 +30,11 @@ export default class Event {
     const prevEventItemEditComponent = this._eventItemEditComponent;
 
     this._eventItemComponent = new EventItemView(event);
-    this._eventItemEditComponent = new EventItemEditView(event, this._destinationModel.getDestinations(), this._offersModel.getOffers());
+    this._eventItemEditComponent = new EventItemEditView(
+      event,
+      this._destinationModel.getDestinations(),
+      this._offersModel.getOffers(),
+    );
 
     this._eventItemComponent.setRollupClickHandler(this._handleItemRollupClick);
     this._eventItemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);
@@ -60,10 +59,13 @@ export default class Event {
     remove(prevEventItemEditComponent);
   }
 
-  _escKeyDownHandler(evt) {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this._eventItemEditComponent.reset(this._event);
+  destroy() {
+    remove(this._eventItemComponent);
+    remove(this._eventItemEditComponent);
+  }
+
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToEvent();
     }
   }
@@ -81,27 +83,19 @@ export default class Event {
     this._mode = Mode.DEFAULT;
   }
 
-  resetView() {
-    if (this._mode !== Mode.DEFAULT) {
+  _escKeyDownHandler(evt) {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this._eventItemEditComponent.reset(this._event);
       this._replaceFormToEvent();
     }
   }
 
-  _handleItemRollupClick() {
-    this._replaceEventToForm();
-  }
-
-  _handleItemFavoriteClick() {
+  _handleItemEditDeleteClick(event) {
     this._changeData(
-      UserAction.UPDATE_EVENT,
-      UpdateType.PATCH,
-      Object.assign(
-        {},
-        this._event,
-        {
-          isFavorite: !this._event.isFavorite,
-        },
-      ),
+      UserAction.DELETE_EVENT,
+      UpdateType.MINOR,
+      event,
     );
   }
 
@@ -119,16 +113,21 @@ export default class Event {
     this._replaceFormToEvent();
   }
 
-  _handleItemEditDeleteClick(event) {
+  _handleItemFavoriteClick() {
     this._changeData(
-      UserAction.DELETE_EVENT,
-      UpdateType.MINOR,
-      event,
+      UserAction.UPDATE_EVENT,
+      UpdateType.PATCH,
+      Object.assign(
+        {},
+        this._event,
+        {
+          isFavorite: !this._event.isFavorite,
+        },
+      ),
     );
   }
 
-  destroy() {
-    remove(this._eventItemComponent);
-    remove(this._eventItemEditComponent);
+  _handleItemRollupClick() {
+    this._replaceEventToForm();
   }
 }

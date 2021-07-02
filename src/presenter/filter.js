@@ -1,8 +1,8 @@
 import FilterView from '../view/filter';
-import { render, RenderPosition, replace, remove } from '../utils/render';
-import { UpdateType } from '../const';
-import { filter } from '../utils/filter';
-import { ucFirst } from '../utils/common';
+import {ucFirst} from '../utils/common';
+import {filter} from '../utils/filter';
+import {remove, render, RenderPosition, replace} from '../utils/render';
+import {UpdateType} from '../const';
 
 export default class Filter {
   constructor(filterContainer, filterModel, eventsModel) {
@@ -36,18 +36,6 @@ export default class Filter {
     remove(prevFilterComponent);
   }
 
-  _handleModelEvent() {
-    this.init();
-  }
-
-  _handleFilterTypeChange(filterType) {
-    if (this._filterModel.getFilter() === filterType) {
-      return;
-    }
-
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
-  }
-
   _getFilters() {
     const events = this._eventsModel.getEvents();
     const currentFilterType = this._filterModel.getFilter();
@@ -60,5 +48,17 @@ export default class Filter {
         isChecked: currentFilterType === type,
         isDisabled: filter[type](events).length === 0,
       }));
+  }
+
+  _handleModelEvent() {
+    this.init();
+  }
+
+  _handleFilterTypeChange(filterType) {
+    if (this._filterModel.getFilter() === filterType) {
+      return;
+    }
+
+    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
   }
 }
