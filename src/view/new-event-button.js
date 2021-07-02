@@ -2,7 +2,9 @@ import AbstractView from './abstract';
 
 const createNewEventButton = () => {
   return (
-    '<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>'
+    `<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">
+      New event
+    </button>`
   );
 };
 

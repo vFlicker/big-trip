@@ -1,9 +1,9 @@
 import SmartView from './smart';
-import { compareDates, humanizeDate } from '../utils/event';
-import { ucFirst, cloneArrayOfObjects } from '../utils/common';
-import { DATEPICKER_BASIC_SETTINGS, DEFAULT_EVENT, ResetButtonText } from '../const';
+import {cloneArrayOfObjects, ucFirst} from '../utils/common';
+import {compareDates, humanizeDate} from '../utils/event';
+import {DATEPICKER_BASIC_SETTINGS, DEFAULT_EVENT, ResetButtonText} from '../const';
+import {nanoid } from 'nanoid';
 import flatpickr from 'flatpickr';
-import { nanoid } from 'nanoid';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
@@ -119,7 +119,12 @@ const createContainerPhotosTemplate = (hasDestinationPictures, pictures) => {
   return '';
 };
 
-const createSectionDestinationTemplate = (hasSectionDestination, destination, hasDestinationDescription, hasDestinationPictures) => {
+const createSectionDestinationTemplate = (
+  hasSectionDestination,
+  destination,
+  hasDestinationDescription,
+  hasDestinationPictures,
+) => {
   if (hasSectionDestination) {
     const {pictures, description} = destination;
 
@@ -141,11 +146,25 @@ const createSectionDestinationTemplate = (hasSectionDestination, destination, ha
   return '';
 };
 
-const createSectionDetailsTemplate = (hasDetails, hasSectionOffers, type, offers, hasSectionDestination, destination, hasDestinationDescription, hasDestinationPictures) => {
+const createSectionDetailsTemplate = (
+  hasDetails,
+  hasSectionOffers,
+  type,
+  offers,
+  hasSectionDestination,
+  destination,
+  hasDestinationDescription,
+  hasDestinationPictures,
+) => {
   if (hasDetails) {
     const sectionOffersTemplate = createSectionOffersTemplate(hasSectionOffers, type, offers);
 
-    const sectionDestinationTemplate = createSectionDestinationTemplate(hasSectionDestination, destination, hasDestinationDescription, hasDestinationPictures);
+    const sectionDestinationTemplate = createSectionDestinationTemplate(
+      hasSectionDestination,
+      destination,
+      hasDestinationDescription,
+      hasDestinationPictures,
+    );
 
     return (
       `<section class="event__details">
@@ -171,13 +190,38 @@ const createRollupButtonTemplate = (isNewEvent) => {
 };
 
 const createEventItemEditTemplate = (state, availableDestination, availableOffers) => {
-  const { id, destination, type, dateStart, dateEnd, price, offers, hasSectionOffers, hasDestinationDescription, hasDestinationPictures, hasSectionDestination, hasDestinationName, hasDetails, isNewEvent, isSubmitDisabled } = state;
+  const {
+    dateEnd,
+    dateStart,
+    destination,
+    hasDestinationDescription,
+    hasDestinationName,
+    hasDestinationPictures,
+    hasDetails,
+    hasSectionDestination,
+    hasSectionOffers,
+    id,
+    isNewEvent,
+    isSubmitDisabled,
+    offers,
+    price,
+    type,
+  } = state;
 
   const eventTypeListTemplate = createEventTypeListTemplate(type, id, availableOffers);
 
   const eventDestinationListTemplate = createEventDestinationListTemplate(availableDestination);
 
-  const sectionDetailsTemplate = createSectionDetailsTemplate(hasDetails, hasSectionOffers, type, offers, hasSectionDestination, destination, hasDestinationDescription, hasDestinationPictures);
+  const sectionDetailsTemplate = createSectionDetailsTemplate(
+    hasDetails,
+    hasSectionOffers,
+    type,
+    offers,
+    hasSectionDestination,
+    destination,
+    hasDestinationDescription,
+    hasDestinationPictures,
+  );
 
   const rollupButtonTemplate = createRollupButtonTemplate(isNewEvent);
 
@@ -246,7 +290,13 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
               <span class="visually-hidden">Price</span>
               €
             </label>
-            <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${price}">
+            <input
+                class="event__input  event__input--price"
+                id="event-price-${id}"
+                type="text"
+                name="event-price"
+                value="${price}"
+            />
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${submitStatus}>Save</button>
@@ -296,23 +346,151 @@ export default class EventItemEdit extends SmartView {
     this._removeEndDatePicker();
   }
 
-  _typeChangeHandler(evt) {
-    if (evt.target.tagName !== 'INPUT') {
-      return;
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+
+    this
+      .getElement()
+      .querySelector('.event__reset-btn')
+      .addEventListener('click', this._formDeleteClickHandler);
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+
+    this
+      .getElement()
+      .addEventListener('submit', this._formSubmitHandler);
+  }
+
+  setRollupClickHandler(callback) {
+    const rollupButton = this.getElement().querySelector('.event__rollup-btn');
+
+    if (rollupButton) {
+      this._callback.rollupClick = callback;
+
+      rollupButton.addEventListener('click', this._rollupClickHandler);
+    }
+  }
+
+  reset(event) {
+    this.updateState(EventItemEdit.parseEventToState(event, this._availableOffers));
+  }
+
+  restoreHandlers() {
+    this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setRollupClickHandler(this._callback.rollupClick);
+    this._setStartDatePicker();
+    this._setEndDatePicker();
+    this._setInnerHandlers();
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EventItemEdit.parseStateToEvent(this._state));
+  }
+
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit(EventItemEdit.parseStateToEvent(this._state));
+  }
+
+  _rollupClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.rollupClick();
+  }
+
+  _setStartDatePicker() {
+    this._removeStartDatePicker();
+
+    this._startDatePicker = flatpickr(
+      this
+        .getElement()
+        .querySelector('.event__field-group--time input[name=event-start-time]'),
+
+      Object.assign(
+        {},
+        DATEPICKER_BASIC_SETTINGS,
+        {
+          minDate: Date.now(),
+          defaultDate: this._state.dateStart,
+          onClose: this._startDateChangeHandler,
+        },
+      ),
+    );
+  }
+
+  _setEndDatePicker() {
+    const isDateStartOver = compareDates(this._state.dateStart, this._state.dateEnd);
+
+    this._removeEndDatePicker();
+
+    this._endDatePicker = flatpickr(
+      this
+        .getElement()
+        .querySelector('.event__field-group--time input[name=event-end-time]'),
+
+      Object.assign(
+        {},
+        DATEPICKER_BASIC_SETTINGS,
+        {
+          minDate: this._state.dateStart,
+          defaultDate: isDateStartOver ? this._state.dateStart : this._state.dateEnd,
+          onClose: this._endDateChangeHandler,
+        },
+      ),
+    );
+  }
+
+  _removeStartDatePicker() {
+    if (this._startDatePicker) {
+      this._startDatePicker.destroy();
+      this._startDatePicker = null;
+    }
+  }
+
+  _removeEndDatePicker() {
+    if (this._endDatePicker) {
+      this._endDatePicker.destroy();
+      this._endDatePicker = null;
+    }
+  }
+
+  _startDateChangeHandler([userDate]) {
+    this.updateState({
+      dateStart: userDate,
+    });
+  }
+
+  _endDateChangeHandler([userDate]) {
+    this.updateState({
+      dateEnd: userDate,
+    });
+  }
+
+  _setInnerHandlers() {
+    this
+      .getElement()
+      .querySelector('.event__input--destination')
+      .addEventListener('input', this._destinationInputHandler);
+
+    if (this._state.hasSectionOffers) {
+      this
+        .getElement()
+        .querySelector('.event__available-offers')
+        .addEventListener('change', this._offerChangeHandler);
     }
 
-    evt.preventDefault();
-    const eventType = evt.target.value;
-    const offers = EventItemEdit.getOfferWithStatus(eventType, [], this._availableOffers);
+    this
+      .getElement()
+      .querySelector('.event__input--price')
+      .addEventListener('input', this._priceInputHandler);
 
-    const hasSectionOffers = offers.length !== 0;
-
-    this.updateState({
-      offers,
-      hasSectionOffers,
-      type: eventType,
-      hasDetails: hasSectionOffers || this._state.hasSectionDestination,
-    });
+    this
+      .getElement()
+      .querySelector('.event__type-list')
+      .addEventListener('change', this._typeChangeHandler);
   }
 
   _destinationInputHandler(evt) {
@@ -377,157 +555,50 @@ export default class EventItemEdit extends SmartView {
     }, true);
   }
 
-  _setInnerHandlers() {
-    this
-      .getElement()
-      .querySelector('.event__type-list')
-      .addEventListener('change', this._typeChangeHandler);
-
-    this
-      .getElement()
-      .querySelector('.event__input--destination')
-      .addEventListener('input', this._destinationInputHandler);
-
-    if (this._state.hasSectionOffers) {
-      this
-        .getElement()
-        .querySelector('.event__available-offers')
-        .addEventListener('change', this._offerChangeHandler);
+  _typeChangeHandler(evt) {
+    if (evt.target.tagName !== 'INPUT') {
+      return;
     }
 
-    this
-      .getElement()
-      .querySelector('.event__input--price')
-      .addEventListener('input', this._priceInputHandler);
-  }
+    evt.preventDefault();
+    const eventType = evt.target.value;
+    const offers = EventItemEdit.getOfferWithStatus(eventType, [], this._availableOffers);
 
-  _removeStartDatePicker() {
-    if (this._startDatePicker) {
-      this._startDatePicker.destroy();
-      this._startDatePicker = null;
-    }
-  }
+    const hasSectionOffers = offers.length !== 0;
 
-  _removeEndDatePicker() {
-    if (this._endDatePicker) {
-      this._endDatePicker.destroy();
-      this._endDatePicker = null;
-    }
-  }
-
-  _startDateChangeHandler([userDate]) {
     this.updateState({
-      dateStart: userDate,
+      offers,
+      hasSectionOffers,
+      type: eventType,
+      hasDetails: hasSectionOffers || this._state.hasSectionDestination,
     });
-  }
-
-  _endDateChangeHandler([userDate]) {
-    this.updateState({
-      dateEnd: userDate,
-    });
-  }
-
-  _setStartDatePicker() {
-    this._removeStartDatePicker();
-
-    this._startDatePicker = flatpickr(
-      this
-        .getElement()
-        .querySelector('.event__field-group--time input[name=event-start-time]'),
-
-      Object.assign(
-        {},
-        DATEPICKER_BASIC_SETTINGS,
-        {
-          minDate: Date.now(),
-          defaultDate: this._state.dateStart,
-          onClose: this._startDateChangeHandler,
-        },
-      ),
-    );
-  }
-
-  _setEndDatePicker() {
-    const isDateStartOver = compareDates(this._state.dateStart, this._state.dateEnd);
-
-    this._removeEndDatePicker();
-
-    this._endDatePicker = flatpickr(
-      this
-        .getElement()
-        .querySelector('.event__field-group--time input[name=event-end-time]'),
-
-      Object.assign(
-        {},
-        DATEPICKER_BASIC_SETTINGS,
-        {
-          minDate: this._state.dateStart,
-          defaultDate: isDateStartOver ? this._state.dateStart : this._state.dateEnd,
-          onClose: this._endDateChangeHandler,
-        },
-      ),
-    );
-  }
-
-  _rollupClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.rollupClick();
-  }
-
-  _formSubmitHandler(evt) {
-    evt.preventDefault();
-    this._callback.formSubmit(EventItemEdit.parseStateToEvent(this._state));
-  }
-
-  _formDeleteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.deleteClick(EventItemEdit.parseStateToEvent(this._state));
-  }
-
-  setRollupClickHandler(callback) {
-    const rollupButton = this.getElement().querySelector('.event__rollup-btn');
-
-    if (rollupButton) {
-      this._callback.rollupClick = callback;
-
-      rollupButton.addEventListener('click', this._rollupClickHandler);
-    }
-  }
-
-  setFormSubmitHandler(callback) {
-    this._callback.formSubmit = callback;
-
-    this
-      .getElement()
-      .addEventListener('submit', this._formSubmitHandler);
-  }
-
-  setDeleteClickHandler(callback) {
-    this._callback.deleteClick = callback;
-
-    this
-      .getElement()
-      .querySelector('.event__reset-btn')
-      .addEventListener('click', this._formDeleteClickHandler);
-  }
-
-  reset(event) {
-    this.updateState(EventItemEdit.parseEventToState(event, this._availableOffers));
-  }
-
-  restoreHandlers() {
-    this._setInnerHandlers();
-    this._setStartDatePicker();
-    this._setEndDatePicker();
-    this.setRollupClickHandler(this._callback.rollupClick);
-    this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _throwValidityError(element, errorText) {
     element.setCustomValidity(errorText);
     element.reportValidity();
-    return;
+  }
+
+  static getOfferWithStatus(userType, userOffers, availableOffers) {
+    const availableOffersWithType = availableOffers.find((item) => item.type === userType);
+    const availableOffersByType = availableOffersWithType.offers;
+
+    return availableOffersByType.reduce((resultArray, availableOfferByType) => {
+      const hasOffer = userOffers.find((item) => item.title === availableOfferByType.title);
+
+      resultArray.push(
+        Object.assign(
+          {},
+          availableOfferByType,
+          {
+            id: nanoid(),
+            isChecked: !!hasOffer,
+          },
+        ),
+      );
+
+      return resultArray;
+    }, []);
   }
 
   static parseEventToState(event, availableOffers) {
@@ -578,27 +649,4 @@ export default class EventItemEdit extends SmartView {
     return state;
   }
 
-  static getOfferWithStatus(userType, userOffers, availableOffers) {
-    const availableOffersWithType = availableOffers.find((item) => item.type === userType);
-    const availableOffersByType = availableOffersWithType.offers;
-
-    const offersWithStatus = availableOffersByType.reduce((resultArray, availableOfferByType) => {
-      const hasOffer = userOffers.find((item) => item.title === availableOfferByType.title);
-
-      resultArray.push(
-        Object.assign(
-          {},
-          availableOfferByType,
-          {
-            id: nanoid(),
-            isChecked: hasOffer ? true : false,
-          },
-        ),
-      );
-
-      return resultArray;
-    }, []);
-
-    return offersWithStatus;
-  }
 }

@@ -9,8 +9,8 @@ import NewEventButtonView from './view/new-event-button';
 import StatisticsView from './view/statistic';
 import BoardPresenter from './presenter/board';
 import FilterPresenter from './presenter/filter';
-import {FilterType, MenuItem, UpdateType} from './const';
 import {remove, render, RenderPosition} from './utils/render';
+import {FilterType, MenuItem, UpdateType} from './const';
 
 const AUTHORIZATION = 'Basic 48avd2449w934avd';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
@@ -30,8 +30,19 @@ const offersModel = new OffersModel();
 const menuComponent = new MenuView();
 const newEventButtonComponent = new NewEventButtonView();
 
-const boardPresenter = new BoardPresenter(containerMainContent, eventsModel, filterModel, destinationModel, offersModel);
-const filterPresenter = new FilterPresenter(containerFilter, filterModel, eventsModel);
+const boardPresenter = new BoardPresenter(
+  containerMainContent,
+  eventsModel,
+  filterModel,
+  destinationModel,
+  offersModel,
+);
+
+const filterPresenter = new FilterPresenter(
+  containerFilter,
+  filterModel,
+  eventsModel,
+);
 
 let statisticsComponent = null;
 

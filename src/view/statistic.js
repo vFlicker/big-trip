@@ -1,8 +1,14 @@
 import SmartView from './smart';
+import {
+  getCountOfUses,
+  getDurationInMs,
+  getEventTypes,
+  getHumanizeDuration,
+  getSumPriceByType
+} from '../utils/statistic';
+import {STATISTIC_SETTINGS, StatisticTitles} from '../const';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { getCountOfUses, getEventTypes, getSumPriceByType, getDurationInMs, getHumanizeDuration } from './../utils/statistic';
-import { StatisticTitles, STATISTIC_SETTINGS } from '../const';
 
 const renderMoneyChart = (moneyCtx, events) => {
   const uniqTypes = getEventTypes(events).map((type) => type.toUpperCase());

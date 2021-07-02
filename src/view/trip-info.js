@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import { getEventPeriod } from '../utils/event';
+import {getEventPeriod} from '../utils/event';
 
 const getTitle = (events) => {
   if (events.length > 3) {

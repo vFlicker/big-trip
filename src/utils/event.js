@@ -1,6 +1,6 @@
+import {getDateDifference} from './common';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {getDateDifference} from './common';
 
 dayjs.extend(duration);
 
@@ -34,6 +34,15 @@ export const getEventPeriod = (eventStart, eventEnd) => {
 export const humanizeDate = (date, formatter = 'MM-DD-YYYY') => {
   return dayjs(date).format(formatter);
 };
+
+export const humanizeDateTime = (date) => {
+  const firstDate = humanizeDate(date, 'MM-DD-YYYY');
+  const secondDate = humanizeDate(date, 'HH:mm');
+  const union = 'T';
+
+  return `${firstDate}${union}${secondDate}`;
+};
+
 
 export const humanizeDurationBetweenDates = (dateStart, dateEnd) => {
   const durationBetweenDates = getDurationBetweenDates(dateStart, dateEnd);

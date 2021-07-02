@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import { humanizeDate, humanizeDurationBetweenDates } from '../utils/event';
+import {humanizeDate, humanizeDateTime, humanizeDurationBetweenDates} from '../utils/event';
 
 const createOfferListTemplate = (offers) => {
   const getTemplate = (offer) => {
@@ -22,6 +22,13 @@ const createOfferListTemplate = (offers) => {
 const createEventItemTemplate = (event) => {
   const {dateStart, dateEnd, offers, isFavorite, type, destination, price} = event;
 
+  const eventData = humanizeDate(dateStart, 'MMM D');
+  const eventDataPlaceholder = humanizeDate(dateStart, 'MM-DD-YYYY');
+  const eventStartTime = humanizeDate(dateStart, 'HH:mm');
+  const eventStartTimePlaceholder = humanizeDateTime(dateStart);
+  const eventEndTime = humanizeDate(dateEnd, 'HH:mm');
+  const eventEndTimePlaceholder = humanizeDateTime(dateEnd);
+
   const timeDuration = humanizeDurationBetweenDates(dateStart, dateEnd);
 
   const offerListTemplate = createOfferListTemplate(offers);
@@ -33,19 +40,21 @@ const createEventItemTemplate = (event) => {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${humanizeDate(dateStart, 'MM-DD-YYYY')}">${humanizeDate(dateStart, 'MMM D')}</time>
+        <time class="event__date" datetime="${eventDataPlaceholder}">${eventData}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
         </div>
         <h3 class="event__title">${type} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${humanizeDate(dateStart, 'MM-DD-YYYY')}T${humanizeDate(dateStart, 'HH:mm')}">
-              ${humanizeDate(dateStart, 'HH:mm')}
+            <time
+                class="event__start-time"
+                datetime="${eventStartTimePlaceholder}">
+              ${eventStartTime}
             </time>
             &mdash;
-            <time class="event__end-time" datetime="${humanizeDate(dateEnd, 'MM-DD-YYYY')}T${humanizeDate(dateEnd, 'HH:mm')}">
-              ${humanizeDate(dateEnd, 'HH:mm')}
+            <time class="event__end-time" datetime="${eventEndTimePlaceholder}">
+              ${eventEndTime}
             </time>
           </p>
           <p class="event__duration">${timeDuration}</p>
@@ -83,14 +92,13 @@ export default class EventItem extends AbstractView {
     return createEventItemTemplate(this._event);
   }
 
-  _rollupClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.rollupClick();
-  }
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
 
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.favoriteClick();
+    this
+      .getElement()
+      .querySelector('.event__favorite-btn')
+      .addEventListener('click', this._favoriteClickHandler);
   }
 
   setRollupClickHandler(callback) {
@@ -102,12 +110,13 @@ export default class EventItem extends AbstractView {
       .addEventListener('click', this._rollupClickHandler);
   }
 
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
 
-    this
-      .getElement()
-      .querySelector('.event__favorite-btn')
-      .addEventListener('click', this._favoriteClickHandler);
+  _rollupClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.rollupClick();
   }
 }
