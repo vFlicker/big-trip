@@ -69,13 +69,10 @@ export default class Events extends Observer {
       },
     );
 
-    adaptEvent.destination.photos = event.destination.pictures;
-
     delete adaptEvent.date_to;
     delete adaptEvent.date_from;
     delete adaptEvent.base_price;
     delete adaptEvent.is_favorite;
-    delete adaptEvent.destination.pictures;
 
     return adaptEvent;
   }

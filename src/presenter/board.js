@@ -11,10 +11,12 @@ import {sortByPrice, sortByTime, sortByDate} from '../utils/event';
 import { filter } from './../utils/filter';
 
 export default class Board {
-  constructor(boardContainer, eventsModel, filterModel) {
+  constructor(boardContainer, eventsModel, filterModel, destinationModel, offersModel) {
     this._boardContainer = boardContainer;
+    this._destinationModel = destinationModel;
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
+    this._offersModel = offersModel;
 
     this._currentSortType = SortType.DAY;
     this._eventPresenter = {};
@@ -34,14 +36,10 @@ export default class Board {
     this._renderEventList = this._renderEventList.bind(this);
     this._renderNoEvent = this._renderNoEvent.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._eventListComponent, this._handleViewAction);
+    this._eventNewPresenter = new EventNewPresenter(this._eventListComponent, this._destinationModel, this._offersModel, this._handleViewAction);
   }
 
-  init(availableDestination, availableTypes, availableOffers) {
-    this._availableDestination = availableDestination;
-    this._availableTypes = availableTypes;
-    this._availableOffers = availableOffers;
-
+  init() {
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._eventsModel.addObserver(this._handleModelEvent);
@@ -66,13 +64,13 @@ export default class Board {
 
     if (eventCount === 0) {
       remove(this._noEventComponent);
-      this._eventNewPresenter.init(this._availableDestination, this._availableTypes, this._availableOffers, callback, this._renderEventList, this._renderNoEvent);
+      this._eventNewPresenter.init(callback, this._renderEventList, this._renderNoEvent);
       return;
     }
 
     this._currentSortType = SortType.DAY;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._eventNewPresenter.init(this._availableDestination, this._availableTypes, this._availableOffers, callback);
+    this._eventNewPresenter.init(callback);
   }
 
   _getEvents() {
@@ -117,7 +115,7 @@ export default class Board {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._eventPresenter[data.id].init(data, this._availableDestination, this._availableTypes, this._availableOffers);
+        this._eventPresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
         this._clearBoard();
@@ -167,8 +165,8 @@ export default class Board {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListComponent, this._handleViewAction, this._handleModeChange);
-    eventPresenter.init(event, this._availableDestination, this._availableTypes, this._availableOffers);
+    const eventPresenter = new EventPresenter(this._eventListComponent, this._destinationModel, this._offersModel, this._handleViewAction, this._handleModeChange);
+    eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
 

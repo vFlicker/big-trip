@@ -4,8 +4,10 @@ import { DEFAULT_EVENT, UpdateType, UserAction } from './../utils/const';
 import { nanoid } from 'nanoid';
 
 export default class EventNew {
-  constructor(eventListContainer, changeData) {
+  constructor(eventListContainer, destinationModel, offersModel, changeData) {
     this._eventListContainer = eventListContainer;
+    this._destinationModel = destinationModel;
+    this._offersModel = offersModel;
     this._changeData = changeData;
 
     this._destroyCallback = null;
@@ -19,7 +21,7 @@ export default class EventNew {
     this._handleItemEditDeleteClick = this._handleItemEditDeleteClick.bind(this);
   }
 
-  init(availableDestination, availableTypes, availableOffers, callback, renderEventList, renderNoEvents) {
+  init(callback, renderEventList, renderNoEvents) {
     this._destroyCallback = callback;
     this._renderEventList = renderEventList;
     this._renderNoEvents = renderNoEvents;
@@ -33,7 +35,7 @@ export default class EventNew {
       this._renderEventList = null;
     }
 
-    this._eventItemEditComponent = new EventItemEditView(DEFAULT_EVENT, availableDestination, availableTypes, availableOffers);
+    this._eventItemEditComponent = new EventItemEditView(DEFAULT_EVENT, this._destinationModel.getDestinations(), this._offersModel.getOffers());
     this._eventItemEditComponent.setFormSubmitHandler(this._handleItemEditSubmit);
     this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
     this._eventItemEditComponent.setDeleteClickHandler(this._handleItemEditDeleteClick);

@@ -9,7 +9,6 @@ import NewEventButtonView from './view/new-event-button';
 import StatisticsView from './view/statistic';
 import BoardPresenter from './presenter/board';
 import FilterPresenter from './presenter/filter';
-import { availableDestination, availableTypes, availableOffers } from './mock/event';
 import {remove, render, RenderPosition} from './utils/render';
 import {FilterType, MenuItem, UpdateType} from './utils/const';
 
@@ -37,7 +36,7 @@ const handleMenuClick = (menuItem) => {
     case MenuItem.TABLE:
       remove(statisticsComponent);
       menuComponent.setMenuItem(menuItem);
-      boardPresenter.init(availableDestination, availableTypes, availableOffers);
+      boardPresenter.init();
       break;
     case MenuItem.STATS:
       boardPresenter.destroy();
@@ -58,7 +57,7 @@ newEventButtonComponent.setButtonClickHandler(() => {
   boardPresenter.destroy();
   menuComponent.setMenuItem(MenuItem.TABLE);
   filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-  boardPresenter.init(availableDestination, availableTypes, availableOffers);
+  boardPresenter.init();
   boardPresenter.createEvent(handleEventNewClose);
   newEventButtonComponent.getElement().disabled = true;
 });
@@ -69,8 +68,8 @@ render(containerTripMain, newEventButtonComponent, RenderPosition.BEFOREEND);
 // Main
 const containerMainContent = document.querySelector('.page-main .page-body__container');
 
-const boardPresenter = new BoardPresenter(containerMainContent, eventsModel, filterModel);
-boardPresenter.init(availableDestination, availableTypes, availableOffers);
+const boardPresenter = new BoardPresenter(containerMainContent, eventsModel, filterModel, destinationModel, offersModel);
+boardPresenter.init();
 
 const filterPresenter = new FilterPresenter(containerFilter, filterModel, eventsModel);
 filterPresenter.init();

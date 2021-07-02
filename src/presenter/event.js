@@ -9,8 +9,10 @@ const Mode = {
 };
 
 export default class Event {
-  constructor(eventListContainer, changeData, changeMode) {
+  constructor(eventListContainer, destinationModel, offersModel, changeData, changeMode) {
     this._eventListContainer = eventListContainer;
+    this._destinationModel = destinationModel;
+    this._offersModel = offersModel;
     this._changeData = changeData;
     this._changeMode = changeMode;
 
@@ -26,14 +28,14 @@ export default class Event {
     this._handleItemEditDeleteClick = this._handleItemEditDeleteClick.bind(this);
   }
 
-  init(event, availableDestination, availableTypes, availableOffers) {
+  init(event) {
     this._event = event;
 
     const prevEventItemComponent = this._eventItemComponent;
     const prevEventItemEditComponent = this._eventItemEditComponent;
 
-    this._eventItemComponent = new EventItemView(event, availableDestination, availableTypes, availableOffers);
-    this._eventItemEditComponent = new EventItemEditView(event, availableDestination, availableTypes, availableOffers);
+    this._eventItemComponent = new EventItemView(event);
+    this._eventItemEditComponent = new EventItemEditView(event, this._destinationModel.getDestinations(), this._offersModel.getOffers());
 
     this._eventItemComponent.setRollupClickHandler(this._handleItemRollupClick);
     this._eventItemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);

@@ -1,34 +1,34 @@
 import SmartView from './smart';
 import { humanizeDate, compareDates } from '../utils/date';
 import { ucFirst, cloneArrayOfObjects } from '../utils/common';
-import { DATEPICKER_BASIC_SETTINGS, DEFAULT_EVENT } from '../utils/const';
+import { DATEPICKER_BASIC_SETTINGS, DEFAULT_EVENT, ResetButtonText } from '../utils/const';
 import flatpickr from 'flatpickr';
+import { nanoid } from 'nanoid';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-const createEventTypeListTemplate = (activeType, availableTypes) => {
+const createEventTypeListTemplate = (id, activeType, availableOffers) => {
   const getTemplate = (type) => {
-    const typeInputStatus = type === activeType
-      ? 'checked'
-      : '';
+    const typeInputStatus = type === activeType ? 'checked' : '';
 
     return (
       `<div class="event__type-item">
-        <input id="event-type-${type}-1"
+        <input id="event-type-${type}-${id}"
             class="event__type-input  visually-hidden"
             type="radio"
             name="event-type"
-            value="${type}" ${typeInputStatus}
+            value="${type}"
+            ${typeInputStatus}
           >
         <label class="event__type-label  event__type-label--${type}"
-            for="event-type-${type}-1">${ucFirst(type)}
+            for="event-type-${type}-${id}">${ucFirst(type)}
         </label>
       </div>`
     );
   };
 
-  return availableTypes
-    .map(getTemplate)
+  return availableOffers
+    .map((offer) => getTemplate(offer.type))
     .join('');
 };
 
@@ -46,34 +46,35 @@ const createEventDestinationListTemplate = (availableDestination) => {
 };
 
 const createEventOfferListTemplate = (type, offers) => {
-  const getTemplate = (offer) => {
-    const offerCheckboxStatus = offer.isChecked
-      ? 'checked'
-      : '';
+  const getTemplate = (type, offer) => {
+    const {id, isChecked, price, title} = offer;
+
+    const offerCheckboxStatus = isChecked ? 'checked' : '';
 
     return (
       `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden"
-          id="event-offer-${type}-${offer.id}"
+          id="event-offer-${type}-${id}"
           type="checkbox"
-          name="event-offer-${type}" ${offerCheckboxStatus}
-          data-event-offer-id="${offer.id}">
-        <label class="event__offer-label" for="event-offer-${type}-${offer.id}">
-          <span class="event__offer-title">Add ${offer.title}</span>
+          name="event-offer-${type}"
+          data-event-offer-id="${id}"
+          ${offerCheckboxStatus}>
+        <label class="event__offer-label" for="event-offer-${type}-${id}">
+          <span class="event__offer-title">Add ${title}</span>
           +€&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
+          <span class="event__offer-price">${price}</span>
         </label>
       </div>`
     );
   };
 
   return offers
-    .map(getTemplate)
+    .map((offer) => getTemplate(type, offer))
     .join('');
 };
 
-const createSectionOffersTemplate = (hasOffers, type, offers) => {
-  if (hasOffers) {
+const createSectionOffersTemplate = (hasSectionOffers, type, offers) => {
+  if (hasSectionOffers) {
     const eventOfferListTemplate = createEventOfferListTemplate(type, offers);
 
     return (
@@ -90,21 +91,21 @@ const createSectionOffersTemplate = (hasOffers, type, offers) => {
   return '';
 };
 
-const createEventPhotoListTemplate = (photos) => {
-  const getTemplate = (photo) => {
+const createEventPhotoListTemplate = (pictures) => {
+  const getTemplate = ({src, description}) => {
     return (
-      `<img class="event__photo" src="${photo}" alt="Event photo">`
+      `<img class="event__photo" src="${src}" alt="${description}">`
     );
   };
 
-  return photos
+  return pictures
     .map(getTemplate)
     .join('');
 };
 
-const createContainerPhotosTemplate = (hasPhotos, photos) => {
-  if (hasPhotos) {
-    const eventPhotoListTemplate = createEventPhotoListTemplate(photos);
+const createContainerPhotosTemplate = (hasDestinationPictures, pictures) => {
+  if (hasDestinationPictures) {
+    const eventPhotoListTemplate = createEventPhotoListTemplate(pictures);
 
     return (
       `<div class="event__photos-container">
@@ -118,15 +119,15 @@ const createContainerPhotosTemplate = (hasPhotos, photos) => {
   return '';
 };
 
-const createSectionDestinationTemplate = (hasDestination, destination, hasDescription, hasPhotos) => {
-  if (hasDestination) {
-    const {photos, description} = destination;
+const createSectionDestinationTemplate = (hasSectionDestination, destination, hasDestinationDescription, hasDestinationPictures) => {
+  if (hasSectionDestination) {
+    const {pictures, description} = destination;
 
-    const descriptionTemplate = hasDescription
+    const descriptionTemplate = hasDestinationDescription
       ? `<p class="event__destination-description">${description}</p>`
       : '';
 
-    const containerPhotosTemplate = createContainerPhotosTemplate(hasPhotos, photos);
+    const containerPhotosTemplate = createContainerPhotosTemplate(hasDestinationPictures, pictures);
 
     return (
       `<section class="event__section  event__section--destination">
@@ -140,11 +141,11 @@ const createSectionDestinationTemplate = (hasDestination, destination, hasDescri
   return '';
 };
 
-const createSectionDetailsTemplate = (hasDetails, hasOffers, type, offers, hasDestination, destination, hasDescription, hasPhotos) => {
+const createSectionDetailsTemplate = (hasDetails, hasSectionOffers, type, offers, hasSectionDestination, destination, hasDestinationDescription, hasDestinationPictures) => {
   if (hasDetails) {
-    const sectionOffersTemplate = createSectionOffersTemplate(hasOffers, type, offers);
+    const sectionOffersTemplate = createSectionOffersTemplate(hasSectionOffers, type, offers);
 
-    const sectionDestinationTemplate = createSectionDestinationTemplate(hasDestination, destination, hasDescription, hasPhotos);
+    const sectionDestinationTemplate = createSectionDestinationTemplate(hasSectionDestination, destination, hasDestinationDescription, hasDestinationPictures);
 
     return (
       `<section class="event__details">
@@ -169,23 +170,27 @@ const createRollupButtonTemplate = (isNewEvent) => {
   return '';
 };
 
-const createEventItemEditTemplate = (state, availableTypes, availableDestination) => {
-  const {destination, type, dateStart, dateEnd, price, offers, hasOffers, hasDescription, hasPhotos, hasDestination, hasDetails, isNewEvent} = state;
+const createEventItemEditTemplate = (state, availableDestination, availableOffers) => {
+  const { id, destination, type, dateStart, dateEnd, price, offers, hasSectionOffers, hasDestinationDescription, hasDestinationPictures, hasSectionDestination, hasDestinationName, hasDetails, isNewEvent, isSubmitDisabled } = state;
 
-  const eventTypeListTemplate = createEventTypeListTemplate(type, availableTypes);
+  const eventTypeListTemplate = createEventTypeListTemplate(type, id, availableOffers);
 
   const eventDestinationListTemplate = createEventDestinationListTemplate(availableDestination);
 
-  const sectionDetailsTemplate = createSectionDetailsTemplate(hasDetails, hasOffers, type, offers, hasDestination, destination, hasDescription, hasPhotos);
+  const sectionDetailsTemplate = createSectionDetailsTemplate(hasDetails, hasSectionOffers, type, offers, hasSectionDestination, destination, hasDestinationDescription, hasDestinationPictures);
 
   const rollupButtonTemplate = createRollupButtonTemplate(isNewEvent);
+
+  const inputDestinationValue = hasDestinationName ? destination.name : '';
+  const submitStatus = isSubmitDisabled ? 'disabled' : '';
+  const resetButtonText = isNewEvent ? ResetButtonText.ADD : ResetButtonText.EDIT;
 
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
-            <label class="event__type  event__type-btn" for="event-type-toggle-1">
+            <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon"
                 width="17"
@@ -193,7 +198,7 @@ const createEventItemEditTemplate = (state, availableTypes, availableDestination
                 src="img/icons/${type}.png"
                 alt="Event ${type} icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
 
             <div class="event__type-list">
               <fieldset class="event__type-group">
@@ -204,32 +209,32 @@ const createEventItemEditTemplate = (state, availableTypes, availableDestination
           </div>
 
           <div class="event__field-group  event__field-group--destination">
-            <label class="event__label  event__type-output" for="event-destination-1">
+            <label class="event__label  event__type-output" for="event-destination-${id}">
               ${type}
             </label>
             <input class="event__input  event__input--destination"
-                id="event-destination-1"
+                id="event-destination-${id}"
                 type="text"
                 name="event-destination"
-                value="${destination.name}"
-                list="destination-list-1">
-            <datalist id="destination-list-1">
+                value="${inputDestinationValue}"
+                list="destination-list-${id}">
+            <datalist id="destination-list-${id}">
               ${eventDestinationListTemplate}
             </datalist>
           </div>
 
           <div class="event__field-group  event__field-group--time">
-            <label class="visually-hidden" for="event-start-time-1">From</label>
+            <label class="visually-hidden" for="event-start-time-${id}">From</label>
             <input class="event__input  event__input--time"
-              id="event-start-time-1"
+              id="event-start-time-${id}"
               type="text"
               name="event-start-time"
               value="${humanizeDate(dateStart, 'MM/DD/YY HH:mm')}"
              >
             —
-            <label class="visually-hidden" for="event-end-time-1">To</label>
+            <label class="visually-hidden" for="event-end-time-${id}">To</label>
             <input class="event__input  event__input--time"
-              id="event-end-time-1"
+              id="event-end-time-${id}"
               type="text"
               name="event-end-time"
               value="${humanizeDate(dateEnd, 'MM/DD/YY HH:mm')}"
@@ -237,15 +242,15 @@ const createEventItemEditTemplate = (state, availableTypes, availableDestination
           </div>
 
           <div class="event__field-group  event__field-group--price">
-            <label class="event__label" for="event-price-1">
+            <label class="event__label" for="event-price-${id}">
               <span class="visually-hidden">Price</span>
               €
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+            <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${price}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">${isNewEvent ? 'Сancel' : 'Delete'}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${submitStatus}>Save</button>
+          <button class="event__reset-btn" type="reset">${resetButtonText}</button>
           ${rollupButtonTemplate}
         </header>
 
@@ -256,12 +261,11 @@ const createEventItemEditTemplate = (state, availableTypes, availableDestination
 };
 
 export default class EventItemEdit extends SmartView {
-  constructor(event, availableDestination, availableTypes, availableOffers) {
+  constructor(event, availableDestination, availableOffers) {
     super();
 
-    this._state = EventItemEdit.parseEventToState(event);
+    this._state = EventItemEdit.parseEventToState(event, availableOffers);
     this._availableDestination = availableDestination;
-    this._availableTypes = availableTypes;
     this._availableOffers = availableOffers;
     this._startDatePicker = null;
     this._endDatePicker = null;
@@ -270,11 +274,11 @@ export default class EventItemEdit extends SmartView {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
-    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._offerChangeHandler = this._offerChangeHandler.bind(this);
-    this._priceChangeHandler = this._priceChangeHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
 
     this._setInnerHandlers();
     this._setStartDatePicker();
@@ -282,7 +286,7 @@ export default class EventItemEdit extends SmartView {
   }
 
   getTemplate() {
-    return createEventItemEditTemplate(this._state, this._availableTypes, this._availableDestination);
+    return createEventItemEditTemplate(this._state, this._availableDestination, this._availableOffers);
   }
 
   removeElement() {
@@ -299,37 +303,41 @@ export default class EventItemEdit extends SmartView {
 
     evt.preventDefault();
     const eventType = evt.target.value;
-    const hasOffers = this._availableOffers[eventType].length !== 0;
+    const offers = EventItemEdit.getOfferWithStatus(eventType, [], this._availableOffers);
+
+    const hasSectionOffers = offers.length !== 0;
 
     this.updateState({
+      offers,
+      hasSectionOffers,
       type: eventType,
-      offers: this._availableOffers[eventType],
-      hasOffers,
-      hasDetails: hasOffers || this._state.hasDestination,
+      hasDetails: hasSectionOffers || this._state.hasSectionDestination,
     });
   }
 
-  _destinationChangeHandler(evt) {
+  _destinationInputHandler(evt) {
     evt.preventDefault();
     const destination = this._availableDestination
       .find((destination) => destination.name === evt.target.value);
 
     if (!destination) {
-      evt.target.setCustomValidity('The destination is unavailable');
-      evt.target.reportValidity();
+      this._throwValidityError(evt.target, 'The destination is unavailable');
       return;
     }
 
-    const hasDescription = destination.description.length !== 0;
-    const hasPhotos = destination.photos.length !== 0;
-    const hasDestination = hasDescription || hasPhotos;
+    const hasDestinationName = destination.name !== 0;
+    const hasDestinationDescription = destination.description.length !== 0;
+    const hasDestinationPictures = destination.pictures.length !== 0;
+    const hasSectionDestination = hasDestinationDescription || hasDestinationPictures;
 
     this.updateState({
       destination,
-      hasDescription,
-      hasPhotos,
-      hasDestination,
-      hasDetails: this._state.hasOffers || hasDestination,
+      hasDestinationDescription,
+      hasDestinationName,
+      hasDestinationPictures,
+      hasSectionDestination,
+      hasDetails: this._state.hasSectionOffers || hasSectionDestination,
+      isSubmitDisabled: !hasDestinationName,
     });
   }
 
@@ -339,7 +347,7 @@ export default class EventItemEdit extends SmartView {
     }
 
     evt.preventDefault();
-    const currentOfferId = Number(evt.target.dataset.eventOfferId);
+    const currentOfferId = evt.target.dataset.eventOfferId;
 
     const offers = cloneArrayOfObjects(this._state.offers);
 
@@ -355,13 +363,12 @@ export default class EventItemEdit extends SmartView {
     }, true);
   }
 
-  _priceChangeHandler(evt) {
+  _priceInputHandler(evt) {
     evt.preventDefault();
     const price = Number(evt.target.value);
 
     if (isNaN(price) || !price) {
-      evt.target.setCustomValidity('Invalid price value');
-      evt.target.reportValidity();
+      this._throwValidityError(evt.target, 'Invalid price value');
       return;
     }
 
@@ -379,9 +386,9 @@ export default class EventItemEdit extends SmartView {
     this
       .getElement()
       .querySelector('.event__input--destination')
-      .addEventListener('input', this._destinationChangeHandler);
+      .addEventListener('input', this._destinationInputHandler);
 
-    if (this._state.hasOffers) {
+    if (this._state.hasSectionOffers) {
       this
         .getElement()
         .querySelector('.event__available-offers')
@@ -391,7 +398,7 @@ export default class EventItemEdit extends SmartView {
     this
       .getElement()
       .querySelector('.event__input--price')
-      .addEventListener('input', this._priceChangeHandler);
+      .addEventListener('input', this._priceInputHandler);
   }
 
   _removeStartDatePicker() {
@@ -505,7 +512,7 @@ export default class EventItemEdit extends SmartView {
   }
 
   reset(event) {
-    this.updateState(EventItemEdit.parseStateToEvent(event));
+    this.updateState(EventItemEdit.parseEventToState(event, this._availableOffers));
   }
 
   restoreHandlers() {
@@ -514,25 +521,35 @@ export default class EventItemEdit extends SmartView {
     this._setEndDatePicker();
     this.setRollupClickHandler(this._callback.rollupClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
-  static parseEventToState(event) {
-    const isNewEvent = event === DEFAULT_EVENT;
-    const hasOffers = event.offers.length !== 0;
-    const hasDescription = event.destination.description.length !== 0;
-    const hasPhotos = event.destination.photos.length !== 0;
-    const hasDestination = hasDescription || hasPhotos;
+  _throwValidityError(element, errorText) {
+    element.setCustomValidity(errorText);
+    element.reportValidity();
+    return;
+  }
+
+  static parseEventToState(event, availableOffers) {
+    const hasDestinationDescription = event.destination.description.length !== 0;
+    const hasDestinationName = event.destination.name.length !== 0;
+    const hasDestinationPictures = event.destination.pictures.length !== 0;
+    const hasSectionDestination = hasDestinationDescription || hasDestinationPictures;
+    const hasSectionOffers = event.offers.length !== 0;
 
     return Object.assign(
       {},
       event,
       {
-        hasOffers,
-        hasDescription,
-        hasPhotos,
-        hasDestination,
-        hasDetails: hasOffers || hasDestination,
-        isNewEvent,
+        hasDestinationDescription,
+        hasDestinationName,
+        hasDestinationPictures,
+        hasSectionDestination,
+        hasSectionOffers,
+        hasDetails: hasSectionOffers || hasSectionDestination,
+        isNewEvent: event === DEFAULT_EVENT,
+        isSubmitDisabled: !hasDestinationName || !event.price,
+        offers: EventItemEdit.getOfferWithStatus(event.type, event.offers, availableOffers),
       },
     );
   }
@@ -540,32 +557,48 @@ export default class EventItemEdit extends SmartView {
   static parseStateToEvent(state) {
     state = Object.assign({}, state);
 
-    if (!state.hasOffers) {
-      state.hasOffers = null;
-    }
+    state.offers = state.offers.filter((offer) => {
+      if (offer.isChecked) {
+        delete offer.isChecked;
+        delete offer.id;
 
-    if (!state.hasDescription) {
-      state.hasDescription = null;
-    }
+        return offer;
+      }
+    });
 
-    if (!state.hasPhotos) {
-      state.hasPhotos = null;
-    }
-
-    if (!state.hasDestination) {
-      state.hasDestination = null;
-    }
-
-    if (!state.hasDetails) {
-      state.hasDetails = null;
-    }
-
-    delete state.hasOffers;
-    delete state.hasDescription;
-    delete state.hasPhotos;
-    delete state.hasDestination;
+    delete state.hasDestinationDescription;
+    delete state.hasDestinationName;
+    delete state.hasDestinationPictures;
+    delete state.hasSectionDestination;
+    delete state.hasSectionOffers;
     delete state.hasDetails;
+    delete state.isNewEvent;
+    delete state.isSubmitDisabled;
 
     return state;
+  }
+
+  static getOfferWithStatus(userType, userOffers, availableOffers) {
+    const availableOffersWithType = availableOffers.find((item) => item.type === userType);
+    const availableOffersByType = availableOffersWithType.offers;
+
+    const offersWithStatus = availableOffersByType.reduce((resultArray, availableOfferByType) => {
+      const hasOffer = userOffers.find((item) => item.title === availableOfferByType.title);
+
+      resultArray.push(
+        Object.assign(
+          {},
+          availableOfferByType,
+          {
+            id: nanoid(),
+            isChecked: hasOffer ? true : false,
+          },
+        ),
+      );
+
+      return resultArray;
+    }, []);
+
+    return offersWithStatus;
   }
 }

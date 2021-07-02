@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { availableDestination, availableOffers } from '../mock/event';
 
 export const SortType = {
   DAY: 'day',
@@ -37,11 +36,15 @@ export const FilterType = {
 export const DEFAULT_EVENT = {
   dateStart: dayjs().startOf('day').toDate(),
   dateEnd: dayjs().startOf('day').toDate(),
-  destination: availableDestination[0],
+  destination: {
+    name: '',
+    description: '',
+    pictures: [],
+  },
   isFavorite: false,
   price: 0,
   type: 'taxi',
-  offers: availableOffers['taxi'],
+  offers: [],
 };
 
 export const MenuItem = {
@@ -72,4 +75,9 @@ export const StatiscticsTitles = {
   TYPE: 'TYPE',
   MONEY: 'MONEY',
   TIME_SPENT: 'TIME-SPENT',
+};
+
+export const ResetButtonText = {
+  ADD: 'Cancel',
+  EDIT: 'Delete',
 };

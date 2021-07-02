@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { getRandomInteger } from '../mock/utils';
 
 dayjs.extend(duration);
 
@@ -15,6 +14,13 @@ const getDuration = (ms) => {
 
 const getDurationBetweenDates = (dateStart, dateEnd) => {
   return getDuration(getDateDifference(dateStart, dateEnd));
+};
+
+const getRandomInteger = (min = 0, max = 1) => {
+  const lower = Math.ceil(Math.min(min, max));
+  const upper = Math.floor(Math.max(min, max));
+
+  return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
 export const getDateStart = () => {
