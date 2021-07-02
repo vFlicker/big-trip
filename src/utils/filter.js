@@ -1,5 +1,13 @@
+import dayjs from 'dayjs';
 import { FilterType } from '../const';
-import { isFutureDate, isPastDate } from './date';
+
+const isPastDate = (date) => {
+  return dayjs().isAfter(date);
+};
+
+const isFutureDate  = (date) => {
+  return dayjs().isBefore(date, 'day') || dayjs().isSame(date, 'day');
+};
 
 export const filter = {
   [FilterType.EVERYTHING]: (events) => events,

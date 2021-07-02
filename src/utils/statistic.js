@@ -1,8 +1,5 @@
 import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-import { getDateDifference } from './date';
-
-dayjs.extend(duration);
+import { getDateDifference } from './common';
 
 export const getUniqueItems = (items) => [...new Set(items)];
 

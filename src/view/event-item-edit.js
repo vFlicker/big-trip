@@ -1,5 +1,5 @@
 import SmartView from './smart';
-import { humanizeDate, compareDates } from '../utils/date';
+import { compareDates, humanizeDate } from '../utils/event';
 import { ucFirst, cloneArrayOfObjects } from '../utils/common';
 import { DATEPICKER_BASIC_SETTINGS, DEFAULT_EVENT, ResetButtonText } from '../const';
 import flatpickr from 'flatpickr';
