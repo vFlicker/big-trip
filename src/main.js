@@ -3,32 +3,36 @@ import DestinationsModel from './model/destinations';
 import EventsModel from './model/events';
 import FilterModel from './model/filter';
 import OffersModel from './model/offers';
-import TripInfoView from './view/trip-info';
 import MenuView from './view/menu';
+import TripInfoView from './view/trip-info';
 import NewEventButtonView from './view/new-event-button';
 import StatisticsView from './view/statistic';
 import BoardPresenter from './presenter/board';
 import FilterPresenter from './presenter/filter';
-import {remove, render, RenderPosition} from './utils/render';
 import {FilterType, MenuItem, UpdateType} from './utils/const';
+import {remove, render, RenderPosition} from './utils/render';
 
 const AUTHORIZATION = 'Basic 48avd2449w934avd';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 
-const api = new Api(END_POINT, AUTHORIZATION);
-
-const destinationModel = new DestinationsModel();
-const eventsModel = new EventsModel();
-const filterModel = new FilterModel();
-const offersModel = new OffersModel();
-
-// Header
 const containerTripMain = document.querySelector('.trip-main');
 const containerMenu = containerTripMain.querySelector('.trip-controls__navigation');
 const containerFilter = containerTripMain.querySelector('.trip-controls__filters');
+const containerMainContent = document.querySelector('.page-main .page-body__container');
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+const eventsModel = new EventsModel();
+const filterModel = new FilterModel();
+const destinationModel = new DestinationsModel();
+const offersModel = new OffersModel();
 
 const menuComponent = new MenuView();
 const newEventButtonComponent = new NewEventButtonView();
+
+const boardPresenter = new BoardPresenter(containerMainContent, eventsModel, filterModel, destinationModel, offersModel);
+const filterPresenter = new FilterPresenter(containerFilter, filterModel, eventsModel);
+
 let statisticsComponent = null;
 
 const handleMenuClick = (menuItem) => {
@@ -51,8 +55,7 @@ const handleEventNewClose = () => {
   newEventButtonComponent.getElement().disabled = false;
 };
 
-menuComponent.setMenuClickHandler(handleMenuClick);
-newEventButtonComponent.setButtonClickHandler(() => {
+const newEventButtonClickHandler = () => {
   remove(statisticsComponent);
   boardPresenter.destroy();
   menuComponent.setMenuItem(MenuItem.TABLE);
@@ -60,18 +63,15 @@ newEventButtonComponent.setButtonClickHandler(() => {
   boardPresenter.init();
   boardPresenter.createEvent(handleEventNewClose);
   newEventButtonComponent.getElement().disabled = true;
-});
+};
+
+menuComponent.setMenuClickHandler(handleMenuClick);
+newEventButtonComponent.setButtonClickHandler(newEventButtonClickHandler);
 
 render(containerMenu, menuComponent, RenderPosition.BEFOREEND);
 render(containerTripMain, newEventButtonComponent, RenderPosition.BEFOREEND);
 
-// Main
-const containerMainContent = document.querySelector('.page-main .page-body__container');
-
-const boardPresenter = new BoardPresenter(containerMainContent, eventsModel, filterModel, destinationModel, offersModel);
 boardPresenter.init();
-
-const filterPresenter = new FilterPresenter(containerFilter, filterModel, eventsModel);
 filterPresenter.init();
 
 Promise.all([api.getDestinations(), api.getEvents(), api.getOffers()])
