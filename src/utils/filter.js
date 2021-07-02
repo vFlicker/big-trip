@@ -1,4 +1,4 @@
-import { FilterType } from './const';
+import { FilterType } from '../const';
 import { isFutureDate, isPastDate } from './date';
 
 export const filter = {

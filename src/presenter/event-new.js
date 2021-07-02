@@ -1,6 +1,6 @@
 import EventItemEditView from '../view/event-item-edit';
 import { render, RenderPosition, remove } from '../utils/render';
-import { DEFAULT_EVENT, UpdateType, UserAction } from './../utils/const';
+import { DEFAULT_EVENT, UpdateType, UserAction } from '../const';
 import { nanoid } from 'nanoid';
 
 export default class EventNew {

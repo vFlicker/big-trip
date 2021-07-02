@@ -2,53 +2,53 @@ import SmartView from './smart';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { getCountOfUses, getEventTypes, getSumPriceByType, getDurationInMs, getHumanizeDuration } from './../utils/statistic';
-import { StatiscticsTitles, STATISTICS_SETTINGS } from './../utils/const';
+import { StatisticTitles, STATISTIC_SETTINGS } from '../const';
 
 const renderMoneyChart = (moneyCtx, events) => {
   const uniqTypes = getEventTypes(events).map((type) => type.toUpperCase());
   const priceByType = getSumPriceByType(events);
 
-  moneyCtx.height = STATISTICS_SETTINGS.barHeight * uniqTypes.length;
+  moneyCtx.height = STATISTIC_SETTINGS.barHeight * uniqTypes.length;
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
-    type: STATISTICS_SETTINGS.type,
+    type: STATISTIC_SETTINGS.type,
     data: {
       labels: uniqTypes,
       datasets: [{
         data: priceByType,
-        backgroundColor: STATISTICS_SETTINGS.backgroundColor,
-        hoverBackgroundColor: STATISTICS_SETTINGS.hoverBackgroundColor,
-        anchor: STATISTICS_SETTINGS.dataAnchor,
-        minBarLength: STATISTICS_SETTINGS.minBarLength,
-        barThickness: STATISTICS_SETTINGS.barThickness,
+        backgroundColor: STATISTIC_SETTINGS.backgroundColor,
+        hoverBackgroundColor: STATISTIC_SETTINGS.hoverBackgroundColor,
+        anchor: STATISTIC_SETTINGS.dataAnchor,
+        minBarLength: STATISTIC_SETTINGS.minBarLength,
+        barThickness: STATISTIC_SETTINGS.barThickness,
       }],
     },
     options: {
       plugins: {
         datalabels: {
           font: {
-            size: STATISTICS_SETTINGS.basicFontSize,
+            size: STATISTIC_SETTINGS.basicFontSize,
           },
-          color: STATISTICS_SETTINGS.datalabelsColor,
-          anchor: STATISTICS_SETTINGS.datalabelsAnchor,
-          align: STATISTICS_SETTINGS.datalabelsAlign,
+          color: STATISTIC_SETTINGS.dataLabelsColor,
+          anchor: STATISTIC_SETTINGS.dataLabelsAnchor,
+          align: STATISTIC_SETTINGS.dataLabelsAlign,
           formatter: (val) => `€ ${val}`,
         },
       },
       title: {
         display: true,
-        text: StatiscticsTitles.MONEY,
-        fontColor: STATISTICS_SETTINGS.fontColor,
-        fontSize: STATISTICS_SETTINGS.titleFontSize,
-        position: STATISTICS_SETTINGS.titlePosition,
+        text: StatisticTitles.MONEY,
+        fontColor: STATISTIC_SETTINGS.fontColor,
+        fontSize: STATISTIC_SETTINGS.titleFontSize,
+        position: STATISTIC_SETTINGS.titlePosition,
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: STATISTICS_SETTINGS.fontColor,
-            padding: STATISTICS_SETTINGS.padding,
-            fontSize: STATISTICS_SETTINGS.basicFontSize,
+            fontColor: STATISTIC_SETTINGS.fontColor,
+            padding: STATISTIC_SETTINGS.padding,
+            fontSize: STATISTIC_SETTINGS.basicFontSize,
           },
           gridLines: {
             display: false,
@@ -80,47 +80,47 @@ const renderTypeChart = (typeCtx, events) => {
   const uniqTypes = getEventTypes(events).map((type) => type.toUpperCase());
   const countOfUses = getCountOfUses(events);
 
-  typeCtx.height = STATISTICS_SETTINGS.barHeight * uniqTypes.length;
+  typeCtx.height = STATISTIC_SETTINGS.barHeight * uniqTypes.length;
 
   return new Chart(typeCtx, {
     plugins: [ChartDataLabels],
-    type: STATISTICS_SETTINGS.type,
+    type: STATISTIC_SETTINGS.type,
     data: {
       labels: uniqTypes,
       datasets: [{
         data: countOfUses,
-        backgroundColor: STATISTICS_SETTINGS.backgroundColor,
-        hoverBackgroundColor: STATISTICS_SETTINGS.hoverBackgroundColor,
-        anchor: STATISTICS_SETTINGS.dataAnchor,
-        minBarLength: STATISTICS_SETTINGS.minBarLength,
-        barThickness: STATISTICS_SETTINGS.barThickness,
+        backgroundColor: STATISTIC_SETTINGS.backgroundColor,
+        hoverBackgroundColor: STATISTIC_SETTINGS.hoverBackgroundColor,
+        anchor: STATISTIC_SETTINGS.dataAnchor,
+        minBarLength: STATISTIC_SETTINGS.minBarLength,
+        barThickness: STATISTIC_SETTINGS.barThickness,
       }],
     },
     options: {
       plugins: {
         datalabels: {
           font: {
-            size: STATISTICS_SETTINGS.basicFontSize,
+            size: STATISTIC_SETTINGS.basicFontSize,
           },
-          color: STATISTICS_SETTINGS.datalabelsColor,
-          anchor: STATISTICS_SETTINGS.datalabelsAnchor,
-          align: STATISTICS_SETTINGS.datalabelsAlign,
+          color: STATISTIC_SETTINGS.dataLabelsColor,
+          anchor: STATISTIC_SETTINGS.dataLabelsAnchor,
+          align: STATISTIC_SETTINGS.dataLabelsAlign,
           formatter: (val) => `${val}x`,
         },
       },
       title: {
         display: true,
-        text: StatiscticsTitles.TYPE,
-        fontColor: STATISTICS_SETTINGS.fontColor,
-        fontSize: STATISTICS_SETTINGS.titleFontSize,
-        position: STATISTICS_SETTINGS.titlePosition,
+        text: StatisticTitles.TYPE,
+        fontColor: STATISTIC_SETTINGS.fontColor,
+        fontSize: STATISTIC_SETTINGS.titleFontSize,
+        position: STATISTIC_SETTINGS.titlePosition,
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: STATISTICS_SETTINGS.fontColor,
-            padding: STATISTICS_SETTINGS.padding,
-            fontSize: STATISTICS_SETTINGS.basicFontSize,
+            fontColor: STATISTIC_SETTINGS.fontColor,
+            padding: STATISTIC_SETTINGS.padding,
+            fontSize: STATISTIC_SETTINGS.basicFontSize,
           },
           gridLines: {
             display: false,
@@ -152,7 +152,7 @@ const renderTimeSpendChart = (timeSpendCtx, events) => {
   const uniqTypes = getEventTypes(events).map((type) => type.toUpperCase());
   const durationInMs = getDurationInMs(events);
 
-  timeSpendCtx.height = STATISTICS_SETTINGS.barHeight * uniqTypes.length;
+  timeSpendCtx.height = STATISTIC_SETTINGS.barHeight * uniqTypes.length;
 
   return new Chart(timeSpendCtx, {
     plugins: [ChartDataLabels],
@@ -161,38 +161,38 @@ const renderTimeSpendChart = (timeSpendCtx, events) => {
       labels: uniqTypes,
       datasets: [{
         data: durationInMs,
-        backgroundColor: STATISTICS_SETTINGS.backgroundColor,
-        hoverBackgroundColor: STATISTICS_SETTINGS.hoverBackgroundColor,
-        anchor: STATISTICS_SETTINGS.dataAnchor,
-        minBarLength: STATISTICS_SETTINGS.minBarLength,
-        barThickness: STATISTICS_SETTINGS.barThickness,
+        backgroundColor: STATISTIC_SETTINGS.backgroundColor,
+        hoverBackgroundColor: STATISTIC_SETTINGS.hoverBackgroundColor,
+        anchor: STATISTIC_SETTINGS.dataAnchor,
+        minBarLength: STATISTIC_SETTINGS.minBarLength,
+        barThickness: STATISTIC_SETTINGS.barThickness,
       }],
     },
     options: {
       plugins: {
         datalabels: {
           font: {
-            size: STATISTICS_SETTINGS.basicFontSize,
+            size: STATISTIC_SETTINGS.basicFontSize,
           },
-          color: STATISTICS_SETTINGS.datalabelsColor,
-          anchor: STATISTICS_SETTINGS.datalabelsAnchor,
-          align: STATISTICS_SETTINGS.datalabelsAlign,
+          color: STATISTIC_SETTINGS.dataLabelsColor,
+          anchor: STATISTIC_SETTINGS.dataLabelsAnchor,
+          align: STATISTIC_SETTINGS.dataLabelsAlign,
           formatter: (val) => `${(getHumanizeDuration(val))}`,
         },
       },
       title: {
         display: true,
-        text: StatiscticsTitles.TIME_SPENT,
-        fontColor: STATISTICS_SETTINGS.fontColor,
-        fontSize: STATISTICS_SETTINGS.titleFontSize,
-        position: STATISTICS_SETTINGS.titlePosition,
+        text: StatisticTitles.TIME_SPENT,
+        fontColor: STATISTIC_SETTINGS.fontColor,
+        fontSize: STATISTIC_SETTINGS.titleFontSize,
+        position: STATISTIC_SETTINGS.titlePosition,
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: STATISTICS_SETTINGS.fontColor,
-            padding: STATISTICS_SETTINGS.padding,
-            fontSize: STATISTICS_SETTINGS.basicFontSize,
+            fontColor: STATISTIC_SETTINGS.fontColor,
+            padding: STATISTIC_SETTINGS.padding,
+            fontSize: STATISTIC_SETTINGS.basicFontSize,
           },
           gridLines: {
             display: false,

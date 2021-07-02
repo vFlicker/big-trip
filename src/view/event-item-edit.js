@@ -1,7 +1,7 @@
 import SmartView from './smart';
 import { humanizeDate, compareDates } from '../utils/date';
 import { ucFirst, cloneArrayOfObjects } from '../utils/common';
-import { DATEPICKER_BASIC_SETTINGS, DEFAULT_EVENT, ResetButtonText } from '../utils/const';
+import { DATEPICKER_BASIC_SETTINGS, DEFAULT_EVENT, ResetButtonText } from '../const';
 import flatpickr from 'flatpickr';
 import { nanoid } from 'nanoid';
 

@@ -9,7 +9,7 @@ import NewEventButtonView from './view/new-event-button';
 import StatisticsView from './view/statistic';
 import BoardPresenter from './presenter/board';
 import FilterPresenter from './presenter/filter';
-import {FilterType, MenuItem, UpdateType} from './utils/const';
+import {FilterType, MenuItem, UpdateType} from './const';
 import {remove, render, RenderPosition} from './utils/render';
 
 const AUTHORIZATION = 'Basic 48avd2449w934avd';

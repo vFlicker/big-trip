@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import { SortType } from '../utils/const';
+import { SortType } from '../const';
 import { ucFirst } from '../utils/common';
 
 const createSortItem = (name, sortType, currentSortType, isDisabled = false) => {

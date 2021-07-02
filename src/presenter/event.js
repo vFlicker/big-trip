@@ -1,7 +1,7 @@
 import EventItemView from '../view/event-item';
 import EventItemEditView from '../view/event-item-edit';
 import { render, RenderPosition, replace, remove } from '../utils/render';
-import {UpdateType, UserAction} from '../utils/const';
+import {UpdateType, UserAction} from '../const';
 
 const Mode = {
   DEFAULT: 'default',

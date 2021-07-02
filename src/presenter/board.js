@@ -6,7 +6,7 @@ import LoadingView from '../view/loading';
 import EventPresenter from './event';
 import EventNewPresenter from './event-new';
 import {remove, render, RenderPosition} from '../utils/render';
-import {FilterType, SortType, UpdateType, UserAction} from '../utils/const';
+import {FilterType, SortType, UpdateType, UserAction} from '../const';
 import {sortByPrice, sortByTime, sortByDate} from '../utils/event';
 import { filter } from './../utils/filter';
 

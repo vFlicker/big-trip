@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import { MenuItem } from '../utils/const';
+import { MenuItem } from '../const';
 
 const createMenuTemplate = () => {
   return (
