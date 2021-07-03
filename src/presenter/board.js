@@ -103,7 +103,9 @@ export default class Board {
           .then((event) => this._eventsModel.updateEvent(updateType, event));
         break;
       case UserAction.ADD_EVENT:
-        this._eventsModel.addEvent(updateType, update);
+        this._api
+          .addEvent(update)
+          .then((event) => this._eventsModel.addEvent(updateType, event));
         break;
       case UserAction.DELETE_EVENT:
         this._eventsModel.deleteEvent(updateType, update);

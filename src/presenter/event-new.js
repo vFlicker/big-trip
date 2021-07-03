@@ -84,11 +84,7 @@ export default class EventNew {
     this._changeData(
       UserAction.ADD_EVENT,
       UpdateType.MINOR,
-      Object.assign(
-        {},
-        event,
-        {id: nanoid()},
-      ),
+      event,
     );
     this.destroy();
   }
