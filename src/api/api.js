@@ -7,48 +7,73 @@ const Method = {
   DELETE: 'DELETE',
 };
 
+const SuccessHTTPSStatusRange = {
+  MIN: 200,
+  MAX: 299,
+};
+
 export default class Api {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
   }
 
-  getDestinations() {
-    const headers = new Headers();
-    headers.append('Authorization', this._authorization);
-
-    return fetch(this._endPoint + '/destinations', {headers})
-      .then((response) => response.json());
-  }
-
   getEvents() {
-    const headers = new Headers();
-    headers.append('Authorization', this._authorization);
-
-    return fetch(this._endPoint + '/points', {headers})
-      .then((response) => response.json())
+    return this._load({url: 'points'})
+      .then(Api.toJSON)
       .then((events) => events.map((event) => EventsModel.adaptToClient(event)));
   }
 
-  getOffers() {
-    const headers = new Headers();
-    headers.append('Authorization', this._authorization);
+  getDestinations() {
+    return this._load({url: 'destinations'})
+      .then(Api.toJSON);
+  }
 
-    return fetch(this._endPoint + '/offers', {headers})
-      .then((response) => response.json());
+  getOffers() {
+    return this._load({url: 'offers'})
+      .then(Api.toJSON);
   }
 
   updateEvent(event) {
-    const headers = new Headers();
-    headers.append('Authorization', this._authorization);
-    headers.append('Content-Type', 'application/json');
-
-    return fetch(this._endPoint + `/points/${event.id}`, {
+    return this._load({
+      url: `points/${event.id}`,
       method: Method.PUT,
       body: JSON.stringify(EventsModel.adaptToServer(event)),
-      headers,
+      headers: new Headers({'Content-Type': 'application/json'}),
     })
-      .then((response) => response.json())
+      .then(Api.toJSON)
       .then(EventsModel.adaptToClient);
+  }
+
+  _load({
+    url,
+    method = Method.GET,
+    body = null,
+    headers = new Headers(),
+  }) {
+    headers.append('Authorization', this._authorization);
+
+    return fetch(`${this._endPoint}/${url}`, {method, body, headers})
+      .then(Api.checkStatus)
+      .catch(Api.catchError);
+  }
+
+  static catchError(err) {
+    throw err;
+  }
+
+  static checkStatus(response) {
+    if (
+      response.status < SuccessHTTPSStatusRange.MIN ||
+      response.status > SuccessHTTPSStatusRange.MAX
+    ) {
+      throw new Error(`${response.status}: ${response.statusText}`);
+    }
+
+    return response;
+  }
+
+  static toJSON(response) {
+    return response.json();
   }
 }
