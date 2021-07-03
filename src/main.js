@@ -36,6 +36,7 @@ const boardPresenter = new BoardPresenter(
   filterModel,
   destinationModel,
   offersModel,
+  api,
 );
 
 const filterPresenter = new FilterPresenter(

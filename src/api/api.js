@@ -1,5 +1,12 @@
 import EventsModel from '../model/events';
 
+const Method = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  DELETE: 'DELETE',
+};
+
 export default class Api {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
@@ -29,5 +36,19 @@ export default class Api {
 
     return fetch(this._endPoint + '/offers', {headers})
       .then((response) => response.json());
+  }
+
+  updateEvent(event) {
+    const headers = new Headers();
+    headers.append('Authorization', this._authorization);
+    headers.append('Content-Type', 'application/json');
+
+    return fetch(this._endPoint + `/points/${event.id}`, {
+      method: Method.PUT,
+      body: JSON.stringify(EventsModel.adaptToServer(event)),
+      headers,
+    })
+      .then((response) => response.json())
+      .then(EventsModel.adaptToClient);
   }
 }

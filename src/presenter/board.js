@@ -12,12 +12,13 @@ import {FilterType, SortType, UpdateType, UserAction} from '../const';
 
 
 export default class Board {
-  constructor(boardContainer, eventsModel, filterModel, destinationModel, offersModel) {
+  constructor(boardContainer, eventsModel, filterModel, destinationModel, offersModel, api) {
     this._boardContainer = boardContainer;
     this._destinationModel = destinationModel;
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
     this._offersModel = offersModel;
+    this._api = api;
 
     this._currentSortType = SortType.DAY;
     this._eventPresenter = {};
@@ -97,7 +98,9 @@ export default class Board {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this._eventsModel.updateEvent(updateType, update);
+        this._api
+          .updateEvent(update)
+          .then((event) => this._eventsModel.updateEvent(updateType, event));
         break;
       case UserAction.ADD_EVENT:
         this._eventsModel.addEvent(updateType, update);

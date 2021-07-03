@@ -76,4 +76,24 @@ export default class Events extends Observer {
 
     return adaptEvent;
   }
+
+  static adaptToServer(event) {
+    const adaptEvent = Object.assign(
+      {},
+      event,
+      {
+        date_to: event.dateEnd instanceof Date ? event.dateEnd.toISOString() : null,
+        date_from: event.dateStart instanceof Date ? event.dateStart.toISOString() : null,
+        base_price: event.price,
+        is_favorite: event.isFavorite,
+      },
+    );
+
+    delete adaptEvent.dateEnd;
+    delete adaptEvent.dateStart;
+    delete adaptEvent.price;
+    delete adaptEvent.isFavorite;
+
+    return adaptEvent;
+  }
 }
