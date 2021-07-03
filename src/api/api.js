@@ -45,6 +45,13 @@ export default class Api {
       .then(EventsModel.adaptToClient);
   }
 
+  deleteEvent(event) {
+    return this._load({
+      url: `points/${event.id}`,
+      method: Method.DELETE,
+    });
+  }
+
   updateEvent(event) {
     return this._load({
       url: `points/${event.id}`,

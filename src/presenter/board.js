@@ -108,7 +108,9 @@ export default class Board {
           .then((event) => this._eventsModel.addEvent(updateType, event));
         break;
       case UserAction.DELETE_EVENT:
-        this._eventsModel.deleteEvent(updateType, update);
+        this._api
+          .deleteEvent(update)
+          .then(() => this._eventsModel.deleteEvent(updateType, update));
         break;
     }
   }
