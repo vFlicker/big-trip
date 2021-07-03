@@ -637,11 +637,14 @@ export default class EventItemEdit extends SmartView {
   }
 
   static parseEventToState(event, availableOffers) {
+    const availableOffersWithType = availableOffers.find((item) => item.type === event.type);
+    const availableOffersByType = availableOffersWithType.offers;
+
     const hasDestinationDescription = event.destination.description.length !== 0;
     const hasDestinationName = event.destination.name.length !== 0;
     const hasDestinationPictures = event.destination.pictures.length !== 0;
     const hasSectionDestination = hasDestinationDescription || hasDestinationPictures;
-    const hasSectionOffers = event.offers.length !== 0;
+    const hasSectionOffers = availableOffersByType.length !== 0;
 
     return Object.assign(
       {},

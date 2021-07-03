@@ -3,15 +3,13 @@ import {humanizeDate, humanizeDateTime, humanizeDurationBetweenDates} from '../u
 
 const createOfferListTemplate = (offers) => {
   const getTemplate = (offer) => {
-    if(offer.isChecked) {
-      return (
-        `<li class="event__offer">
-          <span class="event__offer-title">${offer.title}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
-        </li>`
-      );
-    }
+    return (
+      `<li class="event__offer">
+        <span class="event__offer-title">${offer.title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${offer.price}</span>
+      </li>`
+    );
   };
 
   return offers
