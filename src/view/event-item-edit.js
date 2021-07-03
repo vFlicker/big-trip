@@ -9,7 +9,7 @@ import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const createEventTypeListTemplate = (id, activeType, availableOffers) => {
   const getTemplate = (type) => {
-    const typeInputStatus = type === activeType ? 'checked' : '';
+    const typeCheckStatus = type === activeType ? 'checked' : '';
 
     return (
       `<div class="event__type-item">
@@ -18,7 +18,7 @@ const createEventTypeListTemplate = (id, activeType, availableOffers) => {
             type="radio"
             name="event-type"
             value="${type}"
-            ${typeInputStatus}
+            ${typeCheckStatus}
           >
         <label class="event__type-label  event__type-label--${type}"
             for="event-type-${type}-${id}">${ucFirst(type)}
@@ -49,7 +49,7 @@ const createEventOfferListTemplate = (type, offers) => {
   const getTemplate = (type, offer) => {
     const {id, isChecked, price, title} = offer;
 
-    const offerCheckboxStatus = isChecked ? 'checked' : '';
+    const offerCheckStatus = isChecked ? 'checked' : '';
 
     return (
       `<div class="event__offer-selector">
@@ -58,7 +58,7 @@ const createEventOfferListTemplate = (type, offers) => {
           type="checkbox"
           name="event-offer-${type}"
           data-event-offer-id="${id}"
-          ${offerCheckboxStatus}>
+          ${offerCheckStatus}>
         <label class="event__offer-label" for="event-offer-${type}-${id}">
           <span class="event__offer-title">Add ${title}</span>
           +€&nbsp;
@@ -201,6 +201,9 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
     hasSectionDestination,
     hasSectionOffers,
     id,
+    isDeleting,
+    isDisabled,
+    isSaving,
     isNewEvent,
     isSubmitDisabled,
     offers,
@@ -225,9 +228,16 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
 
   const rollupButtonTemplate = createRollupButtonTemplate(isNewEvent);
 
-  const inputDestinationValue = hasDestinationName ? destination.name : '';
-  const submitStatus = isSubmitDisabled ? 'disabled' : '';
-  const resetButtonText = isNewEvent ? ResetButtonText.ADD : ResetButtonText.EDIT;
+  const destinationValue = hasDestinationName ? destination.name : '';
+  const destinationDisableStatus = isDisabled ? 'disabled' : '';
+  const typeDisableStatus = isDisabled ? 'disabled' : '';
+  const timeDisableStatus = isDisabled ? 'disabled' : '';
+  const priceDisableStatus = isDisabled ? 'disabled' : '';
+  const submitButtonDisableStatus = isDisabled || isSubmitDisabled ? 'disabled' : '';
+  const submitButtonText = isSaving ? 'Saving...' : 'Save';
+  const newEventOrEditEvent = isNewEvent ? ResetButtonText.ADD : ResetButtonText.EDIT;
+  const resetButtonDisableStatus = isDisabled ? 'disabled' : '';
+  const resetButtonText = isDeleting ? 'Deleting...' : newEventOrEditEvent;
 
   return (
     `<li class="trip-events__item">
@@ -242,7 +252,12 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
                 src="img/icons/${type}.png"
                 alt="Event ${type} icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
+            <input
+              class="event__type-toggle  visually-hidden"
+              id="event-type-toggle-${id}"
+              type="checkbox"
+              ${typeDisableStatus}
+            />
 
             <div class="event__type-list">
               <fieldset class="event__type-group">
@@ -256,12 +271,15 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
             <label class="event__label  event__type-output" for="event-destination-${id}">
               ${type}
             </label>
-            <input class="event__input  event__input--destination"
-                id="event-destination-${id}"
-                type="text"
-                name="event-destination"
-                value="${inputDestinationValue}"
-                list="destination-list-${id}">
+            <input
+              class="event__input  event__input--destination"
+              id="event-destination-${id}"
+              type="text"
+              name="event-destination"
+              value="${destinationValue}"
+              list="destination-list-${id}"
+              ${destinationDisableStatus}
+            />
             <datalist id="destination-list-${id}">
               ${eventDestinationListTemplate}
             </datalist>
@@ -269,20 +287,24 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${id}">From</label>
-            <input class="event__input  event__input--time"
+            <input
+              class="event__input  event__input--time"
               id="event-start-time-${id}"
               type="text"
               name="event-start-time"
               value="${humanizeDate(dateStart, 'MM/DD/YY HH:mm')}"
-             >
+              ${timeDisableStatus}
+            >
             —
             <label class="visually-hidden" for="event-end-time-${id}">To</label>
-            <input class="event__input  event__input--time"
+            <input
+              class="event__input  event__input--time"
               id="event-end-time-${id}"
               type="text"
               name="event-end-time"
               value="${humanizeDate(dateEnd, 'MM/DD/YY HH:mm')}"
-             >
+              ${timeDisableStatus}
+            />
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -291,16 +313,29 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
               €
             </label>
             <input
-                class="event__input  event__input--price"
-                id="event-price-${id}"
-                type="text"
-                name="event-price"
-                value="${price}"
+              class="event__input  event__input--price"
+              id="event-price-${id}"
+              type="text"
+              name="event-price"
+              value="${price}"
+              ${priceDisableStatus}
             />
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit" ${submitStatus}>Save</button>
-          <button class="event__reset-btn" type="reset">${resetButtonText}</button>
+          <button
+            class="event__save-btn  btn  btn--blue"
+            type="submit"
+            ${submitButtonDisableStatus}
+          >
+            ${submitButtonText}
+          </button>
+          <button
+            class="event__reset-btn"
+            type="reset"
+            ${resetButtonDisableStatus}
+          >
+            ${resetButtonText}
+          </button>
           ${rollupButtonTemplate}
         </header>
 
@@ -618,6 +653,9 @@ export default class EventItemEdit extends SmartView {
         hasSectionDestination,
         hasSectionOffers,
         hasDetails: hasSectionOffers || hasSectionDestination,
+        isDeleting: false,
+        isDisabled: false,
+        isSaving: false,
         isNewEvent: event === DEFAULT_EVENT,
         isSubmitDisabled: !hasDestinationName || !event.price,
         offers: EventItemEdit.getOfferWithStatus(event.type, event.offers, availableOffers),
@@ -643,6 +681,9 @@ export default class EventItemEdit extends SmartView {
     delete state.hasSectionDestination;
     delete state.hasSectionOffers;
     delete state.hasDetails;
+    delete state.isDeleting;
+    delete state.isDisabled;
+    delete state.isSaving;
     delete state.isNewEvent;
     delete state.isSubmitDisabled;
 

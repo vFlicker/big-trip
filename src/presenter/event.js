@@ -52,7 +52,8 @@ export default class Event {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._eventItemEditComponent, prevEventItemEditComponent);
+      replace(this._eventItemComponent, prevEventItemEditComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(prevEventItemComponent);
@@ -68,6 +69,20 @@ export default class Event {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToEvent();
     }
+  }
+
+  setSaving() {
+    this._eventItemEditComponent.updateState({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setDeleting() {
+    this._eventItemEditComponent.updateState({
+      isDisabled: true,
+      isDeleting: true,
+    });
   }
 
   _replaceEventToForm() {
@@ -110,7 +125,6 @@ export default class Event {
       UpdateType.MINOR,
       event,
     );
-    this._replaceFormToEvent();
   }
 
   _handleItemFavoriteClick() {
