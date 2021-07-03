@@ -92,4 +92,10 @@ Promise.all([api.getDestinations(), api.getEvents(), api.getOffers()])
     offersModel.setOffers(offers);
     eventsModel.setEvents(UpdateType.INIT, events);
     render(containerTripMain, new TripInfoView(events), RenderPosition.AFTERBEGIN);
+  })
+  .catch(() => {
+    destinationModel.setDestinations([]);
+    offersModel.setOffers([]);
+    eventsModel.setEvents(UpdateType.INIT, []);
+    render(containerTripMain, new TripInfoView([]), RenderPosition.AFTERBEGIN);
   });
