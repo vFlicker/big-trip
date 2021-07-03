@@ -71,6 +71,19 @@ export default class Event {
     }
   }
 
+  setAborting() {
+    const resetFormState = () => {
+      this._eventItemEditComponent.updateState({
+        isDisabled: false,
+        isDeleting: false,
+        isSaving: false,
+      });
+    };
+
+    this._eventItemComponent.shake(resetFormState);
+    this._eventItemEditComponent.shake(resetFormState);
+  }
+
   setSaving() {
     this._eventItemEditComponent.updateState({
       isDisabled: true,

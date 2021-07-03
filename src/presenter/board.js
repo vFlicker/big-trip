@@ -101,19 +101,22 @@ export default class Board {
         this._eventPresenter[update.id].setSaving();
         this._api
           .updateEvent(update)
-          .then((event) => this._eventsModel.updateEvent(updateType, event));
+          .then((event) => this._eventsModel.updateEvent(updateType, event))
+          .catch(() => this._eventPresenter[update.id].setAborting());
         break;
       case UserAction.ADD_EVENT:
         this._eventNewPresenter.setSaving();
         this._api
           .addEvent(update)
-          .then((event) => this._eventsModel.addEvent(updateType, event));
+          .then((event) => this._eventsModel.addEvent(updateType, event))
+          .catch(() => this._eventNewPresenter.setAborting());
         break;
       case UserAction.DELETE_EVENT:
         this._eventPresenter[update.id].setDeleting();
         this._api
           .deleteEvent(update)
-          .then(() => this._eventsModel.deleteEvent(updateType, update));
+          .then(() => this._eventsModel.deleteEvent(updateType, update))
+          .catch(() => this._eventPresenter[update.id].setAborting());
         break;
     }
   }

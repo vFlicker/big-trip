@@ -65,6 +65,17 @@ export default class EventNew {
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
+  setAborting() {
+    const resetFormState = () => {
+      this._eventItemEditComponent.updateState({
+        isDisabled: false,
+        isSaving: false,
+      });
+    };
+
+    this._eventItemEditComponent.shake(resetFormState);
+  }
+
   setSaving() {
     this._eventItemEditComponent.updateState({
       isDisabled: true,
