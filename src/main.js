@@ -1,4 +1,5 @@
 import Api from './api/api';
+import Provider from './api/provider';
 import DestinationsModel from './model/destinations';
 import EventsModel from './model/events';
 import FilterModel from './model/filter';
@@ -21,6 +22,7 @@ const containerFilter = containerTripMain.querySelector('.trip-controls__filters
 const containerMainContent = document.querySelector('.page-main .page-body__container');
 
 const api = new Api(END_POINT, AUTHORIZATION);
+const apiWithProvider = new Provider(api);
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
@@ -36,7 +38,7 @@ const boardPresenter = new BoardPresenter(
   filterModel,
   destinationModel,
   offersModel,
-  api,
+  apiWithProvider,
 );
 
 const filterPresenter = new FilterPresenter(
@@ -86,7 +88,7 @@ render(containerTripMain, newEventButtonComponent, RenderPosition.BEFOREEND);
 boardPresenter.init();
 filterPresenter.init();
 
-Promise.all([api.getDestinations(), api.getEvents(), api.getOffers()])
+Promise.all([apiWithProvider.getDestinations(), apiWithProvider.getEvents(), apiWithProvider.getOffers()])
   .then(([destinations, events, offers]) => {
     destinationModel.setDestinations(destinations);
     offersModel.setOffers(offers);
