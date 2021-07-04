@@ -80,9 +80,16 @@ export default class Provider {
 
   updateEvent(event) {
     if (isOnline()) {
-      return this._api.updateEvent(event);
+      return this._api.updateEvent(event)
+        .then((updatedEvent) => {
+          this._eventsStorage.setItem(updatedEvent.id, EventsModel.adaptToServer(updatedEvent));
+
+          return updatedEvent;
+        });
     }
 
-    return Promise.reject('offline logic is not implemented');
+    this._eventsStorage.setItem(event.id, EventsModel.adaptToServer(Object.assign({}, event)));
+
+    return Promise.resolve(event);
   }
 }
