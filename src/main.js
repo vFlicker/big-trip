@@ -99,3 +99,7 @@ Promise.all([api.getDestinations(), api.getEvents(), api.getOffers()])
     eventsModel.setEvents(UpdateType.INIT, []);
     render(containerTripMain, new TripInfoView([]), RenderPosition.AFTERBEGIN);
   });
+
+window.addEventListener('load', () => {
+  navigator.serviceWorker.register('/sw.js');
+});
