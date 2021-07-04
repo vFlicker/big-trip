@@ -4,6 +4,16 @@ const isOnline = () => {
   return window.navigator.onLine;
 };
 
+const createStoreStructure = (items) => {
+  return items.reduce((acc, current) => {
+    return Object.assign(
+      {},
+      acc,
+      {[current.id]: current},
+    );
+  }, {});
+};
+
 export default class Provider {
   constructor(api, eventsStorage, destinationStorage, offerStorage) {
     this._api = api;
@@ -16,9 +26,9 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getEvents()
         .then((events) => {
-          events.forEach((event) => {
-            this._eventsStorage.setItem(event.id, EventsModel.adaptToServer(event));
-          });
+          const items = createStoreStructure(events.map((event) => EventsModel.adaptToServer(event)));
+
+          this._eventsStorage.setItems(items);
 
           return events;
         });
