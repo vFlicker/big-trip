@@ -11,7 +11,9 @@ import NewEventButtonView from './view/new-event-button';
 import StatisticsView from './view/statistic';
 import BoardPresenter from './presenter/board';
 import FilterPresenter from './presenter/filter';
+import {isOnline} from './utils/common';
 import {remove, render, RenderPosition} from './utils/render';
+import {showToast} from './utils/toast/toast';
 import {FilterType, MenuItem, UpdateType} from './const';
 
 const AUTHORIZATION = 'Basic 48avd2449w934avd';
@@ -36,7 +38,7 @@ const containerMainContent = document.querySelector('.page-main .page-body__cont
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const eventsStorage = new Store(EVENTS_STORE_NAME, window.localStorage);
-const destinationStorage= new Store(DESTINATION_STORE_NAME, window.localStorage);
+const destinationStorage = new Store(DESTINATION_STORE_NAME, window.localStorage);
 const offerStorage = new Store(OFFERS_STORE_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, eventsStorage, destinationStorage, offerStorage);
 
@@ -86,6 +88,11 @@ const handleEventNewClose = () => {
 };
 
 const newEventButtonClickHandler = () => {
+  if (!isOnline()) {
+    showToast('You can\'t create new point offline');
+    return;
+  }
+
   remove(statisticsComponent);
   boardPresenter.destroy();
   menuComponent.setMenuItem(MenuItem.TABLE);

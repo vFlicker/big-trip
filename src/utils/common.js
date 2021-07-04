@@ -1,5 +1,9 @@
 import dayjs from 'dayjs';
 
+export const isOnline = () => {
+  return window.navigator.onLine;
+};
+
 export const cloneArrayOfObjects = (array) => {
   return array.map((obj) => Object.assign({}, obj));
 };

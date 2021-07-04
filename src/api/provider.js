@@ -1,8 +1,5 @@
 import EventsModel from '../model/events';
-
-const isOnline = () => {
-  return window.navigator.onLine;
-};
+import {isOnline} from '../utils/common';
 
 const createStoreStructure = (items) => {
   return items.reduce((acc, current) => {
@@ -77,10 +74,15 @@ export default class Provider {
 
   addEvent(event) {
     if (isOnline()) {
-      return this._api.addEvent(event);
+      return this._api.addEvent(event)
+        .then((newEvent) => {
+          this._eventsStorage.setItem(newEvent.id, EventsModel.adaptToServer(newEvent));
+
+          return newEvent;
+        });
     }
 
-    return Promise.reject('offline logic is not implemented');
+    return Promise.reject(new Error('Add event failed'));
   }
 
   deleteEvent(event) {
