@@ -1,34 +1,62 @@
+import EventsModel from '../model/events';
+
 const isOnline = () => {
   return window.navigator.onLine;
 };
 
 export default class Provider {
-  constructor(api) {
+  constructor(api, eventsStorage, destinationStorage, offerStorage) {
     this._api = api;
+    this._eventsStorage = eventsStorage;
+    this._destinationStorage = destinationStorage;
+    this._offerStorage = offerStorage;
   }
 
   getEvents() {
     if (isOnline()) {
-      return this._api.getEvents();
+      return this._api.getEvents()
+        .then((events) => {
+          events.forEach((event) => {
+            this._eventsStorage.setItem(event.id, EventsModel.adaptToServer(event));
+          });
+
+          return events;
+        });
     }
 
-    return Promise.reject('offline logic is not implemented');
+    const events = Object.values(this._eventsStorage.getItems());
+
+    return Promise.resolve(events.map((event) => EventsModel.adaptToClient(event)));
   }
 
   getDestinations() {
     if (isOnline()) {
-      return this._api.getDestinations();
+      return this._api.getDestinations()
+        .then((destinations) => {
+          this._destinationStorage.setItems(destinations);
+
+          return destinations;
+        });
     }
 
-    return Promise.reject('offline logic is not implemented');
+    const destinations = this._destinationStorage.getItems();
+
+    return Promise.resolve(destinations);
   }
 
   getOffers() {
     if (isOnline()) {
-      return this._api.getOffers();
+      return this._api.getOffers()
+        .then((offers) => {
+          this._offerStorage.setItems(offers);
+
+          return offers;
+        });
     }
 
-    return Promise.reject('offline logic is not implemented');
+    const offers = this._offerStorage.getItems();
+
+    return Promise.resolve(offers);
   }
 
   addEvent(event) {

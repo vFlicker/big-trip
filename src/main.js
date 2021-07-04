@@ -1,5 +1,6 @@
 import Api from './api/api';
 import Provider from './api/provider';
+import Store from './api/store';
 import DestinationsModel from './model/destinations';
 import EventsModel from './model/events';
 import FilterModel from './model/filter';
@@ -16,13 +17,28 @@ import {FilterType, MenuItem, UpdateType} from './const';
 const AUTHORIZATION = 'Basic 48avd2449w934avd';
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 
+const EVENTS_STORE_PREFIX = 'bigtrip-localstorage-events';
+const EVENTS_STORE_VER = 'v1';
+const EVENTS_STORE_NAME = `${EVENTS_STORE_PREFIX}-${EVENTS_STORE_VER}`;
+
+const DESTINATION_STORE_PREFIX = 'bigtrip-localstorage-destinations';
+const DESTINATION_STORE_VER = 'v1';
+const DESTINATION_STORE_NAME = `${DESTINATION_STORE_PREFIX}-${DESTINATION_STORE_VER}`;
+
+const OFFERS_STORE_PREFIX = 'bigtrip-localstorage-offers';
+const OFFERS_STORE_VER = 'v1';
+const OFFERS_STORE_NAME = `${OFFERS_STORE_PREFIX}-${OFFERS_STORE_VER}`;
+
 const containerTripMain = document.querySelector('.trip-main');
 const containerMenu = containerTripMain.querySelector('.trip-controls__navigation');
 const containerFilter = containerTripMain.querySelector('.trip-controls__filters');
 const containerMainContent = document.querySelector('.page-main .page-body__container');
 
 const api = new Api(END_POINT, AUTHORIZATION);
-const apiWithProvider = new Provider(api);
+const eventsStorage = new Store(EVENTS_STORE_NAME, window.localStorage);
+const destinationStorage= new Store(DESTINATION_STORE_NAME, window.localStorage);
+const offerStorage = new Store(OFFERS_STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, eventsStorage, destinationStorage, offerStorage);
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
