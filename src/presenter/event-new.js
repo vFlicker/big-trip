@@ -1,7 +1,6 @@
 import EventItemEditView from '../view/event-item-edit';
 import {remove, render, RenderPosition} from '../utils/render';
 import {DEFAULT_EVENT, UpdateType, UserAction} from '../const';
-import {nanoid} from 'nanoid';
 
 export default class EventNew {
   constructor(eventListContainer, destinationModel, offersModel, changeData) {
