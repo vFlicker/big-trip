@@ -69,10 +69,13 @@ export default class Provider {
 
   deleteEvent(event) {
     if (isOnline()) {
-      return this._api.deleteEvent(event);
+      return this._api.deleteEvent(event)
+        .then(() => this._eventsStorage.removeItem(event.id));
     }
 
-    return Promise.reject('offline logic is not implemented');
+    this._eventsStorage.removeItem(event.id);
+
+    return Promise.resolve();
   }
 
   updateEvent(event) {
