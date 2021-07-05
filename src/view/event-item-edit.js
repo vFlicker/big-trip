@@ -534,7 +534,8 @@ export default class EventItemEdit extends SmartView {
       .find((destination) => destination.name === evt.target.value);
 
     if (!destination) {
-      this._throwValidityError(evt.target, 'The destination is unavailable');
+      evt.target.setCustomValidity('The destination is unavailable');
+      evt.target.reportValidity();
       return;
     }
 
@@ -580,10 +581,13 @@ export default class EventItemEdit extends SmartView {
     evt.preventDefault();
     const price = Number(evt.target.value);
 
-    if (isNaN(price) || !price) {
-      this._throwValidityError(evt.target, 'Invalid price value');
+    if (Number.isNaN(price) || price < 0) {
+      evt.target.setCustomValidity('Invalid price value');
+      evt.target.reportValidity();
       return;
     }
+
+    evt.target.setCustomValidity('');
 
     this.updateState({
       price,
@@ -607,11 +611,6 @@ export default class EventItemEdit extends SmartView {
       type: eventType,
       hasDetails: hasSectionOffers || this._state.hasSectionDestination,
     });
-  }
-
-  _throwValidityError(element, errorText) {
-    element.setCustomValidity(errorText);
-    element.reportValidity();
   }
 
   static getOfferWithStatus(userType, userOffers, availableOffers) {
@@ -660,7 +659,7 @@ export default class EventItemEdit extends SmartView {
         isDisabled: false,
         isSaving: false,
         isNewEvent: event === DEFAULT_EVENT,
-        isSubmitDisabled: !hasDestinationName || !event.price,
+        isSubmitDisabled: !hasDestinationName,
         offers: EventItemEdit.getOfferWithStatus(event.type, event.offers, availableOffers),
       },
     );
