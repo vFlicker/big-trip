@@ -28,6 +28,11 @@ export const DEFAULT_EVENT = {
   offers: [],
 };
 
+export const EscapeKeys = {
+  ESCAPE: 'Escape',
+  ESC: 'Esc',
+};
+
 export const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',

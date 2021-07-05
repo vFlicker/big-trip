@@ -1,6 +1,6 @@
 import EventItemEditView from '../view/event-item-edit';
 import {remove, render, RenderPosition} from '../utils/render';
-import {DEFAULT_EVENT, UpdateType, UserAction} from '../const';
+import {DEFAULT_EVENT, EscapeKeys, UpdateType, UserAction} from '../const';
 
 export default class EventNew {
   constructor(eventListContainer, destinationModel, offersModel, changeData) {
@@ -83,7 +83,7 @@ export default class EventNew {
   }
 
   _escKeyDownHandler(evt) {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (evt.key === EscapeKeys.ESCAPE || evt.key === EscapeKeys.ESC) {
       evt.preventDefault();
       this.destroy();
     }
