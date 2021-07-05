@@ -76,12 +76,12 @@ const handleMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
       remove(statisticsComponent);
-      menuComponent.setMenuItem(menuItem);
+      menuComponent.setItem(menuItem);
       boardPresenter.init();
       break;
     case MenuItem.STATS:
       boardPresenter.destroy();
-      menuComponent.setMenuItem(menuItem);
+      menuComponent.setItem(menuItem);
       statisticsComponent = new StatisticsView(eventsModel.getEvents());
       render(containerMainContent, statisticsComponent, RenderPosition.BEFOREEND);
       break;
@@ -100,15 +100,15 @@ const newEventButtonClickHandler = () => {
 
   remove(statisticsComponent);
   boardPresenter.destroy();
-  menuComponent.setMenuItem(MenuItem.TABLE);
+  menuComponent.setItem(MenuItem.TABLE);
   filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
   boardPresenter.init();
   boardPresenter.createEvent(handleEventNewClose);
   newEventButtonComponent.getElement().disabled = true;
 };
 
-menuComponent.setMenuClickHandler(handleMenuClick);
-newEventButtonComponent.setButtonClickHandler(newEventButtonClickHandler);
+menuComponent.setClickHandler(handleMenuClick);
+newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
 
 render(containerMenu, menuComponent, RenderPosition.BEFOREEND);
 render(containerTripMain, newEventButtonComponent, RenderPosition.BEFOREEND);

@@ -39,7 +39,7 @@ export default class Event {
     this._eventItemComponent.setRollupClickHandler(this._handleItemRollupClick);
     this._eventItemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);
     this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
-    this._eventItemEditComponent.setFormSubmitHandler(this._handleItemEditSubmit);
+    this._eventItemEditComponent.setSubmitHandler(this._handleItemEditSubmit);
     this._eventItemEditComponent.setDeleteClickHandler(this._handleItemEditDeleteClick);
 
     if (prevEventItemComponent === null || prevEventItemEditComponent === null) {

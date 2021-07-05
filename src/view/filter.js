@@ -44,27 +44,27 @@ export default class Filter extends AbstractView {
 
     this._filters = filters;
 
-    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
   }
 
   getTemplate() {
     return createFilterTemplate(this._filters);
   }
 
-  _filterTypeChangeHandler(evt) {
+  setTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+
+    this
+      .getElement()
+      .addEventListener('change', this._typeChangeHandler);
+  }
+
+  _typeChangeHandler(evt) {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
 
     evt.preventDefault();
     this._callback.filterTypeChange(evt.target.dataset.filterType);
-  }
-
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-
-    this
-      .getElement()
-      .addEventListener('change', this._filterTypeChangeHandler);
   }
 }

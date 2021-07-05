@@ -356,8 +356,8 @@ export default class EventItemEdit extends SmartView {
     this._endDatePicker = null;
 
     this._rollupClickHandler = this._rollupClickHandler.bind(this);
-    this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
+    this._submitHandler = this._submitHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
@@ -387,15 +387,15 @@ export default class EventItemEdit extends SmartView {
     this
       .getElement()
       .querySelector('.event__reset-btn')
-      .addEventListener('click', this._formDeleteClickHandler);
+      .addEventListener('click', this._deleteClickHandler);
   }
 
-  setFormSubmitHandler(callback) {
+  setSubmitHandler(callback) {
     this._callback.formSubmit = callback;
 
     this
       .getElement()
-      .addEventListener('submit', this._formSubmitHandler);
+      .addEventListener('submit', this._submitHandler);
   }
 
   setRollupClickHandler(callback) {
@@ -414,19 +414,19 @@ export default class EventItemEdit extends SmartView {
 
   restoreHandlers() {
     this.setDeleteClickHandler(this._callback.deleteClick);
-    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setSubmitHandler(this._callback.formSubmit);
     this.setRollupClickHandler(this._callback.rollupClick);
     this._setStartDatePicker();
     this._setEndDatePicker();
     this._setInnerHandlers();
   }
 
-  _formDeleteClickHandler(evt) {
+  _deleteClickHandler(evt) {
     evt.preventDefault();
     this._callback.deleteClick(EventItemEdit.parseStateToEvent(this._state));
   }
 
-  _formSubmitHandler(evt) {
+  _submitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit(EventItemEdit.parseStateToEvent(this._state));
   }

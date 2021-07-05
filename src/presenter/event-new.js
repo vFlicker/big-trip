@@ -35,7 +35,7 @@ export default class EventNew {
     }
 
     this._eventItemEditComponent = new EventItemEditView(DEFAULT_EVENT, this._destinationModel.getDestinations(), this._offersModel.getOffers());
-    this._eventItemEditComponent.setFormSubmitHandler(this._handleItemEditSubmit);
+    this._eventItemEditComponent.setSubmitHandler(this._handleItemEditSubmit);
     this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
     this._eventItemEditComponent.setDeleteClickHandler(this._handleItemEditDeleteClick);
 
