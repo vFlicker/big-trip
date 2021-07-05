@@ -6,11 +6,11 @@ import EventsModel from './model/events';
 import FilterModel from './model/filter';
 import OffersModel from './model/offers';
 import MenuView from './view/menu';
-import TripInfoView from './view/trip-info';
 import NewEventButtonView from './view/new-event-button';
 import StatisticsView from './view/statistic';
 import BoardPresenter from './presenter/board';
 import FilterPresenter from './presenter/filter';
+import TripInfoPresenter from './presenter/trip-info';
 import {isOnline} from './utils/common';
 import {remove, render, RenderPosition} from './utils/render';
 import {showToast} from './utils/toast/toast';
@@ -65,6 +65,11 @@ const filterPresenter = new FilterPresenter(
   eventsModel,
 );
 
+const tripInfoPresenter = new TripInfoPresenter(
+  containerTripMain,
+  eventsModel,
+);
+
 let statisticsComponent = null;
 
 const handleMenuClick = (menuItem) => {
@@ -108,6 +113,7 @@ newEventButtonComponent.setButtonClickHandler(newEventButtonClickHandler);
 render(containerMenu, menuComponent, RenderPosition.BEFOREEND);
 render(containerTripMain, newEventButtonComponent, RenderPosition.BEFOREEND);
 
+tripInfoPresenter.init();
 boardPresenter.init();
 filterPresenter.init();
 
@@ -116,13 +122,11 @@ Promise.all([apiWithProvider.getDestinations(), apiWithProvider.getEvents(), api
     destinationModel.setDestinations(destinations);
     offersModel.setOffers(offers);
     eventsModel.setEvents(UpdateType.INIT, events);
-    render(containerTripMain, new TripInfoView(events), RenderPosition.AFTERBEGIN);
   })
   .catch(() => {
     destinationModel.setDestinations([]);
     offersModel.setOffers([]);
     eventsModel.setEvents(UpdateType.INIT, []);
-    render(containerTripMain, new TripInfoView([]), RenderPosition.AFTERBEGIN);
   });
 
 window.addEventListener('load', () => {

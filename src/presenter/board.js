@@ -5,7 +5,7 @@ import NoEventView from '../view/no-event';
 import SortView from '../view/sort';
 import EventPresenter from './event';
 import EventNewPresenter from './event-new';
-import {sortByPrice, sortByTime, sortByDate} from '../utils/event';
+import {sortByPrice, sortByTime, sortByDate} from '../utils/common';
 import {filter} from '../utils/filter';
 import {remove, render, RenderPosition} from '../utils/render';
 import {FilterType, SortType, UpdateType, UserAction} from '../const';

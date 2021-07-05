@@ -1,19 +1,6 @@
 import AbstractView from './abstract';
-import {getEventPeriod} from '../utils/event';
 
-const getTitle = (events) => {
-  if (events.length > 3) {
-    return `${events[0].destination.name} &mdash; ... &mdash; ${events[events.length - 1].destination.name}`;
-  }
-
-  return events.map((event) => event.destination.name).join(' &mdash; ');
-};
-
-const creatTripInfoTemplate = (events) => {
-  const title = getTitle(events);
-  const date = getEventPeriod(events[0], events[events.length - 1]);
-  const price = events.reduce((sum, event) => sum + event.price, 0);
-
+const creatTripInfoTemplate = ({date, price, title}) => {
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
@@ -30,13 +17,13 @@ const creatTripInfoTemplate = (events) => {
 };
 
 export default class TripInfo extends AbstractView {
-  constructor(events) {
+  constructor(info) {
     super();
 
-    this._events = events;
+    this._info = info;
   }
 
   getTemplate() {
-    return creatTripInfoTemplate(this._events);
+    return creatTripInfoTemplate(this._info);
   }
 }
