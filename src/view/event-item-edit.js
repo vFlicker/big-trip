@@ -495,6 +495,7 @@ export default class EventItemEdit extends SmartView {
   _startDateChangeHandler([userDate]) {
     this.updateState({
       dateStart: userDate,
+      dateEnd: userDate,
     });
   }
 
