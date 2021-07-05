@@ -1,7 +1,7 @@
 import SmartView from './smart';
 import {cloneArrayOfObjects, humanizeDate, ucFirst} from '../utils/common';
 import {compareDates} from '../utils/event';
-import {DATEPICKER_BASIC_SETTINGS, DEFAULT_EVENT, ResetButtonText} from '../const';
+import {DATEPICKER_BASIC_SETTINGS, DateTimeFormats, DEFAULT_EVENT, ResetButtonText} from '../const';
 import {nanoid } from 'nanoid';
 import flatpickr from 'flatpickr';
 
@@ -292,7 +292,7 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
               id="event-start-time-${id}"
               type="text"
               name="event-start-time"
-              value="${humanizeDate(dateStart, 'MM/DD/YY HH:mm')}"
+              value="${humanizeDate(dateStart, DateTimeFormats.FULL_DATE_AND_TIME)}"
               ${timeDisableStatus}
             >
             —
@@ -302,7 +302,7 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
               id="event-end-time-${id}"
               type="text"
               name="event-end-time"
-              value="${humanizeDate(dateEnd, 'MM/DD/YY HH:mm')}"
+              value="${humanizeDate(dateEnd, DateTimeFormats.FULL_DATE_AND_TIME)}"
               ${timeDisableStatus}
             />
           </div>

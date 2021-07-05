@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {DateTimeFormats} from '../const';
 
 export const isOnline = () => {
   return window.navigator.onLine;
@@ -12,7 +13,7 @@ export const getDateDifference = (dateStart, dateEnd) => {
   return dayjs(dateEnd).diff(dayjs(dateStart));
 };
 
-export const humanizeDate = (date, formatter = 'MM-DD-YYYY') => {
+export const humanizeDate = (date, formatter = DateTimeFormats.FULL_DATE) => {
   return dayjs(date).format(formatter);
 };
 

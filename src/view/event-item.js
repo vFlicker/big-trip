@@ -1,6 +1,7 @@
 import AbstractView from './abstract';
 import {humanizeDate} from '../utils/common';
 import {humanizeDateTime, humanizeDurationBetweenDates} from '../utils/event';
+import {DateTimeFormats} from '../const';
 
 const createOfferListTemplate = (offers) => {
   const getTemplate = (offer) => {
@@ -21,11 +22,11 @@ const createOfferListTemplate = (offers) => {
 const createEventItemTemplate = (event) => {
   const {dateStart, dateEnd, offers, isFavorite, type, destination, price} = event;
 
-  const eventData = humanizeDate(dateStart, 'MMM D');
-  const eventDataPlaceholder = humanizeDate(dateStart, 'MM-DD-YYYY');
-  const eventStartTime = humanizeDate(dateStart, 'HH:mm');
+  const eventData = humanizeDate(dateStart, DateTimeFormats.MONTH_AND_DAY);
+  const eventDataPlaceholder = humanizeDate(dateStart, DateTimeFormats.FULL_DATE);
+  const eventStartTime = humanizeDate(dateStart, DateTimeFormats.TIME);
   const eventStartTimePlaceholder = humanizeDateTime(dateStart);
-  const eventEndTime = humanizeDate(dateEnd, 'HH:mm');
+  const eventEndTime = humanizeDate(dateEnd, DateTimeFormats.TIME);
   const eventEndTimePlaceholder = humanizeDateTime(dateEnd);
 
   const timeDuration = humanizeDurationBetweenDates(dateStart, dateEnd);

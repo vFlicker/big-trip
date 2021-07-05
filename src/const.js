@@ -6,6 +6,14 @@ export const DATEPICKER_BASIC_SETTINGS = {
   dateFormat: 'm/d/y H:i',
 };
 
+export const DateTimeFormats = {
+  DAY: 'D',
+  FULL_DATE_AND_TIME: 'MM/D/YY HH:mm',
+  FULL_DATE: 'MM/D YYYY',
+  MONTH_AND_DAY: 'MMM D',
+  TIME: 'HH:mm',
+};
+
 export const DEFAULT_EVENT = {
   dateStart: dayjs().startOf('day').toDate(),
   dateEnd: dayjs().startOf('day').toDate(),

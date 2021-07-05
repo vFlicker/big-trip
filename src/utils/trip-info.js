@@ -1,4 +1,5 @@
 import {humanizeDate} from './common';
+import {DateTimeFormats} from '../const';
 import dayjs from 'dayjs';
 
 export const getEventPeriod = (events) => {
@@ -12,21 +13,21 @@ export const getEventPeriod = (events) => {
     const dayTo = dayjs(lastEvent.dateEnd).date();
 
     if (monthFrom === monthTo && dayFrom === dayTo) {
-      return `${humanizeDate(firstEvent.dateStart, 'MMM DD')}`;
+      return `${humanizeDate(firstEvent.dateStart, DateTimeFormats.MONTH_AND_DAY)}`;
     }
 
     if (monthFrom === monthTo) {
       return (
-        `${humanizeDate(firstEvent.dateStart, 'MMM DD')}
+        `${humanizeDate(firstEvent.dateStart, DateTimeFormats.MONTH_AND_DAY)}
         &nbsp;&mdash;&nbsp;
-        ${humanizeDate(lastEvent.dateEnd, 'DD')}`
+        ${humanizeDate(lastEvent.dateEnd, DateTimeFormats.DAY)}`
       );
     }
 
     return (
-      `${humanizeDate(firstEvent.dateStart, 'MMM DD')}
+      `${humanizeDate(firstEvent.dateStart, DateTimeFormats.MONTH_AND_DAY)}
       &nbsp;&mdash;&nbsp;
-      ${humanizeDate(lastEvent.dateEnd, 'MMM DD')}`
+      ${humanizeDate(lastEvent.dateEnd, DateTimeFormats.MONTH_AND_DAY)}`
     );
   }
 

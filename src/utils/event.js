@@ -1,4 +1,5 @@
 import {getDateDifference, humanizeDate} from './common';
+import {DateTimeFormats} from '../const';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
@@ -17,8 +18,8 @@ const getDurationBetweenDates = (dateStart, dateEnd) => {
 };
 
 export const humanizeDateTime = (date) => {
-  const firstDate = humanizeDate(date, 'MM-DD-YYYY');
-  const secondDate = humanizeDate(date, 'HH:mm');
+  const firstDate = humanizeDate(date, DateTimeFormats.FULL_DATE);
+  const secondDate = humanizeDate(date, DateTimeFormats.TIME);
   const union = 'T';
 
   return `${firstDate}${union}${secondDate}`;
