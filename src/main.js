@@ -99,9 +99,6 @@ const newEventButtonClickHandler = () => {
   newEventButtonComponent.disable();
 };
 
-menuComponent.setClickHandler(handleMenuClick);
-newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
-
 render(containerMenu, menuComponent, RenderPosition.BEFOREEND);
 render(containerTripMain, newEventButtonComponent, RenderPosition.BEFOREEND);
 
@@ -111,14 +108,21 @@ filterPresenter.init();
 
 Promise.all([apiWithProvider.getDestinations(), apiWithProvider.getEvents(), apiWithProvider.getOffers()])
   .then(([destinations, events, offers]) => {
+    newEventButtonComponent.disable();
     destinationModel.setDestinations(destinations);
     offersModel.setOffers(offers);
     eventsModel.setEvents(UpdateType.INIT, events);
   })
   .catch(() => {
+    newEventButtonComponent.disable();
     destinationModel.setDestinations([]);
     offersModel.setOffers([]);
     eventsModel.setEvents(UpdateType.INIT, []);
+  })
+  .finally(() => {
+    newEventButtonComponent.enable();
+    newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
+    menuComponent.setClickHandler(handleMenuClick);
   });
 
 window.addEventListener('load', () => {
