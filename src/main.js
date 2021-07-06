@@ -89,7 +89,7 @@ const handleMenuClick = (menuItem) => {
 };
 
 const handleEventNewClose = () => {
-  newEventButtonComponent.getElement().disabled = false;
+  newEventButtonComponent.enable();
 };
 
 const newEventButtonClickHandler = () => {
@@ -104,7 +104,7 @@ const newEventButtonClickHandler = () => {
   filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
   boardPresenter.init();
   boardPresenter.createEvent(handleEventNewClose);
-  newEventButtonComponent.getElement().disabled = true;
+  newEventButtonComponent.disable();
 };
 
 menuComponent.setClickHandler(handleMenuClick);
