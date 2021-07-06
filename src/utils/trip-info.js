@@ -1,33 +1,16 @@
 import {humanizeDate} from './common';
 import {DateTimeFormats} from '../const';
-import dayjs from 'dayjs';
 
 export const getEventPeriod = (events) => {
   const firstEvent = events[0];
   const lastEvent = events[events.length - 1];
 
   if (firstEvent && lastEvent) {
-    const monthFrom = dayjs(firstEvent.dateStart).month();
-    const monthTo = dayjs(lastEvent.dateEnd).month();
-    const dayFrom = dayjs(firstEvent.dateStart).date();
-    const dayTo = dayjs(lastEvent.dateEnd).date();
-
-    if (monthFrom === monthTo && dayFrom === dayTo) {
-      return `${humanizeDate(firstEvent.dateStart, DateTimeFormats.MONTH_AND_DAY)}`;
-    }
-
-    if (monthFrom === monthTo) {
-      return (
-        `${humanizeDate(firstEvent.dateStart, DateTimeFormats.MONTH_AND_DAY)}
-        &nbsp;&mdash;&nbsp;
-        ${humanizeDate(lastEvent.dateEnd, DateTimeFormats.DAY)}`
-      );
-    }
+    const humanizeFirstFrom = humanizeDate(firstEvent.dateStart, DateTimeFormats.MONTH_AND_DAY);
+    const humanizeFirstTo = humanizeDate(lastEvent.dateEnd, DateTimeFormats.MONTH_AND_DAY);
 
     return (
-      `${humanizeDate(firstEvent.dateStart, DateTimeFormats.MONTH_AND_DAY)}
-      &nbsp;&mdash;&nbsp;
-      ${humanizeDate(lastEvent.dateEnd, DateTimeFormats.MONTH_AND_DAY)}`
+      `${humanizeFirstFrom} &nbsp;&mdash;&nbsp; ${humanizeFirstTo}`
     );
   }
 
@@ -43,14 +26,23 @@ export const getTotalPrice = (events) => {
 };
 
 export const getTitle = (events) => {
-  if (events.length > 3) {
-    const firstEventName = events[0].destination.name;
-    const lastEventName = events[events.length - 1].destination.name;
+  const allCities = events.map((event) => event.destination.name);
 
-    return `${firstEventName} &mdash; ... &mdash; ${lastEventName}`;
+  const filtredCities = allCities.reduce((array, city, index) => {
+    if (city === allCities[index + 1]) {
+      return array;
+    }
+
+    array.push(city);
+    return array;
+  }, []);
+
+  if (filtredCities.length > 3) {
+    const firstCity = filtredCities[0];
+    const lastCity = filtredCities[filtredCities.length - 1];
+
+    return `${firstCity} &mdash; ... &mdash; ${lastCity}`;
   }
 
-  return events
-    .map((event) => event.destination.name)
-    .join(' &mdash; ');
+  return filtredCities.join(' &mdash; ');
 };
