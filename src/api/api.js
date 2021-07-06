@@ -10,7 +10,7 @@ export default class Api {
   getEvents() {
     return this._load({url: 'points'})
       .then(Api.toJSON)
-      .then((events) => events.map((event) => EventsModel.adaptToClient(event)));
+      .then((events) => events.map(EventsModel.adaptToClient));
   }
 
   getDestinations() {
@@ -21,6 +21,14 @@ export default class Api {
   getOffers() {
     return this._load({url: 'offers'})
       .then(Api.toJSON);
+  }
+
+  getAllData() {
+    return Promise.all([
+      this.getEvents(),
+      this.getDestinations(),
+      this.getOffers(),
+    ]);
   }
 
   addEvent(event) {

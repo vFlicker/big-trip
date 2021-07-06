@@ -4,10 +4,8 @@ import {remove, render, RenderPosition, replace} from '../utils/render';
 import {EscKeyEvent , Mode, UpdateType, UserAction} from '../const';
 
 export default class Event {
-  constructor(eventListContainer, destinationModel, offersModel, changeData, changeMode) {
+  constructor(eventListContainer, changeData, changeMode) {
     this._eventListContainer = eventListContainer;
-    this._destinationModel = destinationModel;
-    this._offersModel = offersModel;
     this._changeData = changeData;
     this._changeMode = changeMode;
 
@@ -30,11 +28,7 @@ export default class Event {
     const prevEventItemEditComponent = this._eventItemEditComponent;
 
     this._eventItemComponent = new EventItemView(event);
-    this._eventItemEditComponent = new EventItemEditView(
-      event,
-      this._destinationModel.getDestinations(),
-      this._offersModel.getOffers(),
-    );
+    this._eventItemEditComponent = new EventItemEditView(event);
 
     this._eventItemComponent.setRollupClickHandler(this._handleItemRollupClick);
     this._eventItemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);

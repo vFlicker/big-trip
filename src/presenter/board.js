@@ -12,12 +12,10 @@ import {FilterType, SortType, UpdateType, UserAction} from '../const';
 
 
 export default class Board {
-  constructor(boardContainer, eventsModel, filterModel, destinationModel, offersModel, api) {
+  constructor(boardContainer, eventsModel, filterModel, api) {
     this._boardContainer = boardContainer;
-    this._destinationModel = destinationModel;
     this._eventsModel = eventsModel;
     this._filterModel = filterModel;
-    this._offersModel = offersModel;
     this._api = api;
 
     this._currentSortType = SortType.DAY;
@@ -38,12 +36,7 @@ export default class Board {
     this._renderEventList = this._renderEventList.bind(this);
     this._renderNoEvent = this._renderNoEvent.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(
-      this._eventListComponent,
-      this._destinationModel,
-      this._offersModel,
-      this._handleViewAction,
-    );
+    this._eventNewPresenter = new EventNewPresenter(this._eventListComponent, this._handleViewAction);
   }
 
   init() {
@@ -184,7 +177,12 @@ export default class Board {
   }
 
   _renderEvent(event) {
-    const eventPresenter = new EventPresenter(this._eventListComponent, this._destinationModel, this._offersModel, this._handleViewAction, this._handleModeChange);
+    const eventPresenter = new EventPresenter(
+      this._eventListComponent,
+      this._handleViewAction,
+      this._handleModeChange,
+    );
+
     eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }

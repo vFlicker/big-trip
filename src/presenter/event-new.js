@@ -3,10 +3,8 @@ import {remove, render, RenderPosition} from '../utils/render';
 import {DEFAULT_EVENT, EscKeyEvent , UpdateType, UserAction} from '../const';
 
 export default class EventNew {
-  constructor(eventListContainer, destinationModel, offersModel, changeData) {
+  constructor(eventListContainer, changeData) {
     this._eventListContainer = eventListContainer;
-    this._destinationModel = destinationModel;
-    this._offersModel = offersModel;
     this._changeData = changeData;
 
     this._destroyCallback = null;
@@ -34,7 +32,7 @@ export default class EventNew {
       this._renderEventList = null;
     }
 
-    this._eventItemEditComponent = new EventItemEditView(DEFAULT_EVENT, this._destinationModel.getDestinations(), this._offersModel.getOffers());
+    this._eventItemEditComponent = new EventItemEditView(DEFAULT_EVENT);
     this._eventItemEditComponent.setSubmitHandler(this._handleItemEditSubmit);
     this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
     this._eventItemEditComponent.setDeleteClickHandler(this._handleItemEditDeleteClick);

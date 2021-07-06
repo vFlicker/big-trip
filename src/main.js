@@ -1,7 +1,5 @@
-import DestinationsModel from './model/destinations';
 import EventsModel from './model/events';
 import FilterModel from './model/filter';
-import OffersModel from './model/offers';
 import MenuView from './view/menu';
 import NewEventButtonView from './view/new-event-button';
 import BoardPresenter from './presenter/board';
@@ -15,13 +13,7 @@ import {FilterType, MenuItem, UpdateType} from './const';
 import Api from './api/api';
 import Provider from './api/provider';
 import Store from './api/store';
-import {
-  AUTHORIZATION,
-  END_POINT,
-  EVENTS_STORE_NAME,
-  DESTINATION_STORE_NAME,
-  OFFERS_STORE_NAME
-} from './api/const';
+import {AUTHORIZATION, END_POINT, EVENTS_STORE_NAME, DESTINATION_STORE_NAME, OFFERS_STORE_NAME} from './api/const';
 
 const containerTripMain = document.querySelector('.trip-main');
 const containerMenu = containerTripMain.querySelector('.trip-controls__navigation');
@@ -36,36 +28,14 @@ const apiWithProvider = new Provider(api, eventsStorage, destinationStorage, off
 
 const eventsModel = new EventsModel();
 const filterModel = new FilterModel();
-const destinationModel = new DestinationsModel();
-const offersModel = new OffersModel();
 
 const menuComponent = new MenuView();
 const newEventButtonComponent = new NewEventButtonView();
 
-const boardPresenter = new BoardPresenter(
-  containerMainContent,
-  eventsModel,
-  filterModel,
-  destinationModel,
-  offersModel,
-  apiWithProvider,
-);
-
-const filterPresenter = new FilterPresenter(
-  containerFilter,
-  filterModel,
-  eventsModel,
-);
-
-const statisticPresenter = new StatisticPresenter(
-  containerMainContent,
-  eventsModel,
-);
-
-const tripInfoPresenter = new TripInfoPresenter(
-  containerTripMain,
-  eventsModel,
-);
+const boardPresenter = new BoardPresenter(containerMainContent, eventsModel, filterModel, apiWithProvider);
+const filterPresenter = new FilterPresenter(containerFilter, filterModel, eventsModel);
+const statisticPresenter = new StatisticPresenter(containerMainContent, eventsModel);
+const tripInfoPresenter = new TripInfoPresenter(containerTripMain, eventsModel);
 
 const handleMenuClick = (menuItem) => {
   switch (menuItem) {
@@ -108,17 +78,13 @@ tripInfoPresenter.init();
 boardPresenter.init();
 filterPresenter.init();
 
-Promise.all([apiWithProvider.getDestinations(), apiWithProvider.getEvents(), apiWithProvider.getOffers()])
-  .then(([destinations, events, offers]) => {
+apiWithProvider.getAllData()
+  .then((events) => {
     newEventButtonComponent.disable();
-    destinationModel.setDestinations(destinations);
-    offersModel.setOffers(offers);
     eventsModel.setEvents(UpdateType.INIT, events);
   })
   .catch(() => {
     newEventButtonComponent.disable();
-    destinationModel.setDestinations([]);
-    offersModel.setOffers([]);
     eventsModel.setEvents(UpdateType.INIT, []);
   })
   .finally(() => {

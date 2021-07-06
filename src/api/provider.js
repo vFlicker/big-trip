@@ -1,4 +1,5 @@
 import EventsModel from '../model/events';
+import DataStore from '../dataStorage';
 import {isOnline} from '../utils/common';
 
 const createStoreStructure = (items) => {
@@ -25,51 +26,28 @@ export default class Provider {
     this._offerStorage = offerStorage;
   }
 
-  getEvents() {
+  getAllData() {
     if (isOnline()) {
-      return this._api.getEvents()
-        .then((events) => {
-          const items = createStoreStructure(events.map((event) => EventsModel.adaptToServer(event)));
+      return this._api.getAllData()
+        .then(([events, destinations, offers]) => {
+          const eventItems = createStoreStructure(events.map(EventsModel.adaptToServer));
 
-          this._eventsStorage.setItems(items);
+          this._eventsStorage.setItems(eventItems);
+          DataStore.setDestinations = destinations;
+          DataStore.setOffers = offers;
+          this._destinationStorage.setItems(destinations);
+          this._offerStorage.setItems(offers);
 
           return events;
         });
     }
+    const storeEvents = Object.values(this._eventsStorage.getItems());
+    const storeDestinations = this._destinationStorage.getItems();
+    const storeOffers = this._offerStorage.getItems();
+    DataStore.setDestinations = storeDestinations;
+    DataStore.setOffers = storeOffers;
 
-    const events = Object.values(this._eventsStorage.getItems());
-
-    return Promise.resolve(events.map((event) => EventsModel.adaptToClient(event)));
-  }
-
-  getDestinations() {
-    if (isOnline()) {
-      return this._api.getDestinations()
-        .then((destinations) => {
-          this._destinationStorage.setItems(destinations);
-
-          return destinations;
-        });
-    }
-
-    const destinations = this._destinationStorage.getItems();
-
-    return Promise.resolve(destinations);
-  }
-
-  getOffers() {
-    if (isOnline()) {
-      return this._api.getOffers()
-        .then((offers) => {
-          this._offerStorage.setItems(offers);
-
-          return offers;
-        });
-    }
-
-    const offers = this._offerStorage.getItems();
-
-    return Promise.resolve(offers);
+    return Promise.resolve(storeEvents.map(EventsModel.adaptToClient));
   }
 
   addEvent(event) {

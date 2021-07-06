@@ -1,4 +1,5 @@
 import SmartView from './smart';
+import DataStore from '../dataStorage';
 import {cloneArrayOfObjects, humanizeDate, ucFirst} from '../utils/common';
 import {compareDates} from '../utils/event';
 import {DATEPICKER_BASIC_SETTINGS, DateTimeFormats, DEFAULT_EVENT, ResetButtonText} from '../const';
@@ -346,12 +347,12 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
 };
 
 export default class EventItemEdit extends SmartView {
-  constructor(event, availableDestination, availableOffers) {
+  constructor(event) {
     super();
 
-    this._state = EventItemEdit.parseEventToState(event, availableOffers);
-    this._availableDestination = availableDestination;
-    this._availableOffers = availableOffers;
+    this._state = EventItemEdit.parseEventToState(event, DataStore.getOffers);
+    this._availableDestination = DataStore.getDestinations;
+    this._availableOffers = DataStore.getOffers;
     this._startDatePicker = null;
     this._endDatePicker = null;
 
