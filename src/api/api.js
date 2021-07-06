@@ -1,16 +1,5 @@
 import EventsModel from '../model/events';
-
-const Method = {
-  GET: 'GET',
-  POST: 'POST',
-  PUT: 'PUT',
-  DELETE: 'DELETE',
-};
-
-const SuccessHTTPSStatusRange = {
-  MIN: 200,
-  MAX: 299,
-};
+import {Method, SuccessHTTPSStatusRange} from './const';
 
 export default class Api {
   constructor(endPoint, authorization) {
