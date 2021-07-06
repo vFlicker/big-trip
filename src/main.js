@@ -4,12 +4,12 @@ import FilterModel from './model/filter';
 import OffersModel from './model/offers';
 import MenuView from './view/menu';
 import NewEventButtonView from './view/new-event-button';
-import StatisticsView from './view/statistic';
 import BoardPresenter from './presenter/board';
 import FilterPresenter from './presenter/filter';
+import StatisticPresenter from './presenter/statistic';
 import TripInfoPresenter from './presenter/trip-info';
 import {isOnline} from './utils/common';
-import {remove, render, RenderPosition} from './utils/render';
+import {render, RenderPosition} from './utils/render';
 import {showToast} from './utils/toast/toast';
 import {FilterType, MenuItem, UpdateType} from './const';
 import Api from './api/api';
@@ -57,25 +57,27 @@ const filterPresenter = new FilterPresenter(
   eventsModel,
 );
 
+const statisticPresenter = new StatisticPresenter(
+  containerMainContent,
+  eventsModel,
+);
+
 const tripInfoPresenter = new TripInfoPresenter(
   containerTripMain,
   eventsModel,
 );
 
-let statisticsComponent = null;
-
 const handleMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
-      remove(statisticsComponent);
+      statisticPresenter.destroy();
       menuComponent.setItem(menuItem);
       boardPresenter.init();
       break;
     case MenuItem.STATS:
       boardPresenter.destroy();
       menuComponent.setItem(menuItem);
-      statisticsComponent = new StatisticsView(eventsModel.getEvents());
-      render(containerMainContent, statisticsComponent, RenderPosition.BEFOREEND);
+      statisticPresenter.init();
       break;
   }
 };
@@ -90,7 +92,7 @@ const newEventButtonClickHandler = () => {
     return;
   }
 
-  remove(statisticsComponent);
+  statisticPresenter.destroy();
   boardPresenter.destroy();
   menuComponent.setItem(MenuItem.TABLE);
   filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
