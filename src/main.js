@@ -80,17 +80,20 @@ filterPresenter.init();
 
 apiWithProvider.getAllData()
   .then((events) => {
+    menuComponent.disable();
     newEventButtonComponent.disable();
     eventsModel.setEvents(UpdateType.INIT, events);
   })
   .catch(() => {
+    menuComponent.disable();
     newEventButtonComponent.disable();
     eventsModel.setEvents(UpdateType.INIT, []);
   })
   .finally(() => {
+    menuComponent.enable();
     newEventButtonComponent.enable();
-    newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
     menuComponent.setClickHandler(handleMenuClick);
+    newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
   });
 
 window.addEventListener('load', () => {
