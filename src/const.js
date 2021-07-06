@@ -28,7 +28,7 @@ export const DEFAULT_EVENT = {
   offers: [],
 };
 
-export const EscapeKeys = {
+export const EscKeyEvent = {
   ESCAPE: 'Escape',
   ESC: 'Esc',
 };

@@ -16,17 +16,17 @@ export default class TripInfo {
   }
 
   init() {
-    const prevFilterComponent = this._tripInfoComponent;
+    const prevTripInfoComponent = this._tripInfoComponent;
 
     this._tripInfoComponent = new TripInfoView(this._getInfo());
 
-    if (prevFilterComponent === null) {
+    if (prevTripInfoComponent === null) {
       render(this._tripInfoContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
       return;
     }
 
-    replace(this._tripInfoComponent, prevFilterComponent);
-    remove(prevFilterComponent);
+    replace(this._tripInfoComponent, prevTripInfoComponent);
+    remove(prevTripInfoComponent);
   }
 
   _handleModelEvent() {

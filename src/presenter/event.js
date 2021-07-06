@@ -1,7 +1,7 @@
 import EventItemView from '../view/event-item';
 import EventItemEditView from '../view/event-item-edit';
 import {remove, render, RenderPosition, replace} from '../utils/render';
-import {EscapeKeys, Mode, UpdateType, UserAction} from '../const';
+import {EscKeyEvent , Mode, UpdateType, UserAction} from '../const';
 
 export default class Event {
   constructor(eventListContainer, destinationModel, offersModel, changeData, changeMode) {
@@ -112,7 +112,7 @@ export default class Event {
   }
 
   _escKeyDownHandler(evt) {
-    if (evt.key === EscapeKeys.ESCAPE || evt.key === EscapeKeys.ESC) {
+    if (evt.key === EscKeyEvent .ESCAPE || evt.key === EscKeyEvent .ESC) {
       evt.preventDefault();
       this._eventItemEditComponent.reset(this._event);
       this._replaceFormToEvent();
