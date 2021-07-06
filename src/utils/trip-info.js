@@ -34,7 +34,13 @@ export const getEventPeriod = (events) => {
   return 'trip date';
 };
 
-export const getPrice = (events) => events.reduce((sum, event) => sum + event.price, 0);
+export const getTotalPrice = (events) => {
+  return events.reduce((sum, event) => {
+    const offersPrice = event.offers.reduce((sum, offer) => sum += offer.price, 0);
+
+    return sum + event.price + offersPrice;
+  }, 0);
+};
 
 export const getTitle = (events) => {
   if (events.length > 3) {

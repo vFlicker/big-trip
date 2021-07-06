@@ -1,7 +1,7 @@
 import TripInfoView from '../view/trip-info';
 import {sortByDate} from '../utils/common';
 import {remove, render, RenderPosition, replace} from '../utils/render';
-import {getEventPeriod, getPrice, getTitle} from '../utils/trip-info';
+import {getEventPeriod, getTotalPrice, getTitle} from '../utils/trip-info';
 
 export default class TripInfo {
   constructor(tripInfoContainer, eventsModel) {
@@ -38,7 +38,7 @@ export default class TripInfo {
 
     return {
       date: getEventPeriod(sortedEvents),
-      price: getPrice(sortedEvents),
+      price: getTotalPrice(sortedEvents),
       title: getTitle(sortedEvents),
     };
   }
