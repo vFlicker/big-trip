@@ -36,55 +36,45 @@ const assetUrls = [
   '/img/photos/5.jpg',
 ];
 
-const installHandler = (evt) => {
-  evt.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(assetUrls);
-      }),
+const installHandler = async () => {
+  const cache = await caches.open(CACHE_NAME);
+  await cache.addAll(assetUrls);
+};
+
+const activateHandler = async () => {
+  const cacheNames = await caches.keys();
+  await Promise.all(
+    cacheNames
+      .filter((cacheName) => cacheName.startsWith(CACHE_PREFIX) && cacheName !== CACHE_NAME)
+      .map((cacheName) => caches.delete(cacheName)),
   );
 };
 
-const activateHandler = (evt) => {
-  evt.waitUntil(
-    caches.keys()
-      .then((cacheNames) =>  Promise.all(
-        cacheNames
-          .filter((cacheName) => cacheName.startsWith(CACHE_PREFIX) && cacheName !== CACHE_NAME)
-          .map((cacheName) => caches.delete(cacheName)),
-      )),
-  );
+const loadData = async (request) => {
+  const cacheResponse = await caches.match(request);
+
+  if (cacheResponse) {
+    return cacheResponse;
+  }
+
+  const response = await fetch(request);
+
+  if (
+    !response ||
+    response.status !== HTTP_STATUS_OK ||
+    response.type !== RESPONSE_SAFE_TYPE
+  ) {
+    return response;
+  }
+
+  const cache = await caches.open(CACHE_NAME);
+  await cache.put(request, response.clone());
+  return response;
 };
 
-const fetchHandler = (evt) => {
+const fetchHandler = async (evt) => {
   const {request} = evt;
-
-  evt.respondWith(
-    caches.match(request)
-      .then((cacheResponse) => {
-        if (cacheResponse) {
-          return cacheResponse;
-        }
-
-        return fetch(request)
-          .then((response) => {
-            if (
-              !response ||
-              response.status !== HTTP_STATUS_OK ||
-              response.type !== RESPONSE_SAFE_TYPE
-            )  {
-              return response;
-            }
-
-            const clonedResponse = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then((cache) => cache.put(request, clonedResponse));
-
-            return response;
-          });
-      }),
-  );
+  evt.respondWith(loadData(request));
 };
 
 self.addEventListener('install', installHandler);
