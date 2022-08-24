@@ -1,10 +1,12 @@
 import EventsModel from './model/events';
 import FilterModel from './model/filter';
 import { MenuView, NewEventButtonView } from './view';
-import BoardPresenter from './presenter/board';
-import FilterPresenter from './presenter/filter';
-import StatisticPresenter from './presenter/statistic';
-import TripInfoPresenter from './presenter/trip-info';
+import {
+  BoardPresenter,
+  FilterPresenter,
+  StatisticPresenter,
+  TripInfoPresenter,
+} from './presenter';
 import {isOnline} from './utils/common';
 import {render, RenderPosition} from './utils/render';
 import {showToast} from './utils/toast/toast';

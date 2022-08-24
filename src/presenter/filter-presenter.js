@@ -4,7 +4,7 @@ import {filter} from '../utils/filter';
 import {remove, render, RenderPosition, replace} from '../utils/render';
 import {UpdateType} from '../const';
 
-export default class Filter {
+export default class FilterPresenter {
   constructor(filterContainer, filterModel, eventsModel) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;

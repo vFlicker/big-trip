@@ -2,7 +2,7 @@ import { EventItemEditView } from '../view';
 import {remove, render, RenderPosition} from '../utils/render';
 import {DEFAULT_EVENT, EscKeyEvent , UpdateType, UserAction} from '../const';
 
-export default class EventNew {
+export default class NewEventPresenter {
   constructor(eventListContainer, changeData) {
     this._eventListContainer = eventListContainer;
     this._changeData = changeData;

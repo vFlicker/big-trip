@@ -1,7 +1,7 @@
 import { StatisticView } from '../view';
 import {remove, render, RenderPosition} from '../utils/render';
 
-export default class Statistic {
+export default class StatisticPresenter {
   constructor(statisticContainer, eventsModel) {
     this._statisticContainer = statisticContainer;
     this._eventsModel = eventsModel;

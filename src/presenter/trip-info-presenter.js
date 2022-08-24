@@ -3,7 +3,7 @@ import {sortByDate} from '../utils/common';
 import {remove, render, RenderPosition, replace} from '../utils/render';
 import {getEventPeriod, getTotalPrice, getTitle} from '../utils/trip-info';
 
-export default class TripInfo {
+export default class TripInfoPresenter {
   constructor(tripInfoContainer, eventsModel) {
     this._tripInfoContainer = tripInfoContainer;
     this._eventsModel = eventsModel;

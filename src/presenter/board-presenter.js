@@ -5,15 +5,15 @@ import {
   NoEventView,
   SortView,
 } from '../view';
-import EventPresenter from './event';
-import EventNewPresenter from './event-new';
 import {sortByPrice, sortByTime, sortByDate} from '../utils/common';
 import {filter} from '../utils/filter';
 import {remove, render, RenderPosition} from '../utils/render';
 import {FilterType, SortType, UpdateType, UserAction} from '../const';
+import EventPresenter from './event-presenter';
+import EventNewPresenter from './new-event-presenter';
 
 
-export default class Board {
+export default class BoardPresenter {
   constructor(boardContainer, eventsModel, filterModel, api) {
     this._boardContainer = boardContainer;
     this._eventsModel = eventsModel;
