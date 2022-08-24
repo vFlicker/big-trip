@@ -226,9 +226,8 @@ const renderTimeSpendChart = (timeSpendCtx, events) => {
   });
 };
 
-const createStatisticsTemplate = () => {
-  return (
-    `<section class="statistics">
+const createStatisticsTemplate = () => (
+  `<section class="statistics">
       <h2 class="visually-hidden">Trip statistics</h2>
 
       <div class="statistics__item statistics__item--money">
@@ -243,8 +242,7 @@ const createStatisticsTemplate = () => {
         <canvas class="statistics__chart  statistics__chart--time" width="900"></canvas>
       </div>
     </section>`
-  );
-};
+);
 
 export default class Statistic extends SmartView {
   constructor(events) {

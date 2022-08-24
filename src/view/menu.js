@@ -1,14 +1,12 @@
 import AbstractView from './abstract';
 import {MenuItem} from '../const';
 
-const createMenuTemplate = () => {
-  return (
-    `<nav class="trip-controls__trip-tabs  trip-tabs">
+const createMenuTemplate = () => (
+  `<nav class="trip-controls__trip-tabs  trip-tabs">
       <a class="trip-tabs__btn  trip-tabs__btn--active" href="#" data-menu-item="${MenuItem.TABLE}">Table</a>
       <a class="trip-tabs__btn" href="#" data-menu-item="${MenuItem.STATS}">Stats</a>
     </nav>`
-  );
-};
+);
 
 export default class Menu extends AbstractView {
   constructor() {

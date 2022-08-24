@@ -34,11 +34,9 @@ const createEventTypeListTemplate = (id, activeType, availableOffers) => {
 };
 
 const createEventDestinationListTemplate = (availableDestination) => {
-  const getTemplate = ({name}) => {
-    return (
-      `<option value="${name}"></option>`
-    );
-  };
+  const getTemplate = ({name}) => (
+    `<option value="${name}"></option>`
+  );
 
   return Object
     .values(availableDestination)
@@ -93,11 +91,9 @@ const createSectionOffersTemplate = (hasSectionOffers, type, offers) => {
 };
 
 const createEventPhotoListTemplate = (pictures) => {
-  const getTemplate = ({src, description}) => {
-    return (
-      `<img class="event__photo" src="${src}" alt="${description}">`
-    );
-  };
+  const getTemplate = ({src, description}) => (
+    `<img class="event__photo" src="${src}" alt="${description}">`
+  );
 
   return pictures
     .map(getTemplate)

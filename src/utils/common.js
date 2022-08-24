@@ -1,21 +1,13 @@
 import dayjs from 'dayjs';
 import {DateTimeFormats} from '../const';
 
-export const isOnline = () => {
-  return window.navigator.onLine;
-};
+export const isOnline = () => window.navigator.onLine;
 
-export const cloneArrayOfObjects = (array) => {
-  return array.map((obj) => Object.assign({}, obj));
-};
+export const cloneArrayOfObjects = (array) => array.map((obj) => Object.assign({}, obj));
 
-export const getDateDifference = (dateStart, dateEnd) => {
-  return dayjs(dateEnd).diff(dayjs(dateStart));
-};
+export const getDateDifference = (dateStart, dateEnd) => dayjs(dateEnd).diff(dayjs(dateStart));
 
-export const humanizeDate = (date, formatter = DateTimeFormats.FULL_DATE) => {
-  return dayjs(date).format(formatter);
-};
+export const humanizeDate = (date, formatter = DateTimeFormats.FULL_DATE) => dayjs(date).format(formatter);
 
 export const ucFirst = (string) => {
   if (!string) {
@@ -32,10 +24,6 @@ export const sortByTime = (firstEvent, secondEvent) => {
   return firstDuration - secondDuration;
 };
 
-export const sortByPrice = (firstEvent, secondEvent) => {
-  return firstEvent.price - secondEvent.price;
-};
+export const sortByPrice = (firstEvent, secondEvent) => firstEvent.price - secondEvent.price;
 
-export const sortByDate = (firstEvent, secondEvent) => {
-  return dayjs(firstEvent.dateStart).diff(dayjs(secondEvent.dateStart));
-};
+export const sortByDate = (firstEvent, secondEvent) => dayjs(firstEvent.dateStart).diff(dayjs(secondEvent.dateStart));

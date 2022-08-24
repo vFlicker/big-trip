@@ -4,15 +4,13 @@ import {humanizeDateTime, humanizeDurationBetweenDates} from '../utils/event';
 import {DateTimeFormats} from '../const';
 
 const createOfferListTemplate = (offers) => {
-  const getTemplate = (offer) => {
-    return (
-      `<li class="event__offer">
+  const getTemplate = (offer) => (
+    `<li class="event__offer">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${offer.price}</span>
       </li>`
-    );
-  };
+  );
 
   return offers
     .map(getTemplate)

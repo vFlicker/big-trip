@@ -2,21 +2,15 @@ import EventsModel from '../model/events';
 import DataStore from '../dataStorage';
 import {isOnline} from '../utils/common';
 
-const createStoreStructure = (items) => {
-  return items.reduce((acc, current) => {
-    return Object.assign(
-      {},
-      acc,
-      {[current.id]: current},
-    );
-  }, {});
-};
+const createStoreStructure = (items) => items.reduce((acc, current) => Object.assign(
+  {},
+  acc,
+  {[current.id]: current},
+), {});
 
-const getSyncedEvents = (items) => {
-  return items
-    .filter(({success}) => success)
-    .map(({payload}) => payload.point);
-};
+const getSyncedEvents = (items) => items
+  .filter(({success}) => success)
+  .map(({payload}) => payload.point);
 
 export default class Provider {
   constructor(api, eventsStorage, destinationStorage, offerStorage) {

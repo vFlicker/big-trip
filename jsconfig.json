@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "checkJs": true,
-  }
+    "target": "es6",
+    // "checkJs": true,
+  },
+  "baseUrl": ".",
+  "exclude": [
+    "node_modules",
+    "public"
+  ]
 }

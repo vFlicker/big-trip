@@ -1,8 +1,7 @@
 import AbstractView from './abstract';
 
-const creatTripInfoTemplate = ({date, price, title}) => {
-  return (
-    `<section class="trip-main__trip-info  trip-info">
+const creatTripInfoTemplate = ({date, price, title}) => (
+  `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
         <h1 class="trip-info__title">${title}</h1>
 
@@ -13,8 +12,7 @@ const creatTripInfoTemplate = ({date, price, title}) => {
         Total: €&nbsp;<span class="trip-info__cost-value">${price}</span>
       </p>
     </section>`
-  );
-};
+);
 
 export default class TripInfo extends AbstractView {
   constructor(info) {
