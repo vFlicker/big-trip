@@ -1,0 +1,12 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2019,
+    "sourceType": "module"
+  },
+  "env": {
+    "es2017": true,
+    "browser": true
+  },
+  "extends": ["htmlacademy/vanilla"]
+}
+
