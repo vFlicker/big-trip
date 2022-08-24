@@ -6,7 +6,7 @@ const createBoardTemplate = () => (
     </section>`
 );
 
-export default class Board extends AbstractView {
+export default class BoardView extends AbstractView {
   getTemplate() {
     return createBoardTemplate();
   }

@@ -76,7 +76,7 @@ const createEventItemTemplate = (event) => {
   );
 };
 
-export default class EventItem extends AbstractView {
+export default class EventItemView extends AbstractView {
   constructor(event) {
     super();
 

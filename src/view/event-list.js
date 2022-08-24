@@ -4,7 +4,7 @@ const createEventListTemplate = () => (
   '<ul class="trip-events__list"></ul>'
 );
 
-export default class EventList extends AbstractView {
+export default class EventListView extends AbstractView {
   getTemplate() {
     return createEventListTemplate();
   }

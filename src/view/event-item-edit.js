@@ -342,11 +342,11 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
   );
 };
 
-export default class EventItemEdit extends SmartView {
+export default class EventItemEditView extends SmartView {
   constructor(event) {
     super();
 
-    this._state = EventItemEdit.parseEventToState(event, DataStore.getOffers);
+    this._state = EventItemEditView.parseEventToState(event, DataStore.getOffers);
     this._availableDestination = DataStore.getDestinations;
     this._availableOffers = DataStore.getOffers;
     this._startDatePicker = null;
@@ -406,7 +406,7 @@ export default class EventItemEdit extends SmartView {
   }
 
   reset(event) {
-    this.updateState(EventItemEdit.parseEventToState(event, this._availableOffers));
+    this.updateState(EventItemEditView.parseEventToState(event, this._availableOffers));
   }
 
   restoreHandlers() {
@@ -420,12 +420,12 @@ export default class EventItemEdit extends SmartView {
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteClick(EventItemEdit.parseStateToEvent(this._state));
+    this._callback.deleteClick(EventItemEditView.parseStateToEvent(this._state));
   }
 
   _submitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(EventItemEdit.parseStateToEvent(this._state));
+    this._callback.formSubmit(EventItemEditView.parseStateToEvent(this._state));
   }
 
   _rollupClickHandler(evt) {
@@ -599,7 +599,7 @@ export default class EventItemEdit extends SmartView {
 
     evt.preventDefault();
     const eventType = evt.target.value;
-    const offers = EventItemEdit.getOfferWithStatus(eventType, [], this._availableOffers);
+    const offers = EventItemEditView.getOfferWithStatus(eventType, [], this._availableOffers);
 
     const hasSectionOffers = offers.length !== 0;
 
@@ -658,7 +658,7 @@ export default class EventItemEdit extends SmartView {
         isSaving: false,
         isNewEvent: event === DEFAULT_EVENT,
         isSubmitDisabled: !hasDestinationName,
-        offers: EventItemEdit.getOfferWithStatus(event.type, event.offers, availableOffers),
+        offers: EventItemEditView.getOfferWithStatus(event.type, event.offers, availableOffers),
       },
     );
   }
