@@ -1,0 +1,14 @@
+export { default as AbstractView } from './abstract-view';
+export { default as BoardView } from './board-view';
+export { default as EventItemView } from './event-item-view';
+export { default as EventItemEditView } from './event-item-edit-view';
+export { default as EventListView } from './event-list-view';
+export { default as FilterView } from './filter-view';
+export { default as LoadingView } from './loader-view';
+export { default as MenuView } from './menu-view';
+export { default as NewEventButtonView } from './new-event-button-view';
+export { default as NoEventView } from './no-event-view';
+export { default as SmartView } from './smart-view';
+export { default as SortView } from './sort-view';
+export { default as StatisticView } from './statistic-view';
+export { default as TripInfoView } from './trip-info-view';

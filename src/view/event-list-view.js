@@ -1,4 +1,5 @@
-import AbstractView from './abstract';
+import AbstractView from './abstract-view';
+
 
 const createEventListTemplate = () => (
   '<ul class="trip-events__list"></ul>'

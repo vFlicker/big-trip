@@ -1,4 +1,4 @@
-import StatisticView from '../view/statistic';
+import { StatisticView } from '../view';
 import {remove, render, RenderPosition} from '../utils/render';
 
 export default class Statistic {

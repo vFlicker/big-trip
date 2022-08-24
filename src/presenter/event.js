@@ -1,5 +1,4 @@
-import EventItemView from '../view/event-item';
-import EventItemEditView from '../view/event-item-edit';
+import { EventItemView, EventItemEditView } from '../view';
 import {remove, render, RenderPosition, replace} from '../utils/render';
 import {EscKeyEvent , Mode, UpdateType, UserAction} from '../const';
 

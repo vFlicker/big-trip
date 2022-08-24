@@ -1,4 +1,4 @@
-import FilterView from '../view/filter';
+import { FilterView } from '../view';
 import {ucFirst} from '../utils/common';
 import {filter} from '../utils/filter';
 import {remove, render, RenderPosition, replace} from '../utils/render';

@@ -1,4 +1,4 @@
-import SmartView from './smart';
+import SmartView from './smart-view';
 import DataStore from '../dataStorage';
 import {cloneArrayOfObjects, humanizeDate, ucFirst} from '../utils/common';
 import {compareDates} from '../utils/event';

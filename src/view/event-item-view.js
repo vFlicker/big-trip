@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import AbstractView from './abstract-view';
 import {humanizeDate} from '../utils/common';
 import {humanizeDateTime, humanizeDurationBetweenDates} from '../utils/event';
 import {DateTimeFormats} from '../const';

@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import AbstractView from './abstract-view';
 
 const createTripInfoTemplate = ({date, price, title}) => (
   `<section class="trip-main__trip-info  trip-info">

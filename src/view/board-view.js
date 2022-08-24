@@ -1,4 +1,4 @@
-import AbstractView from './abstract';
+import AbstractView from './abstract-view';
 
 const createBoardTemplate = () => (
   `<section class="trip-events">

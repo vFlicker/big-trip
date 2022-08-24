@@ -1,8 +1,10 @@
-import BoardView from '../view/board';
-import EventListView from '../view/event-list';
-import LoadingView from '../view/loading';
-import NoEventView from '../view/no-event';
-import SortView from '../view/sort';
+import {
+  BoardView,
+  EventListView,
+  LoadingView,
+  NoEventView,
+  SortView,
+} from '../view';
 import EventPresenter from './event';
 import EventNewPresenter from './event-new';
 import {sortByPrice, sortByTime, sortByDate} from '../utils/common';

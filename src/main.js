@@ -1,7 +1,6 @@
 import EventsModel from './model/events';
 import FilterModel from './model/filter';
-import MenuView from './view/menu';
-import NewEventButtonView from './view/new-event-button';
+import { MenuView, NewEventButtonView } from './view';
 import BoardPresenter from './presenter/board';
 import FilterPresenter from './presenter/filter';
 import StatisticPresenter from './presenter/statistic';
