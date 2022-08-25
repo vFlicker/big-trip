@@ -1,7 +1,14 @@
 import { TripInfoView } from '../view';
-import {sortByDate} from '../utils/common';
-import {remove, render, RenderPosition, replace} from '../utils/render';
-import {getEventPeriod, getTotalPrice, getTitle} from '../utils/trip-info';
+import {
+  getEventPeriod,
+  getTitle,
+  getTotalPrice,
+  remove,
+  render,
+  RenderPosition,
+  replace,
+  sortByDate
+} from '../utils';
 
 export default class TripInfoPresenter {
   constructor(tripInfoContainer, eventsModel) {

@@ -1,4 +1,4 @@
-import Observer from '../utils/observer';
+import { Observer } from '../utils';
 import {FilterType} from '../const';
 
 export default class Filter extends Observer {

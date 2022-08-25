@@ -7,9 +7,7 @@ import {
   StatisticPresenter,
   TripInfoPresenter,
 } from './presenter';
-import {isOnline} from './utils/common';
-import {render, RenderPosition} from './utils/render';
-import {showToast} from './utils/toast/toast';
+import { isOnline, render, RenderPosition, showToast } from './utils';
 import {FilterType, MenuItem, UpdateType} from './const';
 import Api from './api/api';
 import Provider from './api/provider';
@@ -97,16 +95,3 @@ apiWithProvider.getAllData()
     newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
   });
 
-window.addEventListener('load', () => {
-  navigator.serviceWorker.register('/sw.js');
-});
-
-window.addEventListener('online', () => {
-  document.title = document.title.replace(' [offline]', '');
-  apiWithProvider.sync();
-});
-
-window.addEventListener('offline', () => {
-  document.title += ' [offline]';
-  showToast('You are offline');
-});

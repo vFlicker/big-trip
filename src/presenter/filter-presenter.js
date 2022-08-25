@@ -1,8 +1,6 @@
 import { FilterView } from '../view';
-import {ucFirst} from '../utils/common';
-import {filter} from '../utils/filter';
-import {remove, render, RenderPosition, replace} from '../utils/render';
 import {UpdateType} from '../const';
+import { filter, remove, render, RenderPosition, replace, ucFirst } from '../utils';
 
 export default class FilterPresenter {
   constructor(filterContainer, filterModel, eventsModel) {

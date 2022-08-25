@@ -1,5 +1,5 @@
 import { StatisticView } from '../view';
-import {remove, render, RenderPosition} from '../utils/render';
+import {remove, render, RenderPosition} from '../utils';
 
 export default class StatisticPresenter {
   constructor(statisticContainer, eventsModel) {

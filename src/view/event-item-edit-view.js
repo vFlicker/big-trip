@@ -1,12 +1,23 @@
-import SmartView from './smart-view';
-import DataStore from '../dataStorage';
-import {cloneArrayOfObjects, humanizeDate, ucFirst} from '../utils/common';
-import {compareDates} from '../utils/event';
-import {DATEPICKER_BASIC_SETTINGS, DateTimeFormats, DEFAULT_EVENT, ResetButtonText} from '../const';
-import {nanoid } from 'nanoid';
 import flatpickr from 'flatpickr';
+import { nanoid } from 'nanoid';
 
-import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+import {
+  DATEPICKER_BASIC_SETTINGS,
+  DateTimeFormats,
+  DEFAULT_EVENT,
+  ResetButtonText
+} from '../const';
+import DataStore from '../dataStorage';
+import {
+  cloneArrayOfObjects,
+  compareDates,
+  humanizeDate,
+  ucFirst
+} from '../utils';
+import SmartView from './smart-view';
+
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 const createEventTypeListTemplate = (id, activeType, availableOffers) => {
   const getTemplate = (type) => {

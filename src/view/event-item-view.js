@@ -1,7 +1,10 @@
-import AbstractView from './abstract-view';
-import {humanizeDate} from '../utils/common';
-import {humanizeDateTime, humanizeDurationBetweenDates} from '../utils/event';
 import {DateTimeFormats} from '../const';
+import {
+  humanizeDate,
+  humanizeDateTime,
+  humanizeDurationBetweenDates,
+} from '../utils';
+import AbstractView from './abstract-view';
 
 const createOfferListTemplate = (offers) => {
   const getTemplate = (offer) => (

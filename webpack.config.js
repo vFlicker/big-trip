@@ -14,6 +14,11 @@ module.exports = {
       patterns: [{ from: 'public' }],
     }),
   ],
+  devServer: {
+    static: path.resolve(__dirname, 'public'),
+    open: true,
+    hot: false,
+  },
   module: {
     rules: [
       {

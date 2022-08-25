@@ -1,6 +1,6 @@
 import EventsModel from '../model/events';
 import DataStore from '../dataStorage';
-import {isOnline} from '../utils/common';
+import { isOnline } from '../utils';
 
 const createStoreStructure = (items) => items.reduce((acc, current) => Object.assign(
   {},
