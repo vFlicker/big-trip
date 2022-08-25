@@ -1,7 +1,7 @@
-import {getDateDifference, humanizeDate} from './common';
-import {DateTimeFormats} from '../const';
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
+import dayjs, { duration } from 'dayjs';
+
+import { DateTimeFormats } from '../const';
+import { getDateDifference, humanizeDate } from './common';
 
 dayjs.extend(duration);
 

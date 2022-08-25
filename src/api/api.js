@@ -1,4 +1,4 @@
-import EventsModel from '../model/events';
+import { EventsModel } from '../model';
 import {Method, SuccessHTTPSStatusRange} from './const';
 
 export default class Api {

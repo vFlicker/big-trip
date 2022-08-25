@@ -1,5 +1,5 @@
-import {humanizeDate} from './common';
-import {DateTimeFormats} from '../const';
+import { DateTimeFormats } from '../const';
+import { humanizeDate } from './common';
 
 export const getEventPeriod = (events) => {
   const firstEvent = events[0];

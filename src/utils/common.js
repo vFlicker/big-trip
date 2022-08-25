@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import {DateTimeFormats} from '../const';
+
+import { DateTimeFormats } from '../const';
 
 export const isOnline = () => window.navigator.onLine;
 

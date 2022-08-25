@@ -1,5 +1,6 @@
-import {getDateDifference} from './common';
 import dayjs from 'dayjs';
+
+import { getDateDifference } from './common';
 
 export const getUniqueItems = (items) => [...new Set(items)];
 

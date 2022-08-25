@@ -1,6 +1,6 @@
 import { Observer } from '../utils';
 
-export default class Events extends Observer {
+export default class EventsModel extends Observer {
   constructor() {
     super();
 

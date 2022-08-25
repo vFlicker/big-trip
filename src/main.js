@@ -1,6 +1,9 @@
-import EventsModel from './model/events';
-import FilterModel from './model/filter';
-import { MenuView, NewEventButtonView } from './view';
+import Api from './api/api';
+import {AUTHORIZATION, END_POINT, EVENTS_STORE_NAME, DESTINATION_STORE_NAME, OFFERS_STORE_NAME} from './api/const';
+import Store from './api/store';
+import Provider from './api/provider';
+import {FilterType, MenuItem, UpdateType} from './const';
+import { EventsModel, FilterModel } from './model';
 import {
   BoardPresenter,
   FilterPresenter,
@@ -8,11 +11,8 @@ import {
   TripInfoPresenter,
 } from './presenter';
 import { isOnline, render, RenderPosition, showToast } from './utils';
-import {FilterType, MenuItem, UpdateType} from './const';
-import Api from './api/api';
-import Provider from './api/provider';
-import Store from './api/store';
-import {AUTHORIZATION, END_POINT, EVENTS_STORE_NAME, DESTINATION_STORE_NAME, OFFERS_STORE_NAME} from './api/const';
+import { MenuView, NewEventButtonView } from './view';
+
 
 const containerTripMain = document.querySelector('.trip-main');
 const containerMenu = containerTripMain.querySelector('.trip-controls__navigation');

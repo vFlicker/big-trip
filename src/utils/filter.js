@@ -1,5 +1,6 @@
-import {FilterType} from '../const';
 import dayjs from 'dayjs';
+
+import { FilterType } from '../const';
 
 const isPastDate = (date) => dayjs().isAfter(date);
 
