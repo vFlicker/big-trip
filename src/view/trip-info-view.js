@@ -1,6 +1,6 @@
 import AbstractView from './abstract-view';
 
-const createTripInfoTemplate = ({date, price, title}) => (
+const createTripInfoTemplate = ({ date, price, title }) => (
   `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
         <h1 class="trip-info__title">${title}</h1>

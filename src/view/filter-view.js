@@ -1,11 +1,8 @@
 import AbstractView from './abstract-view';
 
-const createFilterItems = (filters) => {
-  const getTemplate = (filters) => {
-    const {type, name, isChecked, isDisabled} = filters;
-
-    return (
-      `<div class="trip-filters__filter">
+const createFilterList = (filters) => {
+  const getTemplate = ({ type, name, isChecked, isDisabled }) => (
+    `<div class="trip-filters__filter">
         <input
           id="filter-${type}"
           class="trip-filters__filter-input  visually-hidden"
@@ -17,8 +14,7 @@ const createFilterItems = (filters) => {
           data-filter-type="${type}">
         <label class="trip-filters__filter-label" for="filter-${type}">${name}</label>
       </div>`
-    );
-  };
+  );
 
 
   return filters
@@ -27,11 +23,11 @@ const createFilterItems = (filters) => {
 };
 
 const createFilterTemplate = (filters) => {
-  const filterItems = createFilterItems(filters);
+  const filterList = createFilterList(filters);
 
   return (
     `<form class="trip-filters" action="#" method="get">
-      ${filterItems}
+      ${filterList}
 
       <button class="visually-hidden" type="submit">Accept filter</button>
     </form>`

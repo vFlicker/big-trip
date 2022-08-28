@@ -7,11 +7,11 @@ import {
 import AbstractView from './abstract-view';
 
 const createOfferListTemplate = (offers) => {
-  const getTemplate = (offer) => (
+  const getTemplate = ({ title, price }) => (
     `<li class="event__offer">
-        <span class="event__offer-title">${offer.title}</span>
+        <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
+        <span class="event__offer-price">${price}</span>
       </li>`
   );
 
@@ -20,9 +20,15 @@ const createOfferListTemplate = (offers) => {
     .join('');
 };
 
-const createEventItemTemplate = (event) => {
-  const {dateStart, dateEnd, offers, isFavorite, type, destination, price} = event;
-
+const createEventItemTemplate = ({
+  dateStart,
+  dateEnd,
+  offers,
+  isFavorite,
+  type,
+  destination,
+  price
+}) => {
   const eventData = humanizeDate(dateStart, DateTimeFormats.MONTH_AND_DAY);
   const eventDataPlaceholder = humanizeDate(dateStart, DateTimeFormats.FULL_DATE);
   const eventStartTime = humanizeDate(dateStart, DateTimeFormats.TIME);

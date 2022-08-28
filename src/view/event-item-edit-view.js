@@ -19,6 +19,7 @@ import SmartView from './smart-view';
 
 import 'flatpickr/dist/flatpickr.min.css';
 
+// TODO: look at the naming of createFunctionsTemplate and them argument names
 const createEventTypeListTemplate = (id, activeType, availableOffers) => {
   const getTemplate = (type) => {
     const typeCheckStatus = type === activeType ? 'checked' : '';
@@ -57,7 +58,7 @@ const createEventDestinationListTemplate = (availableDestination) => {
 
 const createEventOfferListTemplate = (type, offers) => {
   const getTemplate = (type, offer) => {
-    const {id, isChecked, price, title} = offer;
+    const { id, isChecked, price, title } = offer;
 
     const offerCheckStatus = isChecked ? 'checked' : '';
 
@@ -84,25 +85,25 @@ const createEventOfferListTemplate = (type, offers) => {
 };
 
 const createSectionOffersTemplate = (hasSectionOffers, type, offers) => {
-  if (hasSectionOffers) {
-    const eventOfferListTemplate = createEventOfferListTemplate(type, offers);
+  if (!hasSectionOffers) {
+    return '';
+  }
 
-    return (
-      `<section class="event__section  event__section--offers">
+  const eventOfferListTemplate = createEventOfferListTemplate(type, offers);
+
+  return (
+    `<section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
           ${eventOfferListTemplate}
         </div>
       </section>`
-    );
-  }
-
-  return '';
+  );
 };
 
 const createEventPhotoListTemplate = (pictures) => {
-  const getTemplate = ({src, description}) => (
+  const getTemplate = ({ src, description }) => (
     `<img class="event__photo" src="${src}" alt="${description}">`
   );
 
@@ -112,19 +113,19 @@ const createEventPhotoListTemplate = (pictures) => {
 };
 
 const createContainerPhotosTemplate = (hasDestinationPictures, pictures) => {
-  if (hasDestinationPictures) {
-    const eventPhotoListTemplate = createEventPhotoListTemplate(pictures);
+  if (!hasDestinationPictures) {
+    return;
+  }
 
-    return (
-      `<div class="event__photos-container">
+  const eventPhotoListTemplate = createEventPhotoListTemplate(pictures);
+
+  return (
+    `<div class="event__photos-container">
         <div class="event__photos-tape">
           ${eventPhotoListTemplate}
         </div>
       </div>`
-    );
-  }
-
-  return '';
+  );
 };
 
 const createSectionDestinationTemplate = (
@@ -133,25 +134,25 @@ const createSectionDestinationTemplate = (
   hasDestinationDescription,
   hasDestinationPictures,
 ) => {
-  if (hasSectionDestination) {
-    const {pictures, description} = destination;
-
-    const descriptionTemplate = hasDestinationDescription
-      ? `<p class="event__destination-description">${description}</p>`
-      : '';
-
-    const containerPhotosTemplate = createContainerPhotosTemplate(hasDestinationPictures, pictures);
-
-    return (
-      `<section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        ${descriptionTemplate}
-        ${containerPhotosTemplate}
-      </section>`
-    );
+  if (!hasSectionDestination) {
+    return '';
   }
 
-  return '';
+  const { pictures, description } = destination;
+
+  const descriptionTemplate = hasDestinationDescription
+    ? `<p class="event__destination-description">${description}</p>`
+    : '';
+
+  const containerPhotosTemplate = createContainerPhotosTemplate(hasDestinationPictures, pictures);
+
+  return (
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      ${descriptionTemplate}
+      ${containerPhotosTemplate}
+    </section>`
+  );
 };
 
 const createSectionDetailsTemplate = (
@@ -164,25 +165,29 @@ const createSectionDetailsTemplate = (
   hasDestinationDescription,
   hasDestinationPictures,
 ) => {
-  if (hasDetails) {
-    const sectionOffersTemplate = createSectionOffersTemplate(hasSectionOffers, type, offers);
-
-    const sectionDestinationTemplate = createSectionDestinationTemplate(
-      hasSectionDestination,
-      destination,
-      hasDestinationDescription,
-      hasDestinationPictures,
-    );
-
-    return (
-      `<section class="event__details">
-        ${sectionOffersTemplate}
-        ${sectionDestinationTemplate}
-      </section>`
-    );
+  if (!hasDetails) {
+    return '';
   }
 
-  return '';
+  const sectionOffersTemplate = createSectionOffersTemplate(
+    hasSectionOffers,
+    type,
+    offers
+  );
+
+  const sectionDestinationTemplate = createSectionDestinationTemplate(
+    hasSectionDestination,
+    destination,
+    hasDestinationDescription,
+    hasDestinationPictures,
+  );
+
+  return (
+    `<section class="event__details">
+      ${sectionOffersTemplate}
+      ${sectionDestinationTemplate}
+    </section>`
+  );
 };
 
 const createRollupButtonTemplate = (isNewEvent) => {
@@ -197,7 +202,11 @@ const createRollupButtonTemplate = (isNewEvent) => {
   return '';
 };
 
-const createEventItemEditTemplate = (state, availableDestination, availableOffers) => {
+const createEventItemEditTemplate = (
+  state,
+  availableDestination,
+  availableOffers
+) => {
   const {
     dateEnd,
     dateStart,
@@ -219,9 +228,15 @@ const createEventItemEditTemplate = (state, availableDestination, availableOffer
     type,
   } = state;
 
-  const eventTypeListTemplate = createEventTypeListTemplate(type, id, availableOffers);
+  const eventTypeListTemplate = createEventTypeListTemplate(
+    type,
+    id,
+    availableOffers
+  );
 
-  const eventDestinationListTemplate = createEventDestinationListTemplate(availableDestination);
+  const eventDestinationListTemplate = createEventDestinationListTemplate(
+    availableDestination
+  );
 
   const sectionDetailsTemplate = createSectionDetailsTemplate(
     hasDetails,
@@ -379,7 +394,11 @@ export default class EventItemEditView extends SmartView {
   }
 
   getTemplate() {
-    return createEventItemEditTemplate(this._state, this._availableDestination, this._availableOffers);
+    return createEventItemEditTemplate(
+      this._state,
+      this._availableDestination,
+      this._availableOffers
+    );
   }
 
   removeElement() {
@@ -417,7 +436,10 @@ export default class EventItemEditView extends SmartView {
   }
 
   reset(event) {
-    this.updateState(EventItemEditView.parseEventToState(event, this._availableOffers));
+    this.updateState(EventItemEditView.parseEventToState(
+      event,
+      this._availableOffers
+    ));
   }
 
   restoreHandlers() {

@@ -18,6 +18,7 @@ const renderMoneyChart = (moneyCtx, events) => {
 
   moneyCtx.height = STATISTIC_SETTINGS.barHeight * uniqTypes.length;
 
+  // TODO: put it in a separate file?
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: STATISTIC_SETTINGS.type,

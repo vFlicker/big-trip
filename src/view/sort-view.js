@@ -2,43 +2,35 @@ import {SortType} from '../const';
 import { ucFirst } from '../utils';
 import AbstractView from './abstract-view';
 
-const createSortItem = (name, sortType, currentSortType, isDisabled = false) => {
+const createSortItem = (sortType, currentSortType, isDisabled = false) => {
   const isChecked = sortType === currentSortType;
 
   return (
-    `<div class="trip-sort__item  trip-sort__item--${name}">
+    `<div class="trip-sort__item  trip-sort__item--${sortType}">
       <input
-        id="sort-${name}"
+        id="sort-${sortType}"
         class="trip-sort__input  visually-hidden"
         type="radio"
         name="trip-sort"
-        value="sort-${name}"
+        value="sort-${sortType}"
         ${isChecked ? 'checked' : ''}
         ${isDisabled ? 'disabled' : ''}
         data-sort-type="${sortType}"
       >
-      <label class="trip-sort__btn" for="sort-${name}">${ucFirst(name)}</label>
+      <label class="trip-sort__btn" for="sort-${sortType}">${ucFirst(sortType)}</label>
     </div>`
   );
 };
 
-const createSortTemplate = (currentSortType) => {
-  const sortItemDay = createSortItem('day', SortType.DAY, currentSortType);
-  const sortItemEvent = createSortItem('event', SortType.EVENT, currentSortType, true);
-  const sortItemTime = createSortItem('time', SortType.TIME, currentSortType);
-  const sortItemPrice = createSortItem('price', SortType.PRICE, currentSortType);
-  const sortItemOffer = createSortItem('offer', SortType.OFFER, currentSortType, true);
-
-  return (
-    `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-      ${sortItemDay}
-      ${sortItemEvent}
-      ${sortItemTime}
-      ${sortItemPrice}
-      ${sortItemOffer}
+const createSortTemplate = (currentSortType) => (
+  `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+      ${createSortItem(SortType.DAY, currentSortType)}
+      ${createSortItem(SortType.EVENT, currentSortType, true)}
+      ${createSortItem(SortType.TIME, currentSortType)}
+      ${createSortItem(SortType.PRICE, currentSortType)}
+      ${createSortItem(SortType.OFFER, currentSortType, true)}
     </form>`
-  );
-};
+);
 
 export default class SortView extends AbstractView {
   constructor(sortType) {
