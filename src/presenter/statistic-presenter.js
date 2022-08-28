@@ -1,28 +1,30 @@
 import { StatisticView } from '../view';
-import {remove, render, RenderPosition} from '../utils';
+import { remove, render, RenderPosition } from '../utils';
 
 export default class StatisticPresenter {
+  #statisticContainer = null;
+  #eventsModel = null;
+  #statisticComponent = null;
+
   constructor(statisticContainer, eventsModel) {
-    this._statisticContainer = statisticContainer;
-    this._eventsModel = eventsModel;
-
-    this._statisticComponent = null;
+    this.#statisticContainer = statisticContainer;
+    this.#eventsModel = eventsModel;
   }
 
-  init() {
-    this._renderStatistic();
-  }
+  init = () => {
+    this.#renderStatistic();
+  };
 
-  destroy() {
-    if (this._statisticComponent) {
-      remove(this._statisticComponent);
-      this._statisticComponent = null;
+  destroy = () => {
+    if (this.#statisticComponent) {
+      remove(this.#statisticComponent);
+      this.#statisticComponent = null;
     }
-  }
+  };
 
-  _renderStatistic() {
-    const events = this._eventsModel.getEvents();
-    this._statisticComponent = new StatisticView(events);
-    render(this._statisticContainer, this._statisticComponent, RenderPosition.BEFOREEND);
-  }
+  #renderStatistic = () => {
+    const events = this.#eventsModel.getEvents();
+    this.#statisticComponent = new StatisticView(events);
+    render(this.#statisticContainer, this.#statisticComponent, RenderPosition.BEFOREEND);
+  };
 }

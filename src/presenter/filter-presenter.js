@@ -1,42 +1,48 @@
+import { UpdateType } from '../const';
 import { FilterView } from '../view';
-import {UpdateType} from '../const';
-import { filter, remove, render, RenderPosition, replace, ucFirst } from '../utils';
+import {
+  filter,
+  remove,
+  render,
+  RenderPosition,
+  replace,
+  ucFirst,
+} from '../utils';
 
 export default class FilterPresenter {
+  #filterContainer = null;
+  #filterModel = null;
+  #eventsModel = null;
+  #filterComponent = null;
+
   constructor(filterContainer, filterModel, eventsModel) {
-    this._filterContainer = filterContainer;
-    this._filterModel = filterModel;
-    this._eventsModel = eventsModel;
+    this.#filterContainer = filterContainer;
+    this.#filterModel = filterModel;
+    this.#eventsModel = eventsModel;
 
-    this._filterComponent = null;
-
-
-    this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
-
-    this._filterModel.addObserver(this._handleModelEvent);
-    this._eventsModel.addObserver(this._handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+    this.#eventsModel.addObserver(this.#handleModelEvent);
   }
 
-  init() {
-    const filters = this._getFilters();
-    const prevFilterComponent = this._filterComponent;
+  init = () => {
+    const filters = this.#getFilters();
+    const prevFilterComponent = this.#filterComponent;
 
-    this._filterComponent = new FilterView(filters);
-    this._filterComponent.setTypeChangeHandler(this._handleFilterTypeChange);
+    this.#filterComponent = new FilterView(filters);
+    this.#filterComponent.setTypeChangeHandler(this.#handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
+      render(this.#filterContainer, this.#filterComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    replace(this._filterComponent, prevFilterComponent);
+    replace(this.#filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
-  }
+  };
 
-  _getFilters() {
-    const events = this._eventsModel.getEvents();
-    const currentFilterType = this._filterModel.getFilter();
+  #getFilters = () => {
+    const events = this.#eventsModel.getEvents();
+    const currentFilterType = this.#filterModel.getFilter();
 
     return Object
       .keys(filter)
@@ -46,17 +52,17 @@ export default class FilterPresenter {
         isChecked: currentFilterType === type,
         isDisabled: filter[type](events).length === 0,
       }));
-  }
+  };
 
-  _handleModelEvent() {
+  #handleModelEvent = () => {
     this.init();
-  }
+  };
 
-  _handleFilterTypeChange(filterType) {
-    if (this._filterModel.getFilter() === filterType) {
+  #handleFilterTypeChange = (filterType) => {
+    if (this.#filterModel.getFilter() === filterType) {
       return;
     }
 
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
-  }
+    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+  };
 }

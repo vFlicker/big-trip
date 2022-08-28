@@ -4,7 +4,7 @@ export { default as EventItemView } from './event-item-view';
 export { default as EventItemEditView } from './event-item-edit-view';
 export { default as EventListView } from './event-list-view';
 export { default as FilterView } from './filter-view';
-export { default as LoadingView } from './loader-view';
+export { default as LoaderView } from './loader-view';
 export { default as MenuView } from './menu-view';
 export { default as NewEventButtonView } from './new-event-button-view';
 export { default as NoEventView } from './no-event-view';

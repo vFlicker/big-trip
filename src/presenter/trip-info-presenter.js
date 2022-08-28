@@ -11,42 +11,42 @@ import {
 } from '../utils';
 
 export default class TripInfoPresenter {
+  #tripInfoContainer = null;
+  #eventsModel = null;
+  #tripInfoComponent = null;
+
   constructor(tripInfoContainer, eventsModel) {
-    this._tripInfoContainer = tripInfoContainer;
-    this._eventsModel = eventsModel;
+    this.#tripInfoContainer = tripInfoContainer;
+    this.#eventsModel = eventsModel;
 
-    this._tripInfoComponent = null;
-
-    this._handleModelEvent = this._handleModelEvent.bind(this);
-
-    this._eventsModel.addObserver(this._handleModelEvent);
+    this.#eventsModel.addObserver(this.#handleModelEvent);
   }
 
-  init() {
-    const prevTripInfoComponent = this._tripInfoComponent;
+  init = () => {
+    const prevTripInfoComponent = this.#tripInfoComponent;
 
-    this._tripInfoComponent = new TripInfoView(this._getInfo());
+    this.#tripInfoComponent = new TripInfoView(this.#getInfo());
 
     if (prevTripInfoComponent === null) {
-      render(this._tripInfoContainer, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
+      render(this.#tripInfoContainer, this.#tripInfoComponent, RenderPosition.AFTERBEGIN);
       return;
     }
 
-    replace(this._tripInfoComponent, prevTripInfoComponent);
+    replace(this.#tripInfoComponent, prevTripInfoComponent);
     remove(prevTripInfoComponent);
-  }
+  };
 
-  _handleModelEvent() {
+  #handleModelEvent = () => {
     this.init();
-  }
+  };
 
-  _getInfo() {
-    const sortedEvents = this._eventsModel.getEvents().sort(sortByDate);
+  #getInfo = () => {
+    const sortedEvents = this.#eventsModel.getEvents().sort(sortByDate);
 
     return {
       date: getEventPeriod(sortedEvents),
       price: getTotalPrice(sortedEvents),
       title: getTitle(sortedEvents),
     };
-  }
+  };
 }

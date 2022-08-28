@@ -1,140 +1,136 @@
-import {EscKeyEvent , Mode, UpdateType, UserAction} from '../const';
+import { EscKeyEvent , Mode, UpdateType, UserAction } from '../const';
 import { EventItemView, EventItemEditView } from '../view';
 import { remove, render, RenderPosition, replace } from '../utils';
 
 export default class EventPresenter {
+  #eventListContainer = null;
+  #changeData = null;
+  #changeMode = null;
+  #mode = Mode.DEFAULT;
+  #eventItemComponent = null;
+  #eventItemEditComponent = null;
+
   constructor(eventListContainer, changeData, changeMode) {
-    this._eventListContainer = eventListContainer;
-    this._changeData = changeData;
-    this._changeMode = changeMode;
-
-    this._eventItemComponent = null;
-    this._eventItemEditComponent = null;
-    this._mode = Mode.DEFAULT;
-
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
-    this._handleItemEditDeleteClick = this._handleItemEditDeleteClick.bind(this);
-    this._handleItemEditRollupClick = this._handleItemEditRollupClick.bind(this);
-    this._handleItemEditSubmit = this._handleItemEditSubmit.bind(this);
-    this._handleItemFavoriteClick = this._handleItemFavoriteClick.bind(this);
-    this._handleItemRollupClick = this._handleItemRollupClick.bind(this);
+    this.#eventListContainer = eventListContainer;
+    this.#changeData = changeData;
+    this.#changeMode = changeMode;
   }
 
-  init(event) {
+  init = (event) => {
     this._event = event;
 
-    const prevEventItemComponent = this._eventItemComponent;
-    const prevEventItemEditComponent = this._eventItemEditComponent;
+    const prevEventItemComponent = this.#eventItemComponent;
+    const prevEventItemEditComponent = this.#eventItemEditComponent;
 
-    this._eventItemComponent = new EventItemView(event);
-    this._eventItemEditComponent = new EventItemEditView(event);
+    this.#eventItemComponent = new EventItemView(event);
+    this.#eventItemEditComponent = new EventItemEditView(event);
 
-    this._eventItemComponent.setRollupClickHandler(this._handleItemRollupClick);
-    this._eventItemComponent.setFavoriteClickHandler(this._handleItemFavoriteClick);
-    this._eventItemEditComponent.setRollupClickHandler(this._handleItemEditRollupClick);
-    this._eventItemEditComponent.setSubmitHandler(this._handleItemEditSubmit);
-    this._eventItemEditComponent.setDeleteClickHandler(this._handleItemEditDeleteClick);
+    this.#eventItemComponent.setRollupClickHandler(this.#handleItemRollupClick);
+    this.#eventItemComponent.setFavoriteClickHandler(this.#handleItemFavoriteClick);
+    this.#eventItemEditComponent.setRollupClickHandler(this.#handleItemEditRollupClick);
+    this.#eventItemEditComponent.setSubmitHandler(this.#handleItemEditSubmit);
+    this.#eventItemEditComponent.setDeleteClickHandler(this.#handleItemEditDeleteClick);
 
     if (prevEventItemComponent === null || prevEventItemEditComponent === null) {
-      render(this._eventListContainer, this._eventItemComponent, RenderPosition.BEFOREEND);
+      render(this.#eventListContainer, this.#eventItemComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    if (this._mode === Mode.DEFAULT) {
-      replace(this._eventItemComponent, prevEventItemComponent);
+    if (this.#mode === Mode.DEFAULT) {
+      replace(this.#eventItemComponent, prevEventItemComponent);
     }
 
-    if (this._mode === Mode.EDITING) {
-      replace(this._eventItemComponent, prevEventItemEditComponent);
-      this._mode = Mode.DEFAULT;
+    if (this.#mode === Mode.EDITING) {
+      replace(this.#eventItemComponent, prevEventItemEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevEventItemComponent);
     remove(prevEventItemEditComponent);
-  }
+  };
 
-  destroy() {
-    remove(this._eventItemComponent);
-    remove(this._eventItemEditComponent);
-  }
+  destroy = () => {
+    remove(this.#eventItemComponent);
+    remove(this.#eventItemEditComponent);
+  };
 
-  resetView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._replaceFormToEvent();
+  resetView = () => {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToEvent();
     }
-  }
+  };
 
-  setAborting() {
+  setAborting = () => {
     const resetFormState = () => {
-      this._eventItemEditComponent.updateState({
+      this.#eventItemEditComponent.updateState({
         isDisabled: false,
         isDeleting: false,
         isSaving: false,
       });
     };
 
-    this._eventItemComponent.shake(resetFormState);
-    this._eventItemEditComponent.shake(resetFormState);
-  }
+    this.#eventItemComponent.shake(resetFormState);
+    this.#eventItemEditComponent.shake(resetFormState);
+  };
 
-  setSaving() {
-    this._eventItemEditComponent.updateState({
+  setSaving = () => {
+    this.#eventItemEditComponent.updateState({
       isDisabled: true,
       isSaving: true,
     });
-  }
+  };
 
-  setDeleting() {
-    this._eventItemEditComponent.updateState({
+  setDeleting = () => {
+    this.#eventItemEditComponent.updateState({
       isDisabled: true,
       isDeleting: true,
     });
-  }
+  };
 
-  _replaceEventToForm() {
-    replace(this._eventItemEditComponent, this._eventItemComponent);
-    document.addEventListener('keydown', this._escKeyDownHandler);
-    this._changeMode();
-    this._mode = Mode.EDITING;
-  }
+  #replaceEventToForm = () => {
+    replace(this.#eventItemEditComponent, this.#eventItemComponent);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#changeMode();
+    this.#mode = Mode.EDITING;
+  };
 
-  _replaceFormToEvent() {
-    replace(this._eventItemComponent, this._eventItemEditComponent);
-    document.removeEventListener('keydown', this._escKeyDownHandler);
-    this._mode = Mode.DEFAULT;
-  }
+  #replaceFormToEvent = () => {
+    replace(this.#eventItemComponent, this.#eventItemEditComponent);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
+  };
 
-  _escKeyDownHandler(evt) {
+  #escKeyDownHandler = (evt) => {
     if (evt.key === EscKeyEvent .ESCAPE || evt.key === EscKeyEvent .ESC) {
       evt.preventDefault();
-      this._eventItemEditComponent.reset(this._event);
-      this._replaceFormToEvent();
+      this.#eventItemEditComponent.reset(this._event);
+      this.#replaceFormToEvent();
     }
-  }
+  };
 
-  _handleItemEditDeleteClick(event) {
-    this._changeData(
+  #handleItemEditDeleteClick = (event) => {
+    this.#changeData(
       UserAction.DELETE_EVENT,
       UpdateType.MINOR,
       event,
     );
-  }
+  };
 
-  _handleItemEditRollupClick() {
-    this._eventItemEditComponent.reset(this._event);
-    this._replaceFormToEvent();
-  }
+  #handleItemEditRollupClick = () => {
+    this.#eventItemEditComponent.reset(this._event);
+    this.#replaceFormToEvent();
+  };
 
-  _handleItemEditSubmit(event) {
-    this._changeData(
+  #handleItemEditSubmit = (event) => {
+    this.#changeData(
       UserAction.UPDATE_EVENT,
       UpdateType.MINOR,
       event,
     );
-  }
+  };
 
-  _handleItemFavoriteClick() {
-    this._changeData(
+  #handleItemFavoriteClick = () => {
+    this.#changeData(
       UserAction.UPDATE_EVENT,
       UpdateType.PATCH,
       Object.assign(
@@ -145,9 +141,9 @@ export default class EventPresenter {
         },
       ),
     );
-  }
+  };
 
-  _handleItemRollupClick() {
-    this._replaceEventToForm();
-  }
+  #handleItemRollupClick = () => {
+    this.#replaceEventToForm();
+  };
 }
