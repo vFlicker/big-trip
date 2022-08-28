@@ -9,26 +9,20 @@ const createMenuTemplate = () => (
 );
 
 export default class MenuView extends AbstractView {
-  constructor() {
-    super();
-
-    this._clickHandler = this._clickHandler.bind(this);
-  }
-
   get template() {
     return createMenuTemplate();
   }
 
-  setClickHandler(callback) {
+  setClickHandler = (callback) => {
     this._callback.menuClick = callback;
 
     this
       .element
-      .addEventListener('click', this._clickHandler);
-  }
+      .addEventListener('click', this.#clickHandler);
+  };
 
-  setItem(menuItem) {
-    const items = this._getMenuItems();
+  setItem = (menuItem) => {
+    const items = this.#getMenuItems();
 
     items.forEach((item) => {
       if (item.dataset.menuItem === menuItem) {
@@ -37,25 +31,25 @@ export default class MenuView extends AbstractView {
         item.classList.remove('trip-tabs__btn--active');
       }
     });
-  }
+  };
 
-  enable() {
-    const menuItems = this._getMenuItems();
+  enable = () => {
+    const menuItems = this.#getMenuItems();
 
     menuItems.forEach((menuItem) => {
       menuItem.classList.remove('trip-tabs__btn--disabled');
     });
-  }
+  };
 
-  disable() {
-    const menuItems = this._getMenuItems();
+  disable = () => {
+    const menuItems = this.#getMenuItems();
 
     menuItems.forEach((menuItem) => {
       menuItem.classList.add('trip-tabs__btn--disabled');
     });
-  }
+  };
 
-  _clickHandler(evt) {
+  #clickHandler = (evt) => {
     if (
       evt.target.tagName !== 'A' ||
       evt.target.classList.contains('trip-tabs__btn--active')
@@ -65,9 +59,7 @@ export default class MenuView extends AbstractView {
 
     evt.preventDefault();
     this._callback.menuClick(evt.target.dataset.menuItem);
-  }
+  };
 
-  _getMenuItems() {
-    return this.element.querySelectorAll('.trip-tabs__btn');
-  }
+  #getMenuItems = () => this.element.querySelectorAll('.trip-tabs__btn');
 }

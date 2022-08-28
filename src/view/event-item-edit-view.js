@@ -382,19 +382,9 @@ export default class EventItemEditView extends SmartView {
     this._startDatePicker = null;
     this._endDatePicker = null;
 
-    this._rollupClickHandler = this._rollupClickHandler.bind(this);
-    this._submitHandler = this._submitHandler.bind(this);
-    this._deleteClickHandler = this._deleteClickHandler.bind(this);
-    this._typeChangeHandler = this._typeChangeHandler.bind(this);
-    this._destinationInputHandler = this._destinationInputHandler.bind(this);
-    this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
-    this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
-    this._offerChangeHandler = this._offerChangeHandler.bind(this);
-    this._priceInputHandler = this._priceInputHandler.bind(this);
-
-    this._setInnerHandlers();
-    this._setStartDatePicker();
-    this._setEndDatePicker();
+    this.#setInnerHandlers();
+    this.#setStartDatePicker();
+    this.#setEndDatePicker();
   }
 
   get template() {
@@ -405,73 +395,73 @@ export default class EventItemEditView extends SmartView {
     );
   }
 
-  removeElement() {
+  removeElement = () => {
     super.removeElement();
 
-    this._removeStartDatePicker();
-    this._removeEndDatePicker();
-  }
+    this.#removeStartDatePicker();
+    this.#removeEndDatePicker();
+  };
 
-  setDeleteClickHandler(callback) {
+  setDeleteClickHandler = (callback) => {
     this._callback.deleteClick = callback;
 
     this
       .element
       .querySelector('.event__reset-btn')
-      .addEventListener('click', this._deleteClickHandler);
-  }
+      .addEventListener('click', this.#deleteClickHandler);
+  };
 
-  setSubmitHandler(callback) {
+  setSubmitHandler = (callback) => {
     this._callback.formSubmit = callback;
 
     this
       .element
-      .addEventListener('submit', this._submitHandler);
-  }
+      .addEventListener('submit', this.#submitHandler);
+  };
 
-  setRollupClickHandler(callback) {
+  setRollupClickHandler = (callback) => {
     const rollupButton = this.element.querySelector('.event__rollup-btn');
 
     if (rollupButton) {
       this._callback.rollupClick = callback;
 
-      rollupButton.addEventListener('click', this._rollupClickHandler);
+      rollupButton.addEventListener('click', this.#rollupClickHandler);
     }
-  }
+  };
 
-  reset(event) {
+  reset = (event) => {
     this.updateState(EventItemEditView.parseEventToState(
       event,
       this._availableOffers
     ));
-  }
+  };
 
-  restoreHandlers() {
+  restoreHandlers = () => {
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setSubmitHandler(this._callback.formSubmit);
     this.setRollupClickHandler(this._callback.rollupClick);
-    this._setStartDatePicker();
-    this._setEndDatePicker();
-    this._setInnerHandlers();
-  }
+    this.#setStartDatePicker();
+    this.#setEndDatePicker();
+    this.#setInnerHandlers();
+  };
 
-  _deleteClickHandler(evt) {
+  #deleteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.deleteClick(EventItemEditView.parseStateToEvent(this._state));
-  }
+  };
 
-  _submitHandler(evt) {
+  #submitHandler = (evt) => {
     evt.preventDefault();
     this._callback.formSubmit(EventItemEditView.parseStateToEvent(this._state));
-  }
+  };
 
-  _rollupClickHandler(evt) {
+  #rollupClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.rollupClick();
-  }
+  };
 
-  _setStartDatePicker() {
-    this._removeStartDatePicker();
+  #setStartDatePicker = () => {
+    this.#removeStartDatePicker();
 
     this._startDatePicker = flatpickr(
       this
@@ -484,16 +474,16 @@ export default class EventItemEditView extends SmartView {
         {
           minDate: Date.now(),
           defaultDate: this._state.dateStart,
-          onClose: this._startDateChangeHandler,
+          onClose: this.#startDateChangeHandler,
         },
       ),
     );
-  }
+  };
 
-  _setEndDatePicker() {
+  #setEndDatePicker = () => {
     const isDateStartOver = compareDates(this._state.dateStart, this._state.dateEnd);
 
-    this._removeEndDatePicker();
+    this.#removeEndDatePicker();
 
     this._endDatePicker = flatpickr(
       this
@@ -506,64 +496,64 @@ export default class EventItemEditView extends SmartView {
         {
           minDate: this._state.dateStart,
           defaultDate: isDateStartOver ? this._state.dateStart : this._state.dateEnd,
-          onClose: this._endDateChangeHandler,
+          onClose: this.#endDateChangeHandler,
         },
       ),
     );
-  }
+  };
 
-  _removeStartDatePicker() {
+  #removeStartDatePicker = () => {
     if (this._startDatePicker) {
       this._startDatePicker.destroy();
       this._startDatePicker = null;
     }
-  }
+  };
 
-  _removeEndDatePicker() {
+  #removeEndDatePicker = () => {
     if (this._endDatePicker) {
       this._endDatePicker.destroy();
       this._endDatePicker = null;
     }
-  }
+  };
 
-  _startDateChangeHandler([userDate]) {
+  #startDateChangeHandler = ([userDate]) => {
     this.updateState({
       dateStart: userDate,
       dateEnd: userDate,
     });
-  }
+  };
 
-  _endDateChangeHandler([userDate]) {
+  #endDateChangeHandler = ([userDate]) => {
     this.updateState({
       dateEnd: userDate,
     });
-  }
+  };
 
-  _setInnerHandlers() {
+  #setInnerHandlers = () => {
     this
       .element
       .querySelector('.event__input--destination')
-      .addEventListener('input', this._destinationInputHandler);
+      .addEventListener('input', this.#destinationInputHandler);
 
     if (this._state.hasSectionOffers) {
       this
         .element
         .querySelector('.event__available-offers')
-        .addEventListener('change', this._offerChangeHandler);
+        .addEventListener('change', this.#offerChangeHandler);
     }
 
     this
       .element
       .querySelector('.event__input--price')
-      .addEventListener('input', this._priceInputHandler);
+      .addEventListener('input', this.#priceInputHandler);
 
     this
       .element
       .querySelector('.event__type-list')
-      .addEventListener('change', this._typeChangeHandler);
-  }
+      .addEventListener('change', this.#typeChangeHandler);
+  };
 
-  _destinationInputHandler(evt) {
+  #destinationInputHandler = (evt) => {
     evt.preventDefault();
     const destination = this._availableDestination
       .find((destination) => destination.name === evt.target.value);
@@ -588,9 +578,9 @@ export default class EventItemEditView extends SmartView {
       hasDetails: this._state.hasSectionOffers || hasSectionDestination,
       isSubmitDisabled: !hasDestinationName,
     });
-  }
+  };
 
-  _offerChangeHandler(evt) {
+  #offerChangeHandler = (evt) => {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
@@ -610,9 +600,9 @@ export default class EventItemEditView extends SmartView {
     this.updateState({
       offers,
     }, true);
-  }
+  };
 
-  _priceInputHandler(evt) {
+  #priceInputHandler = (evt) => {
     evt.preventDefault();
     const price = Number(evt.target.value);
 
@@ -627,9 +617,9 @@ export default class EventItemEditView extends SmartView {
     this.updateState({
       price,
     }, true);
-  }
+  };
 
-  _typeChangeHandler(evt) {
+  #typeChangeHandler = (evt) => {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
@@ -646,7 +636,7 @@ export default class EventItemEditView extends SmartView {
       type: eventType,
       hasDetails: hasSectionOffers || this._state.hasSectionDestination,
     });
-  }
+  };
 
   static getOfferWithStatus(userType, userOffers, availableOffers) {
     const availableOffersWithType = availableOffers.find((item) => item.type === userType);

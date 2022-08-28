@@ -248,49 +248,50 @@ const createStatisticsTemplate = () => (
 );
 
 export default class StatisticView extends SmartView {
+  #events = null;
+  #moneyChart = null;
+  #typeChart = null;
+  #timeChart = null;
+
   constructor(events) {
     super();
 
-    this._events = events;
+    this.#events = events;
 
-    this._moneyChart = null;
-    this._typeChart = null;
-    this._timeChart = null;
-
-    this._setCharts();
+    this.#setCharts();
   }
 
   get template() {
     return createStatisticsTemplate();
   }
 
-  removeElement() {
+  removeElement = () => {
     super.removeElement();
 
-    if (this._moneyChart !== null, this._typeChart !== null, this._timeChart !== null) {
-      this._moneyChart = null;
-      this._typeChart = null;
-      this._timeChart = null;
+    if (this.#moneyChart !== null, this.#typeChart !== null, this.#timeChart !== null) {
+      this.#moneyChart = null;
+      this.#typeChart = null;
+      this.#timeChart = null;
     }
-  }
+  };
 
-  restoreHandlers() {
-    this._setCharts();
-  }
+  restoreHandlers = () => {
+    this.#setCharts();
+  };
 
-  _setCharts() {
-    if (this._moneyChart !== null, this._typeChart !== null, this._timeChart !== null) {
-      this._moneyChart = null;
-      this._typeChart = null;
-      this._timeChart = null;
+  #setCharts = () => {
+    if (this.#moneyChart !== null, this.#typeChart !== null, this.#timeChart !== null) {
+      this.#moneyChart = null;
+      this.#typeChart = null;
+      this.#timeChart = null;
     }
 
     const moneyCtx = this.element.querySelector('.statistics__chart--money');
     const typeCtx = this.element.querySelector('.statistics__chart--transport');
     const timeSpendCtx = this.element.querySelector('.statistics__chart--time');
 
-    this._moneyChart = renderMoneyChart(moneyCtx, this._events);
-    this._typeChart = renderTypeChart(typeCtx, this._events);
-    this._timeChart = renderTimeSpendChart(timeSpendCtx, this._events);
-  }
+    this.#moneyChart = renderMoneyChart(moneyCtx, this.#events);
+    this.#typeChart = renderTypeChart(typeCtx, this.#events);
+    this.#timeChart = renderTimeSpendChart(timeSpendCtx, this.#events);
+  };
 }

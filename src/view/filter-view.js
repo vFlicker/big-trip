@@ -35,32 +35,32 @@ const createFilterTemplate = (filters) => {
 };
 
 export default class FilterView extends AbstractView {
+  #filters = null;
+
   constructor(filters) {
     super();
 
-    this._filters = filters;
-
-    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this.#filters = filters;
   }
 
   get template() {
-    return createFilterTemplate(this._filters);
+    return createFilterTemplate(this.#filters);
   }
 
-  setTypeChangeHandler(callback) {
+  setTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
 
     this
       .element
-      .addEventListener('change', this._typeChangeHandler);
-  }
+      .addEventListener('change', this.#typeChangeHandler);
+  };
 
-  _typeChangeHandler(evt) {
+  #typeChangeHandler = (evt) => {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
 
     evt.preventDefault();
     this._callback.filterTypeChange(evt.target.dataset.filterType);
-  }
+  };
 }

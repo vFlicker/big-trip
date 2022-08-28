@@ -15,13 +15,15 @@ const createTripInfoTemplate = ({ date, price, title }) => (
 );
 
 export default class TripInfoView extends AbstractView {
+  #info = null;
+
   constructor(info) {
     super();
 
-    this._info = info;
+    this.#info = info;
   }
 
   get template() {
-    return createTripInfoTemplate(this._info);
+    return createTripInfoTemplate(this.#info);
   }
 }

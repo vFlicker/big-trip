@@ -86,44 +86,43 @@ const createEventItemTemplate = ({
 };
 
 export default class EventItemView extends AbstractView {
+  #event = null;
+
   constructor(event) {
     super();
 
-    this._event = event;
-
-    this._rollupClickHandler = this._rollupClickHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this.#event = event;
   }
 
   get template() {
-    return createEventItemTemplate(this._event);
+    return createEventItemTemplate(this.#event);
   }
 
-  setFavoriteClickHandler(callback) {
+  setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
 
     this
       .element
       .querySelector('.event__favorite-btn')
-      .addEventListener('click', this._favoriteClickHandler);
-  }
+      .addEventListener('click', this.#favoriteClickHandler);
+  };
 
-  setRollupClickHandler(callback) {
+  setRollupClickHandler = (callback) => {
     this._callback.rollupClick = callback;
 
     this
       .element
       .querySelector('.event__rollup-btn')
-      .addEventListener('click', this._rollupClickHandler);
-  }
+      .addEventListener('click', this.#rollupClickHandler);
+  };
 
-  _favoriteClickHandler(evt) {
+  #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.favoriteClick();
-  }
+  };
 
-  _rollupClickHandler(evt) {
+  #rollupClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.rollupClick();
-  }
+  };
 }

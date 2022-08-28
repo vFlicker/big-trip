@@ -7,34 +7,28 @@ const createNewEventButton = () => (
 );
 
 export default class NewEventButtonView extends AbstractView {
-  constructor() {
-    super();
-
-    this._clickHandler = this._clickHandler.bind(this);
-  }
-
   get template() {
     return createNewEventButton();
   }
 
-  setClickHandler(callback) {
+  setClickHandler = (callback) => {
     this._callback.buttonClick = callback;
 
     this
       .element
-      .addEventListener('click', this._clickHandler);
-  }
+      .addEventListener('click', this.#clickHandler);
+  };
 
-  enable() {
+  enable = () => {
     this.element.disabled = false;
-  }
+  };
 
-  disable() {
+  disable = () => {
     this.element.disabled = true;
-  }
+  };
 
-  _clickHandler(evt) {
+  #clickHandler = (evt) => {
     evt.preventDefault();
     this._callback.buttonClick();
-  }
+  };
 }
