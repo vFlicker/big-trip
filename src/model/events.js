@@ -1,61 +1,55 @@
 import { Observer } from '../utils';
 
 export default class EventsModel extends Observer {
-  constructor() {
-    super();
-
-    this._events = [];
-  }
+  #events = [];
 
   setEvents(updateType, events) {
-    this._events = events;
+    this.#events = events;
 
     this._notify(updateType);
   }
 
-  getEvents() {
-    return this._events;
-  }
+  getEvents = () => this.#events;
 
-  addEvent(updateType, update) {
-    this._events = [
+  addEvent = (updateType, update) => {
+    this.#events = [
       update,
-      ...this._events,
+      ...this.#events,
     ];
 
     this._notify(updateType, update);
-  }
+  };
 
-  deleteEvent(updateType, update) {
-    const index = this._events.findIndex((event) => event.id === update.id);
+  deleteEvent = (updateType, update) => {
+    const index = this.#events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t delete unexisting event');
     }
 
-    this._events = [
-      ...this._events.slice(0, index),
-      ...this._events.slice(index + 1),
+    this.#events = [
+      ...this.#events.slice(0, index),
+      ...this.#events.slice(index + 1),
     ];
 
     this._notify(updateType);
-  }
+  };
 
-  updateEvent(updateType, update) {
-    const index = this._events.findIndex((event) => event.id === update.id);
+  updateEvent = (updateType, update) => {
+    const index = this.#events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t update unexisting event');
     }
 
-    this._events = [
-      ...this._events.slice(0, index),
+    this.#events = [
+      ...this.#events.slice(0, index),
       update,
-      ...this._events.slice(index + 1),
+      ...this.#events.slice(index + 1),
     ];
 
     this._notify(updateType, update);
-  }
+  };
 
   static adaptToClient(event) {
     const adaptEvent = Object.assign(
