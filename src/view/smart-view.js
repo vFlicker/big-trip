@@ -12,11 +12,7 @@ export default class SmartView extends AbstractView {
       return;
     }
 
-    this._state = Object.assign(
-      {},
-      this._state,
-      update,
-    );
+    this._state = { ...this._state, ...update };
 
     if (justStateUpdating) {
       return;

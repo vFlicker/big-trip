@@ -4,7 +4,7 @@ import { DateTimeFormats } from '../const';
 
 export const isOnline = () => window.navigator.onLine;
 
-export const cloneArrayOfObjects = (array) => array.map((obj) => Object.assign({}, obj));
+export const cloneArrayOfObjects = (array) => array.map((obj) => ({ ...obj }));
 
 export const getDateDifference = (dateStart, dateEnd) => dayjs(dateEnd).diff(dayjs(dateStart));
 

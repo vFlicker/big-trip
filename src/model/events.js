@@ -52,16 +52,13 @@ export default class EventsModel extends Observer {
   };
 
   static adaptToClient(event) {
-    const adaptEvent = Object.assign(
-      {},
-      event,
-      {
-        dateEnd: event.date_to !== null ? new Date(event.date_to) : event.date_to,
-        dateStart: event.date_from !== null ? new Date(event.date_from) : event.date_from,
-        price: event.base_price,
-        isFavorite: event.is_favorite,
-      },
-    );
+    const adaptEvent = {
+      ...event,
+      dateEnd: event.date_to !== null ? new Date(event.date_to) : event.date_to,
+      dateStart: event.date_from !== null ? new Date(event.date_from) : event.date_from,
+      price: event.base_price,
+      isFavorite: event.is_favorite,
+    };
 
     delete adaptEvent.date_to;
     delete adaptEvent.date_from;
@@ -72,16 +69,13 @@ export default class EventsModel extends Observer {
   }
 
   static adaptToServer(event) {
-    const adaptEvent = Object.assign(
-      {},
-      event,
-      {
-        date_to: event.dateEnd instanceof Date ? event.dateEnd.toISOString() : null,
-        date_from: event.dateStart instanceof Date ? event.dateStart.toISOString() : null,
-        base_price: event.price,
-        is_favorite: event.isFavorite,
-      },
-    );
+    const adaptEvent = {
+      ...event,
+      date_to: event.dateEnd instanceof Date ? event.dateEnd.toISOString() : null,
+      date_from: event.dateStart instanceof Date ? event.dateStart.toISOString() : null,
+      base_price: event.price,
+      is_favorite: event.isFavorite,
+    };
 
     delete adaptEvent.dateEnd;
     delete adaptEvent.dateStart;

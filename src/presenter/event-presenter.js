@@ -7,6 +7,7 @@ export default class EventPresenter {
   #changeData = null;
   #changeMode = null;
   #mode = Mode.DEFAULT;
+  #event = null;
   #eventItemComponent = null;
   #eventItemEditComponent = null;
 
@@ -17,7 +18,7 @@ export default class EventPresenter {
   }
 
   init = (event) => {
-    this._event = event;
+    this.#event = event;
 
     const prevEventItemComponent = this.#eventItemComponent;
     const prevEventItemEditComponent = this.#eventItemEditComponent;
@@ -103,7 +104,7 @@ export default class EventPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === EscKeyEvent .ESCAPE || evt.key === EscKeyEvent .ESC) {
       evt.preventDefault();
-      this.#eventItemEditComponent.reset(this._event);
+      this.#eventItemEditComponent.reset(this.#event);
       this.#replaceFormToEvent();
     }
   };
@@ -117,7 +118,7 @@ export default class EventPresenter {
   };
 
   #handleItemEditRollupClick = () => {
-    this.#eventItemEditComponent.reset(this._event);
+    this.#eventItemEditComponent.reset(this.#event);
     this.#replaceFormToEvent();
   };
 
@@ -133,13 +134,10 @@ export default class EventPresenter {
     this.#changeData(
       UserAction.UPDATE_EVENT,
       UpdateType.PATCH,
-      Object.assign(
-        {},
-        this._event,
-        {
-          isFavorite: !this._event.isFavorite,
-        },
-      ),
+      {
+        ...this.#event,
+        isFavorite: !this.#event.isFavorite
+      },
     );
   };
 

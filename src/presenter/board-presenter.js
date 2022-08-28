@@ -147,25 +147,6 @@ export default class BoardPresenter {
       .forEach((presenter) => presenter.resetView());
   };
 
-  #renderLoading = () => {
-    render(this.#boardComponent, this.#loaderComponent, RenderPosition.BEFOREEND);
-  };
-
-  #renderNoEvent = () => {
-    render(this.#boardComponent, this.#noEventComponent, RenderPosition.BEFOREEND);
-  };
-
-  #renderSort = () => {
-    if (this.#sortComponent !== null) {
-      this.#sortComponent = null;
-    }
-
-    this.#sortComponent = new SortView(this.#currentSortType);
-    this.#sortComponent.setTypeChangeHandler(this.#handleSortTypeChange);
-
-    render(this.#boardComponent, this.#sortComponent, RenderPosition.BEFOREEND);
-  };
-
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
@@ -174,25 +155,6 @@ export default class BoardPresenter {
     this.#currentSortType = sortType;
     this.#clearBoard();
     this.#renderBoard();
-  };
-
-  #renderEventList = () => {
-    render(this.#boardComponent, this.#eventListComponent, RenderPosition.BEFOREEND);
-  };
-
-  #renderEvent = (event) => {
-    const eventPresenter = new EventPresenter(
-      this.#eventListComponent,
-      this.#handleViewAction,
-      this.#handleModeChange,
-    );
-
-    eventPresenter.init(event);
-    this.#eventPresenter[event.id] = eventPresenter;
-  };
-
-  #renderEvents = (events) => {
-    events.forEach((event) => this.#renderEvent(event));
   };
 
   #clearBoard = ({resetSortType = false} = {}) => {
@@ -215,7 +177,7 @@ export default class BoardPresenter {
 
   #renderBoard = () => {
     if (this.#isLoading) {
-      this.#renderLoading();
+      this.#renderLoader();
       return;
     }
 
@@ -230,5 +192,43 @@ export default class BoardPresenter {
     this.#renderSort();
     this.#renderEventList();
     this.#renderEvents(events);
+  };
+
+  #renderEventList = () => {
+    render(this.#boardComponent, this.#eventListComponent, RenderPosition.BEFOREEND);
+  };
+
+  #renderEvent = (event) => {
+    const eventPresenter = new EventPresenter(
+      this.#eventListComponent,
+      this.#handleViewAction,
+      this.#handleModeChange,
+    );
+
+    eventPresenter.init(event);
+    this.#eventPresenter[event.id] = eventPresenter;
+  };
+
+  #renderEvents = (events) => {
+    events.forEach((event) => this.#renderEvent(event));
+  };
+
+  #renderLoader = () => {
+    render(this.#boardComponent, this.#loaderComponent, RenderPosition.BEFOREEND);
+  };
+
+  #renderNoEvent = () => {
+    render(this.#boardComponent, this.#noEventComponent, RenderPosition.BEFOREEND);
+  };
+
+  #renderSort = () => {
+    if (this.#sortComponent !== null) {
+      this.#sortComponent = null;
+    }
+
+    this.#sortComponent = new SortView(this.#currentSortType);
+    this.#sortComponent.setTypeChangeHandler(this.#handleSortTypeChange);
+
+    render(this.#boardComponent, this.#sortComponent, RenderPosition.BEFOREEND);
   };
 }

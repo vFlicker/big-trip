@@ -2,11 +2,10 @@ import DataStore from '../dataStorage';
 import { EventsModel } from '../model';
 import { isOnline } from '../utils';
 
-const createStoreStructure = (items) => items.reduce((acc, current) => Object.assign(
-  {},
-  acc,
-  {[current.id]: current},
-), {});
+const createStoreStructure = (items) => items.reduce((acc, current) => ({
+  ...acc,
+  [current.id]: current,
+}), {});
 
 const getSyncedEvents = (items) => items
   .filter(({success}) => success)
@@ -35,6 +34,7 @@ export default class Provider {
           return events;
         });
     }
+
     const storeEvents = Object.values(this._eventsStorage.getItems());
     const storeDestinations = this._destinationStorage.getItems();
     const storeOffers = this._offerStorage.getItems();
@@ -78,7 +78,7 @@ export default class Provider {
         });
     }
 
-    this._eventsStorage.setItem(event.id, EventsModel.adaptToServer(Object.assign({}, event)));
+    this._eventsStorage.setItem(event.id, EventsModel.adaptToServer({ ...event }));
 
     return Promise.resolve(event);
   }

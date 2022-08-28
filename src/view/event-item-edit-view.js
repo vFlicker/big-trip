@@ -464,19 +464,13 @@ export default class EventItemEditView extends SmartView {
     this.#removeStartDatePicker();
 
     this._startDatePicker = flatpickr(
-      this
-        .element
-        .querySelector('.event__field-group--time input[name=event-start-time]'),
-
-      Object.assign(
-        {},
-        DATEPICKER_BASIC_SETTINGS,
-        {
-          minDate: Date.now(),
-          defaultDate: this._state.dateStart,
-          onClose: this.#startDateChangeHandler,
-        },
-      ),
+      this.element.querySelector('.event__field-group--time input[name=event-start-time]'),
+      {
+        ...DATEPICKER_BASIC_SETTINGS,
+        minDate: Date.now(),
+        defaultDate: this._state.dateStart,
+        onClose: this.#startDateChangeHandler,
+      },
     );
   };
 
@@ -486,19 +480,13 @@ export default class EventItemEditView extends SmartView {
     this.#removeEndDatePicker();
 
     this._endDatePicker = flatpickr(
-      this
-        .element
-        .querySelector('.event__field-group--time input[name=event-end-time]'),
-
-      Object.assign(
-        {},
-        DATEPICKER_BASIC_SETTINGS,
-        {
-          minDate: this._state.dateStart,
-          defaultDate: isDateStartOver ? this._state.dateStart : this._state.dateEnd,
-          onClose: this.#endDateChangeHandler,
-        },
-      ),
+      this.element.querySelector('.event__field-group--time input[name=event-end-time]'),
+      {
+        ...DATEPICKER_BASIC_SETTINGS,
+        minDate: this._state.dateStart,
+        defaultDate: isDateStartOver ? this._state.dateStart : this._state.dateEnd,
+        onClose: this.#endDateChangeHandler,
+      },
     );
   };
 
@@ -645,16 +633,11 @@ export default class EventItemEditView extends SmartView {
     return availableOffersByType.reduce((resultArray, availableOfferByType) => {
       const hasOffer = userOffers.find((item) => item.title === availableOfferByType.title);
 
-      resultArray.push(
-        Object.assign(
-          {},
-          availableOfferByType,
-          {
-            id: nanoid(),
-            isChecked: !!hasOffer,
-          },
-        ),
-      );
+      resultArray.push({
+        ...availableOfferByType,
+        id: nanoid(),
+        isChecked: Boolean(hasOffer),
+      });
 
       return resultArray;
     }, []);
@@ -670,28 +653,25 @@ export default class EventItemEditView extends SmartView {
     const hasSectionDestination = hasDestinationDescription || hasDestinationPictures;
     const hasSectionOffers = availableOffersByType.length !== 0;
 
-    return Object.assign(
-      {},
-      event,
-      {
-        hasDestinationDescription,
-        hasDestinationName,
-        hasDestinationPictures,
-        hasSectionDestination,
-        hasSectionOffers,
-        hasDetails: hasSectionOffers || hasSectionDestination,
-        isDeleting: false,
-        isDisabled: false,
-        isSaving: false,
-        isNewEvent: event === DEFAULT_EVENT,
-        isSubmitDisabled: !hasDestinationName,
-        offers: EventItemEditView.getOfferWithStatus(event.type, event.offers, availableOffers),
-      },
-    );
+    return {
+      ...event,
+      hasDestinationDescription,
+      hasDestinationName,
+      hasDestinationPictures,
+      hasSectionDestination,
+      hasSectionOffers,
+      hasDetails: hasSectionOffers || hasSectionDestination,
+      isDeleting: false,
+      isDisabled: false,
+      isSaving: false,
+      isNewEvent: event === DEFAULT_EVENT,
+      isSubmitDisabled: !hasDestinationName,
+      offers: EventItemEditView.getOfferWithStatus(event.type, event.offers, availableOffers),
+    };
   }
 
   static parseStateToEvent(state) {
-    state = Object.assign({}, state);
+    state = { ...state };
 
     state.offers = state.offers.filter((offer) => {
       if (offer.isChecked) {
