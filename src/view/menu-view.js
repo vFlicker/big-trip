@@ -15,7 +15,7 @@ export default class MenuView extends AbstractView {
     this._clickHandler = this._clickHandler.bind(this);
   }
 
-  getTemplate() {
+  get template() {
     return createMenuTemplate();
   }
 
@@ -23,7 +23,7 @@ export default class MenuView extends AbstractView {
     this._callback.menuClick = callback;
 
     this
-      .getElement()
+      .element
       .addEventListener('click', this._clickHandler);
   }
 
@@ -68,6 +68,6 @@ export default class MenuView extends AbstractView {
   }
 
   _getMenuItems() {
-    return this.getElement().querySelectorAll('.trip-tabs__btn');
+    return this.element.querySelectorAll('.trip-tabs__btn');
   }
 }

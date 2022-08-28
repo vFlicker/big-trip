@@ -262,6 +262,10 @@ const createEventItemEditTemplate = (
   const resetButtonDisableStatus = isDisabled ? 'disabled' : '';
   const resetButtonText = isDeleting ? 'Deleting...' : newEventOrEditEvent;
 
+  const humanizedDateStart = humanizeDate(dateStart, DateTimeFormats.FULL_DATE_AND_TIME);
+  const humanizedDateEnd = humanizeDate(dateEnd, DateTimeFormats.FULL_DATE_AND_TIME);
+
+
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -315,7 +319,7 @@ const createEventItemEditTemplate = (
               id="event-start-time-${id}"
               type="text"
               name="event-start-time"
-              value="${humanizeDate(dateStart, DateTimeFormats.FULL_DATE_AND_TIME)}"
+              value="${humanizedDateStart}}"
               ${timeDisableStatus}
             >
             —
@@ -325,7 +329,7 @@ const createEventItemEditTemplate = (
               id="event-end-time-${id}"
               type="text"
               name="event-end-time"
-              value="${humanizeDate(dateEnd, DateTimeFormats.FULL_DATE_AND_TIME)}"
+              value="${humanizedDateEnd}}"
               ${timeDisableStatus}
             />
           </div>
@@ -393,7 +397,7 @@ export default class EventItemEditView extends SmartView {
     this._setEndDatePicker();
   }
 
-  getTemplate() {
+  get template() {
     return createEventItemEditTemplate(
       this._state,
       this._availableDestination,
@@ -412,7 +416,7 @@ export default class EventItemEditView extends SmartView {
     this._callback.deleteClick = callback;
 
     this
-      .getElement()
+      .element
       .querySelector('.event__reset-btn')
       .addEventListener('click', this._deleteClickHandler);
   }
@@ -421,12 +425,12 @@ export default class EventItemEditView extends SmartView {
     this._callback.formSubmit = callback;
 
     this
-      .getElement()
+      .element
       .addEventListener('submit', this._submitHandler);
   }
 
   setRollupClickHandler(callback) {
-    const rollupButton = this.getElement().querySelector('.event__rollup-btn');
+    const rollupButton = this.element.querySelector('.event__rollup-btn');
 
     if (rollupButton) {
       this._callback.rollupClick = callback;
@@ -471,7 +475,7 @@ export default class EventItemEditView extends SmartView {
 
     this._startDatePicker = flatpickr(
       this
-        .getElement()
+        .element
         .querySelector('.event__field-group--time input[name=event-start-time]'),
 
       Object.assign(
@@ -493,7 +497,7 @@ export default class EventItemEditView extends SmartView {
 
     this._endDatePicker = flatpickr(
       this
-        .getElement()
+        .element
         .querySelector('.event__field-group--time input[name=event-end-time]'),
 
       Object.assign(
@@ -537,24 +541,24 @@ export default class EventItemEditView extends SmartView {
 
   _setInnerHandlers() {
     this
-      .getElement()
+      .element
       .querySelector('.event__input--destination')
       .addEventListener('input', this._destinationInputHandler);
 
     if (this._state.hasSectionOffers) {
       this
-        .getElement()
+        .element
         .querySelector('.event__available-offers')
         .addEventListener('change', this._offerChangeHandler);
     }
 
     this
-      .getElement()
+      .element
       .querySelector('.event__input--price')
       .addEventListener('input', this._priceInputHandler);
 
     this
-      .getElement()
+      .element
       .querySelector('.event__type-list')
       .addEventListener('change', this._typeChangeHandler);
   }

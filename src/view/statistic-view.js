@@ -260,7 +260,7 @@ export default class StatisticView extends SmartView {
     this._setCharts();
   }
 
-  getTemplate() {
+  get template() {
     return createStatisticsTemplate();
   }
 
@@ -285,9 +285,9 @@ export default class StatisticView extends SmartView {
       this._timeChart = null;
     }
 
-    const moneyCtx = this.getElement().querySelector('.statistics__chart--money');
-    const typeCtx = this.getElement().querySelector('.statistics__chart--transport');
-    const timeSpendCtx = this.getElement().querySelector('.statistics__chart--time');
+    const moneyCtx = this.element.querySelector('.statistics__chart--money');
+    const typeCtx = this.element.querySelector('.statistics__chart--transport');
+    const timeSpendCtx = this.element.querySelector('.statistics__chart--time');
 
     this._moneyChart = renderMoneyChart(moneyCtx, this._events);
     this._typeChart = renderTypeChart(typeCtx, this._events);

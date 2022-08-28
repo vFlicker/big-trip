@@ -23,17 +23,17 @@ export const remove = (component) => {
     throw new Error('Can remove only components');
   }
 
-  component.getElement().remove();
+  component.element.remove();
   component.removeElement();
 };
 
 export const render = (container, child, place) => {
   if (container instanceof AbstractView) {
-    container = container.getElement();
+    container = container.element;
   }
 
   if (child instanceof AbstractView) {
-    child = child.getElement();
+    child = child.element;
   }
 
   switch (place) {
@@ -54,11 +54,11 @@ export const render = (container, child, place) => {
 
 export const replace = (newChild, oldChild) => {
   if (oldChild instanceof AbstractView) {
-    oldChild = oldChild.getElement();
+    oldChild = oldChild.element;
   }
 
   if (newChild instanceof AbstractView) {
-    newChild = newChild.getElement();
+    newChild = newChild.element;
   }
 
   const parent = oldChild.parentElement;

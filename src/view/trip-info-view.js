@@ -21,7 +21,7 @@ export default class TripInfoView extends AbstractView {
     this._info = info;
   }
 
-  getTemplate() {
+  get template() {
     return createTripInfoTemplate(this._info);
   }
 }
