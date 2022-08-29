@@ -2,66 +2,83 @@ import { ApiService, HttpMethod } from '../framework';
 import { EventsModel } from '../model';
 
 export class Api extends ApiService {
-  getEvents() {
-    return this._load({url: 'points'})
-      .then(ApiService.parseResponse)
-      .then((events) => events.map(EventsModel.adaptToClient));
-  }
+  getEvents = async () => {
+    const response = await this._load({ url: 'points' });
+    const events = await ApiService.parseResponse(response);
+    const adaptedEvents = events.map(EventsModel.adaptToClient);
 
-  getDestinations() {
-    return this._load({url: 'destinations'})
-      .then(ApiService.parseResponse);
-  }
+    return adaptedEvents;
+  };
 
-  getOffers() {
-    return this._load({url: 'offers'})
-      .then(ApiService.parseResponse);
-  }
+  getDestinations = async () => {
+    const response = await this._load({ url: 'destinations' });
+    const destinations = await ApiService.parseResponse(response);
 
-  getAllData() {
-    return Promise.all([
+    return destinations;
+  };
+
+  getOffers = async () => {
+    const response = await this._load({ url: 'offers '});
+    const offers = await ApiService.parseResponse(response);
+
+    return offers;
+  };
+
+  getAllData = async () => {
+    const response = await Promise.all([
       this.getEvents(),
       this.getDestinations(),
       this.getOffers(),
     ]);
-  }
 
-  addEvent(event) {
-    return this._load({
+    return response;
+  };
+
+  addEvent = async (event) => {
+    const response = this._load({
       url: 'points',
       method: HttpMethod.POST,
       body: JSON.stringify(EventsModel.adaptToServer(event)),
-      headers: new Headers({'Content-Type': 'application/json'}),
-    })
-      .then(ApiService.parseResponse)
-      .then(EventsModel.adaptToClient);
-  }
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    });
 
-  deleteEvent(event) {
-    return this._load({
+    const parsedEvent = await ApiService.parseResponse(response);
+    const adaptedEvent = EventsModel.adaptToClient(parsedEvent);
+
+    return adaptedEvent;
+  };
+
+  deleteEvent = async (event) => {
+    await this._load({
       url: `points/${event.id}`,
       method: HttpMethod.DELETE,
     });
-  }
+  };
 
-  updateEvent(event) {
-    return this._load({
+  updateEvent = async (event) => {
+    const response = await this._load({
       url: `points/${event.id}`,
       method: HttpMethod.PUT,
       body: JSON.stringify(EventsModel.adaptToServer(event)),
-      headers: new Headers({'Content-Type': 'application/json'}),
-    })
-      .then(ApiService.parseResponse)
-      .then(EventsModel.adaptToClient);
-  }
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    });
 
-  sync(data) {
-    return this._load({
+    const parsedEvent = await ApiService.parseResponse(response);
+    const adaptedEvent = EventsModel.adaptToClient(parsedEvent);
+
+    return adaptedEvent;
+  };
+
+  sync = async (data) => {
+    const response = await this._load({
       url: 'points/sync',
       method: HttpMethod.POST,
       body: JSON.stringify(data),
-      headers: new Headers({'Content-Type': 'application/json'}),
-    })
-      .then(ApiService.parseResponse);
-  }
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    });
+
+    const parsedData = await ApiService.parseResponse(response);
+
+    return parsedData;
+  };
 }
