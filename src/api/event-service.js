@@ -1,7 +1,7 @@
 import { ApiService, HttpMethod } from '../framework';
 import { EventsModel } from '../model';
 
-export class Api extends ApiService {
+export class EventService extends ApiService {
   getEvents = async () => {
     const response = await this._load({ url: 'points' });
     const events = await ApiService.parseResponse(response);

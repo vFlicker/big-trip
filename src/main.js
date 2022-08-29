@@ -1,4 +1,4 @@
-import { Api } from './api/api';
+import { EventService } from './api/event-service';
 import {
   AUTHORIZATION,
   END_POINT,
@@ -25,7 +25,7 @@ const menuElement = tripElement.querySelector('.trip-controls__navigation');
 const filterElement = tripElement.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.page-main .page-body__container');
 
-const api = new Api(END_POINT, AUTHORIZATION);
+const api = new EventService(END_POINT, AUTHORIZATION);
 const eventsStorage = new Store(EVENTS_STORE_NAME, window.localStorage);
 const destinationStorage = new Store(
   DESTINATION_STORE_NAME,
