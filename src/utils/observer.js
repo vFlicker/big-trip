@@ -1,17 +1,16 @@
 export default class Observer {
-  constructor() {
-    this._observers = [];
-  }
+  #observers = new Set();
+
 
   addObserver(observer) {
-    this._observers.push(observer);
+    this.#observers.add(observer);
   }
 
   removeObserver(observer) {
-    this._observers = this._observers.filter((existedObserver) => existedObserver !== observer);
+    this.#observers = this.#observers.delete(observer);
   }
 
   _notify(event, payload) {
-    this._observers.forEach((observer) => observer(event, payload));
+    this.#observers.forEach((observer) => observer(event, payload));
   }
 }
