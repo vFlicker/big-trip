@@ -2,6 +2,20 @@ import { ApiService, HttpMethod } from '../framework';
 import { EventsModel } from '../model';
 
 export class EventService extends ApiService {
+  addEvent = async (event) => {
+    const response = this._load({
+      url: 'points',
+      method: HttpMethod.POST,
+      body: JSON.stringify(EventsModel.adaptToServer(event)),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    });
+
+    const parsedEvent = await ApiService.parseResponse(response);
+    const adaptedEvent = EventsModel.adaptToClient(parsedEvent);
+
+    return adaptedEvent;
+  };
+
   getEvents = async () => {
     const response = await this._load({ url: 'points' });
     const events = await ApiService.parseResponse(response);
@@ -34,10 +48,10 @@ export class EventService extends ApiService {
     return response;
   };
 
-  addEvent = async (event) => {
-    const response = this._load({
-      url: 'points',
-      method: HttpMethod.POST,
+  updateEvent = async (event) => {
+    const response = await this._load({
+      url: `points/${event.id}`,
+      method: HttpMethod.PUT,
       body: JSON.stringify(EventsModel.adaptToServer(event)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
@@ -53,20 +67,6 @@ export class EventService extends ApiService {
       url: `points/${event.id}`,
       method: HttpMethod.DELETE,
     });
-  };
-
-  updateEvent = async (event) => {
-    const response = await this._load({
-      url: `points/${event.id}`,
-      method: HttpMethod.PUT,
-      body: JSON.stringify(EventsModel.adaptToServer(event)),
-      headers: new Headers({ 'Content-Type': 'application/json' }),
-    });
-
-    const parsedEvent = await ApiService.parseResponse(response);
-    const adaptedEvent = EventsModel.adaptToClient(parsedEvent);
-
-    return adaptedEvent;
   };
 
   sync = async (data) => {

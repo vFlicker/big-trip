@@ -16,7 +16,7 @@ import {
   StatisticPresenter,
   TripInfoPresenter,
 } from './presenter';
-import { isOnline, render, RenderPosition, showToast } from './utils';
+import { isOnline, render, showToast } from './utils';
 import { MenuView, NewEventButtonView } from './view';
 
 
@@ -93,8 +93,8 @@ const newEventButtonClickHandler = () => {
   newEventButtonComponent.disable();
 };
 
-render(menuElement, menuComponent, RenderPosition.BEFOREEND);
-render(tripElement, newEventButtonComponent, RenderPosition.BEFOREEND);
+render(menuComponent, menuElement);
+render(newEventButtonComponent, tripElement);
 
 tripInfoPresenter.init();
 boardPresenter.init();

@@ -10,7 +10,6 @@ import {
   sortByPrice,
   sortByTime,
   sortByDate,
-  RenderPosition,
   render,
   remove,
   filter
@@ -44,7 +43,7 @@ export default class BoardPresenter {
   }
 
   init = () => {
-    render(this.#boardContainer, this.#boardComponent, RenderPosition.BEFOREEND);
+    render(this.#boardComponent, this.#boardContainer);
 
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -195,7 +194,7 @@ export default class BoardPresenter {
   };
 
   #renderEventList = () => {
-    render(this.#boardComponent, this.#eventListComponent, RenderPosition.BEFOREEND);
+    render(this.#eventListComponent, this.#boardComponent);
   };
 
   #renderEvent = (event) => {
@@ -214,11 +213,11 @@ export default class BoardPresenter {
   };
 
   #renderLoader = () => {
-    render(this.#boardComponent, this.#loaderComponent, RenderPosition.BEFOREEND);
+    render(this.#loaderComponent, this.#boardComponent);
   };
 
   #renderNoEvent = () => {
-    render(this.#boardComponent, this.#noEventComponent, RenderPosition.BEFOREEND);
+    render(this.#noEventComponent, this.#boardComponent);
   };
 
   #renderSort = () => {
@@ -229,6 +228,6 @@ export default class BoardPresenter {
     this.#sortComponent = new SortView(this.#currentSortType);
     this.#sortComponent.setTypeChangeHandler(this.#handleSortTypeChange);
 
-    render(this.#boardComponent, this.#sortComponent, RenderPosition.BEFOREEND);
+    render(this.#sortComponent, this.#boardComponent);
   };
 }

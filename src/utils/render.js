@@ -27,29 +27,16 @@ export const remove = (component) => {
   component.removeElement();
 };
 
-export const render = (container, child, place) => {
-  if (container instanceof AbstractView) {
-    container = container.element;
+export const render = (component, container, place = RenderPosition.BEFOREEND) => {
+  if (!(component instanceof AbstractView)) {
+    throw new Error('Can render only components');
   }
 
-  if (child instanceof AbstractView) {
-    child = child.element;
+  if (container === null) {
+    throw new Error('Container element doesn\'t exist');
   }
 
-  switch (place) {
-    case RenderPosition.BEFOREBEGIN:
-      container.before(child);
-      break;
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(child);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(child);
-      break;
-    case RenderPosition.AFTEREND:
-      container.after(child);
-      break;
-  }
+  container.insertAdjacentElement(place, component.element);
 };
 
 export const replace = (newChild, oldChild) => {

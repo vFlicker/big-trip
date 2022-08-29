@@ -34,7 +34,7 @@ export default class NewEventPresenter {
     this.#eventItemEditComponent.setRollupClickHandler(this.#handleItemEditRollupClick);
     this.#eventItemEditComponent.setDeleteClickHandler(this.#handleItemEditDeleteClick);
 
-    render(this.#eventListContainer, this.#eventItemEditComponent, RenderPosition.AFTERBEGIN);
+    render(this.#eventItemEditComponent, this.#eventListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   };

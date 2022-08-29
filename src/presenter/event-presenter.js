@@ -1,6 +1,6 @@
 import { EscKeyEvent , Mode, UpdateType, UserAction } from '../const';
 import { EventItemView, EventItemEditView } from '../view';
-import { remove, render, RenderPosition, replace } from '../utils';
+import { remove, render, replace } from '../utils';
 
 export default class EventPresenter {
   #eventListContainer = null;
@@ -33,7 +33,7 @@ export default class EventPresenter {
     this.#eventItemEditComponent.setDeleteClickHandler(this.#handleItemEditDeleteClick);
 
     if (prevEventItemComponent === null || prevEventItemEditComponent === null) {
-      render(this.#eventListContainer, this.#eventItemComponent, RenderPosition.BEFOREEND);
+      render(this.#eventItemComponent, this.#eventListContainer);
       return;
     }
 

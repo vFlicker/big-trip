@@ -4,7 +4,6 @@ import {
   filter,
   remove,
   render,
-  RenderPosition,
   replace,
   ucFirst,
 } from '../utils';
@@ -32,7 +31,7 @@ export default class FilterPresenter {
     this.#filterComponent.setTypeChangeHandler(this.#handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this.#filterContainer, this.#filterComponent, RenderPosition.BEFOREEND);
+      render(this.#filterComponent, this.#filterContainer);
       return;
     }
 

@@ -28,7 +28,7 @@ export default class TripInfoPresenter {
     this.#tripInfoComponent = new TripInfoView(this.#getInfo());
 
     if (prevTripInfoComponent === null) {
-      render(this.#tripInfoContainer, this.#tripInfoComponent, RenderPosition.AFTERBEGIN);
+      render(this.#tripInfoComponent, this.#tripInfoContainer, RenderPosition.AFTERBEGIN);
       return;
     }
 
