@@ -11,7 +11,7 @@ export const createElement = (template) => {
   const newElement = document.createElement('div');
   newElement.innerHTML = template;
 
-  return newElement.firstChild;
+  return newElement.firstElementChild;
 };
 
 export const remove = (component) => {
@@ -39,20 +39,19 @@ export const render = (component, container, place = RenderPosition.BEFOREEND) =
   container.insertAdjacentElement(place, component.element);
 };
 
-export const replace = (newChild, oldChild) => {
-  if (oldChild instanceof AbstractView) {
-    oldChild = oldChild.element;
+export const replace = (newComponent, oldComponent) => {
+  if (!(newComponent instanceof AbstractView && oldComponent instanceof AbstractView)) {
+    throw new Error('Can replace only components');
   }
 
-  if (newChild instanceof AbstractView) {
-    newChild = newChild.element;
+  const newElement = newComponent.element;
+  const oldElement = oldComponent.element;
+
+  const parent = oldElement.parentElement;
+
+  if (parent === null) {
+    throw new Error('Parent element doesn\'t exist');
   }
 
-  const parent = oldChild.parentElement;
-
-  if (parent === null || newChild === null) {
-    throw new Error('Can\'t replace unexisting elements');
-  }
-
-  parent.replaceChild(newChild, oldChild);
+  parent.replaceChild(newElement, oldElement);
 };
