@@ -11,15 +11,3 @@ export const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 export const DESTINATION_STORE_NAME = `${DESTINATION_STORE_PREFIX}-${DESTINATION_STORE_VER}`;
 export const EVENTS_STORE_NAME = `${EVENTS_STORE_PREFIX}-${EVENTS_STORE_VER}`;
 export const OFFERS_STORE_NAME = `${OFFERS_STORE_PREFIX}-${OFFERS_STORE_VER}`;
-
-export const Method = {
-  GET: 'GET',
-  POST: 'POST',
-  PUT: 'PUT',
-  DELETE: 'DELETE',
-};
-
-export const SuccessHTTPSStatusRange = {
-  MIN: 200,
-  MAX: 299,
-};
