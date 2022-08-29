@@ -1,26 +1,29 @@
 import { EventsModel } from '../model';
-import {Method, SuccessHTTPSStatusRange} from './const';
+import { Method } from './const';
 
 export default class Api {
+  #endPoint = null;
+  #authorization = null;
+
   constructor(endPoint, authorization) {
-    this._endPoint = endPoint;
-    this._authorization = authorization;
+    this.#endPoint = endPoint;
+    this.#authorization = authorization;
   }
 
   getEvents() {
     return this._load({url: 'points'})
-      .then(Api.toJSON)
+      .then(Api.parseResponse)
       .then((events) => events.map(EventsModel.adaptToClient));
   }
 
   getDestinations() {
     return this._load({url: 'destinations'})
-      .then(Api.toJSON);
+      .then(Api.parseResponse);
   }
 
   getOffers() {
     return this._load({url: 'offers'})
-      .then(Api.toJSON);
+      .then(Api.parseResponse);
   }
 
   getAllData() {
@@ -38,7 +41,7 @@ export default class Api {
       body: JSON.stringify(EventsModel.adaptToServer(event)),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
-      .then(Api.toJSON)
+      .then(Api.parseResponse)
       .then(EventsModel.adaptToClient);
   }
 
@@ -56,7 +59,7 @@ export default class Api {
       body: JSON.stringify(EventsModel.adaptToServer(event)),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
-      .then(Api.toJSON)
+      .then(Api.parseResponse)
       .then(EventsModel.adaptToClient);
   }
 
@@ -67,38 +70,39 @@ export default class Api {
       body: JSON.stringify(data),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
-      .then(Api.toJSON);
+      .then(Api.parseResponse);
   }
 
-  _load({
+  _load = async ({
     url,
     method = Method.GET,
     body = null,
     headers = new Headers(),
-  }) {
-    headers.append('Authorization', this._authorization);
+  }) => {
+    headers.append('Authorization', this.#authorization);
 
-    return fetch(`${this._endPoint}/${url}`, {method, body, headers})
-      .then(Api.checkStatus)
-      .catch(Api.catchError);
-  }
+    const response = await fetch(
+      `${this.#endPoint}/${url}`,
+      { method, body, headers }
+    );
+
+    try {
+      Api.checkStatus(response);
+      return response;
+    } catch (err) {
+      Api.catchError(err);
+    }
+  };
 
   static catchError(err) {
     throw err;
   }
 
-  static checkStatus(response) {
-    if (
-      response.status < SuccessHTTPSStatusRange.MIN ||
-      response.status > SuccessHTTPSStatusRange.MAX
-    ) {
+  static checkStatus = (response) => {
+    if (!response.ok) {
       throw new Error(`${response.status}: ${response.statusText}`);
     }
+  };
 
-    return response;
-  }
-
-  static toJSON(response) {
-    return response.json();
-  }
+  static parseResponse = (response) => response.json();
 }
