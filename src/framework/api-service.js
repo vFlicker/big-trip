@@ -1,3 +1,6 @@
+/**
+ * @enum {string} List of possible HTTP methods
+ */
 export const HttpMethod = {
   GET: 'GET',
   POST: 'POST',

@@ -3,12 +3,9 @@ import {
   getEventPeriod,
   getTitle,
   getTotalPrice,
-  remove,
-  render,
-  RenderPosition,
-  replace,
   sortByDate
 } from '../utils';
+import { remove, render, RenderPosition, replace } from '../framework';
 
 export default class TripInfoPresenter {
   #tripInfoContainer = null;

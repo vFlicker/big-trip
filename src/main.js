@@ -16,8 +16,9 @@ import {
   StatisticPresenter,
   TripInfoPresenter,
 } from './presenter';
-import { isOnline, render, showToast } from './utils';
+import { isOnline, showToast } from './utils';
 import { MenuView, NewEventButtonView } from './view';
+import { render } from './framework';
 
 
 const tripElement = document.querySelector('.trip-main');

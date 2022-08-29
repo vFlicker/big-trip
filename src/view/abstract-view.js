@@ -1,4 +1,4 @@
-import { createElement } from '../utils';
+import { createElement } from '../framework';
 
 const MILLISECONDS_PRE_SECOND = 1000;
 const SHAKE_ANIMATION_TIMEOUT = 600;

@@ -2,11 +2,9 @@ import { UpdateType } from '../const';
 import { FilterView } from '../view';
 import {
   filter,
-  remove,
-  render,
-  replace,
   ucFirst,
 } from '../utils';
+import { remove, render, replace } from '../framework';
 
 export default class FilterPresenter {
   #filterContainer = null;

@@ -10,12 +10,11 @@ import {
   sortByPrice,
   sortByTime,
   sortByDate,
-  render,
-  remove,
   filter
 } from '../utils';
 import EventPresenter from './event-presenter';
 import EventNewPresenter from './new-event-presenter';
+import { remove, render } from '../framework';
 
 
 export default class BoardPresenter {

@@ -1,6 +1,6 @@
 import { DEFAULT_EVENT, EscKeyEvent , UpdateType, UserAction } from '../const';
+import { remove, render, RenderPosition } from '../framework';
 import { EventItemEditView } from '../view';
-import { remove, render, RenderPosition } from '../utils';
 
 export default class NewEventPresenter {
   #eventListContainer = null;

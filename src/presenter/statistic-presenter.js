@@ -1,5 +1,5 @@
+import { remove, render } from '../framework';
 import { StatisticView } from '../view';
-import { remove, render } from '../utils';
 
 export default class StatisticPresenter {
   #statisticContainer = null;
