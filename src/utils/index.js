@@ -1,5 +1,3 @@
-export { default as Observer } from './observer';
-
 export * from './common';
 export * from './event';
 export * from './filter';

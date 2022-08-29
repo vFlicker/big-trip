@@ -1,6 +1,6 @@
-import { Observer } from '../utils';
+import { Observable } from '../framework';
 
-export default class EventsModel extends Observer {
+export default class EventsModel extends Observable {
   #events = [];
 
   setEvents(updateType, events) {
