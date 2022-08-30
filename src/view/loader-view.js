@@ -6,7 +6,7 @@ const createLoadingTemplate = () => (
     </p>`
 );
 
-export default class LoaderView extends AbstractView {
+export class LoaderView extends AbstractView {
   get template() {
     return createLoadingTemplate();
   }

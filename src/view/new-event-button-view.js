@@ -6,7 +6,7 @@ const createNewEventButton = () => (
     </button>`
 );
 
-export default class NewEventButtonView extends AbstractView {
+export class NewEventButtonView extends AbstractView {
   get template() {
     return createNewEventButton();
   }

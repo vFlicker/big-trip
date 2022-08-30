@@ -1,6 +1,6 @@
-export { default as BoardPresenter } from './board-presenter';
-export { default as EventPresenter } from './event-presenter';
-export { default as FilterPresenter } from './filter-presenter';
-export { default as NewEventPresenter } from './new-event-presenter';
-export { default as StatisticPresenter } from './statistic-presenter';
-export { default as TripInfoPresenter } from './trip-info-presenter';
+export { BoardPresenter } from './board-presenter';
+export { EventPresenter } from './event-presenter';
+export { FilterPresenter } from './filter-presenter';
+export { NewEventPresenter } from './new-event-presenter';
+export { StatisticPresenter } from './statistic-presenter';
+export { TripInfoPresenter } from './trip-info-presenter';

@@ -1,2 +1,2 @@
-export { default as EventsModel } from './events';
-export { default as FilterModel } from './filter';
+export { EventsModel } from './events';
+export { FilterModel } from './filter';

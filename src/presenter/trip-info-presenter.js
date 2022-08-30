@@ -1,3 +1,4 @@
+import { remove, render, RenderPosition, replace } from '../framework';
 import { TripInfoView } from '../view';
 import {
   getEventPeriod,
@@ -5,9 +6,8 @@ import {
   getTotalPrice,
   sortByDate
 } from '../utils';
-import { remove, render, RenderPosition, replace } from '../framework';
 
-export default class TripInfoPresenter {
+export class TripInfoPresenter {
   #tripInfoContainer = null;
   #eventsModel = null;
   #tripInfoComponent = null;

@@ -6,9 +6,10 @@ import {
   DESTINATION_STORE_NAME,
   OFFERS_STORE_NAME
 } from './api/const';
-import Store from './api/store';
-import Provider from './api/provider';
+import { Store } from './api/store';
+import { Provider } from './api/provider';
 import { FilterType, MenuItem, UpdateType } from './const';
+import { render } from './framework';
 import { EventsModel, FilterModel } from './model';
 import {
   BoardPresenter,
@@ -18,7 +19,6 @@ import {
 } from './presenter';
 import { isOnline, showToast } from './utils';
 import { MenuView, NewEventButtonView } from './view';
-import { render } from './framework';
 
 
 const tripElement = document.querySelector('.trip-main');

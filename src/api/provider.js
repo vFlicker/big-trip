@@ -1,4 +1,4 @@
-import DataStore from '../dataStorage';
+import { DataStore } from '../dataStorage';
 import { EventsModel } from '../model';
 import { isOnline } from '../utils';
 
@@ -11,7 +11,7 @@ const getSyncedEvents = (items) => items
   .filter(({success}) => success)
   .map(({payload}) => payload.point);
 
-export default class Provider {
+export class Provider {
   constructor(api, eventsStorage, destinationStorage, offerStorage) {
     this._api = api;
     this._eventsStorage = eventsStorage;

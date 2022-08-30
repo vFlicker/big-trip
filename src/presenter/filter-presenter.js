@@ -1,12 +1,12 @@
 import { UpdateType } from '../const';
-import { FilterView } from '../view';
 import {
   filter,
   ucFirst,
 } from '../utils';
+import { FilterView } from '../view';
 import { remove, render, replace } from '../framework';
 
-export default class FilterPresenter {
+export class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #eventsModel = null;

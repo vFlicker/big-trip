@@ -1,7 +1,7 @@
 import { FilterType } from '../const';
 import { Observable } from '../framework';
 
-export default class FilterModel extends Observable {
+export class FilterModel extends Observable {
   #activeFilter = FilterType.EVERYTHING;
 
   setFilter = (updateType, filter) => {

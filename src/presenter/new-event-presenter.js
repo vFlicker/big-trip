@@ -2,7 +2,7 @@ import { EscKeyEvent , UpdateType, UserAction } from '../const';
 import { remove, render, RenderPosition } from '../framework';
 import { EventItemEditView } from '../view';
 
-export default class NewEventPresenter {
+export class NewEventPresenter {
   #eventListContainer = null;
   #changeData = null;
   #destroyCallback = null;

@@ -1,4 +1,11 @@
 import { FilterType, SortType, UpdateType, UserAction } from '../const';
+import { remove, render } from '../framework';
+import {
+  sortByPrice,
+  sortByTime,
+  sortByDate,
+  filter
+} from '../utils';
 import {
   BoardView,
   EventListView,
@@ -6,18 +13,11 @@ import {
   NoEventView,
   SortView,
 } from '../view';
-import {
-  sortByPrice,
-  sortByTime,
-  sortByDate,
-  filter
-} from '../utils';
-import EventPresenter from './event-presenter';
-import EventNewPresenter from './new-event-presenter';
-import { remove, render } from '../framework';
+import { EventPresenter } from './event-presenter';
+import { NewEventPresenter } from './new-event-presenter';
 
 
-export default class BoardPresenter {
+export class BoardPresenter {
   #boardContainer = null;
   #eventsModel = null;
   #filterModel = null;
@@ -38,7 +38,7 @@ export default class BoardPresenter {
     this.#filterModel = filterModel;
     this.#api = api;
 
-    this.#eventNewPresenter = new EventNewPresenter(this.#eventListComponent, this.#handleViewAction);
+    this.#eventNewPresenter = new NewEventPresenter(this.#eventListComponent, this.#handleViewAction);
   }
 
   init = () => {

@@ -1,7 +1,7 @@
 import { remove, render } from '../framework';
 import { StatisticView } from '../view';
 
-export default class StatisticPresenter {
+export class StatisticPresenter {
   #statisticContainer = null;
   #eventsModel = null;
   #statisticComponent = null;

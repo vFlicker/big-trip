@@ -7,14 +7,14 @@ import {
   DateTimeFormats,
   ResetButtonText
 } from '../const';
-import DataStore from '../dataStorage';
+import { DataStore } from '../dataStorage';
 import {
   cloneArrayOfObjects,
   compareDates,
   humanizeDate,
   ucFirst
 } from '../utils';
-import SmartView from './smart-view';
+import { SmartView } from './smart-view';
 
 
 import 'flatpickr/dist/flatpickr.min.css';
@@ -386,7 +386,7 @@ const createEventItemEditTemplate = (
   );
 };
 
-export default class EventItemEditView extends SmartView {
+export class EventItemEditView extends SmartView {
   constructor(event = DEFAULT_EVENT) {
     super();
 

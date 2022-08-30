@@ -247,7 +247,7 @@ const createStatisticsTemplate = () => (
     </section>`
 );
 
-export default class StatisticView extends AbstractView {
+export class StatisticView extends AbstractView {
   #events = null;
   #moneyChart = null;
   #typeChart = null;

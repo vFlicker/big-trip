@@ -1,4 +1,4 @@
-export default class DataStore {
+export class DataStore {
   static set setDestinations(destinations) {
     this._destinations = destinations;
   }
