@@ -1,6 +1,6 @@
-import { DEFAULT_EVENT, EscKeyEvent , UpdateType, UserAction } from '../const';
+import { EscKeyEvent , UpdateType, UserAction } from '../const';
+import { remove, render, RenderPosition } from '../framework';
 import { EventItemEditView } from '../view';
-import { remove, render, RenderPosition } from '../utils';
 
 export default class NewEventPresenter {
   #eventListContainer = null;
@@ -29,12 +29,12 @@ export default class NewEventPresenter {
       this.#renderEventList = null;
     }
 
-    this.#eventItemEditComponent = new EventItemEditView(DEFAULT_EVENT);
+    this.#eventItemEditComponent = new EventItemEditView();
     this.#eventItemEditComponent.setSubmitHandler(this.#handleItemEditSubmit);
     this.#eventItemEditComponent.setRollupClickHandler(this.#handleItemEditRollupClick);
     this.#eventItemEditComponent.setDeleteClickHandler(this.#handleItemEditDeleteClick);
 
-    render(this.#eventListContainer, this.#eventItemEditComponent, RenderPosition.AFTERBEGIN);
+    render(this.#eventItemEditComponent, this.#eventListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   };

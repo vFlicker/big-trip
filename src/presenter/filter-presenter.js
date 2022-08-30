@@ -2,12 +2,9 @@ import { UpdateType } from '../const';
 import { FilterView } from '../view';
 import {
   filter,
-  remove,
-  render,
-  RenderPosition,
-  replace,
   ucFirst,
 } from '../utils';
+import { remove, render, replace } from '../framework';
 
 export default class FilterPresenter {
   #filterContainer = null;
@@ -32,7 +29,7 @@ export default class FilterPresenter {
     this.#filterComponent.setTypeChangeHandler(this.#handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this.#filterContainer, this.#filterComponent, RenderPosition.BEFOREEND);
+      render(this.#filterComponent, this.#filterContainer);
       return;
     }
 

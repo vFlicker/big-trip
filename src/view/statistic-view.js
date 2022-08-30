@@ -2,6 +2,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Chart from 'chart.js';
 
 import {STATISTIC_SETTINGS, StatisticTitles} from '../const';
+import { AbstractView } from '../framework';
 import {
   getCountOfUses,
   getDurationInMs,
@@ -9,7 +10,6 @@ import {
   getHumanizeDuration,
   getSumPriceByType
 } from '../utils';
-import SmartView from './smart-view';
 
 
 const renderMoneyChart = (moneyCtx, events) => {
@@ -247,7 +247,7 @@ const createStatisticsTemplate = () => (
     </section>`
 );
 
-export default class StatisticView extends SmartView {
+export default class StatisticView extends AbstractView {
   #events = null;
   #moneyChart = null;
   #typeChart = null;
@@ -268,7 +268,11 @@ export default class StatisticView extends SmartView {
   removeElement = () => {
     super.removeElement();
 
-    if (this.#moneyChart !== null, this.#typeChart !== null, this.#timeChart !== null) {
+    if (
+      this.#moneyChart !== null,
+      this.#typeChart !== null,
+      this.#timeChart !== null
+    ) {
       this.#moneyChart = null;
       this.#typeChart = null;
       this.#timeChart = null;
@@ -280,7 +284,11 @@ export default class StatisticView extends SmartView {
   };
 
   #setCharts = () => {
-    if (this.#moneyChart !== null, this.#typeChart !== null, this.#timeChart !== null) {
+    if (
+      this.#moneyChart !== null,
+      this.#typeChart !== null,
+      this.#timeChart !== null
+    ) {
       this.#moneyChart = null;
       this.#typeChart = null;
       this.#timeChart = null;

@@ -3,12 +3,9 @@ import {
   getEventPeriod,
   getTitle,
   getTotalPrice,
-  remove,
-  render,
-  RenderPosition,
-  replace,
   sortByDate
 } from '../utils';
+import { remove, render, RenderPosition, replace } from '../framework';
 
 export default class TripInfoPresenter {
   #tripInfoContainer = null;
@@ -28,7 +25,7 @@ export default class TripInfoPresenter {
     this.#tripInfoComponent = new TripInfoView(this.#getInfo());
 
     if (prevTripInfoComponent === null) {
-      render(this.#tripInfoContainer, this.#tripInfoComponent, RenderPosition.AFTERBEGIN);
+      render(this.#tripInfoComponent, this.#tripInfoContainer, RenderPosition.AFTERBEGIN);
       return;
     }
 

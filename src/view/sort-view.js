@@ -1,6 +1,6 @@
 import {SortType} from '../const';
 import { ucFirst } from '../utils';
-import AbstractView from './abstract-view';
+import { AbstractView } from '../framework';
 
 const createSortItem = (sortType, currentSortType, isDisabled = false) => {
   const isChecked = sortType === currentSortType;

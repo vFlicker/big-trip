@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 export const DATEPICKER_BASIC_SETTINGS = {
   enableTime: true,
   time_24hr: true,
@@ -12,20 +10,6 @@ export const DateTimeFormats = {
   FULL_DATE: 'MM/D YYYY',
   MONTH_AND_DAY: 'MMM D',
   TIME: 'HH:mm',
-};
-
-export const DEFAULT_EVENT = {
-  dateStart: dayjs().startOf('day').toDate(),
-  dateEnd: dayjs().startOf('day').toDate(),
-  destination: {
-    name: '',
-    description: '',
-    pictures: [],
-  },
-  isFavorite: false,
-  price: 0,
-  type: 'taxi',
-  offers: [],
 };
 
 export const EscKeyEvent = {

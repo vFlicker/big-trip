@@ -1,4 +1,4 @@
-import Api from './api/api';
+import { EventService } from './api/event-service';
 import {
   AUTHORIZATION,
   END_POINT,
@@ -16,8 +16,9 @@ import {
   StatisticPresenter,
   TripInfoPresenter,
 } from './presenter';
-import { isOnline, render, RenderPosition, showToast } from './utils';
+import { isOnline, showToast } from './utils';
 import { MenuView, NewEventButtonView } from './view';
+import { render } from './framework';
 
 
 const tripElement = document.querySelector('.trip-main');
@@ -25,7 +26,7 @@ const menuElement = tripElement.querySelector('.trip-controls__navigation');
 const filterElement = tripElement.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.page-main .page-body__container');
 
-const api = new Api(END_POINT, AUTHORIZATION);
+const api = new EventService(END_POINT, AUTHORIZATION);
 const eventsStorage = new Store(EVENTS_STORE_NAME, window.localStorage);
 const destinationStorage = new Store(
   DESTINATION_STORE_NAME,
@@ -93,8 +94,8 @@ const newEventButtonClickHandler = () => {
   newEventButtonComponent.disable();
 };
 
-render(menuElement, menuComponent, RenderPosition.BEFOREEND);
-render(tripElement, newEventButtonComponent, RenderPosition.BEFOREEND);
+render(menuComponent, menuElement);
+render(newEventButtonComponent, tripElement);
 
 tripInfoPresenter.init();
 boardPresenter.init();

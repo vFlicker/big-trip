@@ -1,4 +1,4 @@
-import AbstractView from './abstract-view';
+import { AbstractView } from '../framework';
 
 const createFilterList = (filters) => {
   const getTemplate = ({ type, name, isChecked, isDisabled }) => (
@@ -50,9 +50,7 @@ export default class FilterView extends AbstractView {
   setTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
 
-    this
-      .element
-      .addEventListener('change', this.#typeChangeHandler);
+    this.element.addEventListener('change', this.#typeChangeHandler);
   };
 
   #typeChangeHandler = (evt) => {

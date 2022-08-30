@@ -1,5 +1,5 @@
+import { remove, render } from '../framework';
 import { StatisticView } from '../view';
-import { remove, render, RenderPosition } from '../utils';
 
 export default class StatisticPresenter {
   #statisticContainer = null;
@@ -25,6 +25,6 @@ export default class StatisticPresenter {
   #renderStatistic = () => {
     const events = this.#eventsModel.getEvents();
     this.#statisticComponent = new StatisticView(events);
-    render(this.#statisticContainer, this.#statisticComponent, RenderPosition.BEFOREEND);
+    render(this.#statisticComponent, this.#statisticContainer);
   };
 }

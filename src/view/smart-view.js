@@ -1,5 +1,6 @@
-import AbstractView from './abstract-view';
+import { AbstractView } from '../framework';
 
+// TODO: refactor this class
 export default class SmartView extends AbstractView {
   constructor() {
     super();

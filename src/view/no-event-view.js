@@ -1,4 +1,4 @@
-import AbstractView from './abstract-view';
+import { AbstractView } from '../framework';
 
 const createNoEventTemplate = () => (
   `<p class="trip-events__msg">

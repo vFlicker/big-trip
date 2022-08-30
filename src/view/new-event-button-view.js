@@ -1,4 +1,4 @@
-import AbstractView from './abstract-view';
+import { AbstractView } from '../framework';
 
 const createNewEventButton = () => (
   `<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">
@@ -14,9 +14,7 @@ export default class NewEventButtonView extends AbstractView {
   setClickHandler = (callback) => {
     this._callback.buttonClick = callback;
 
-    this
-      .element
-      .addEventListener('click', this.#clickHandler);
+    this.element.addEventListener('click', this.#clickHandler);
   };
 
   enable = () => {
