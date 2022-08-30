@@ -1,4 +1,4 @@
-import { DEFAULT_EVENT, EscKeyEvent , UpdateType, UserAction } from '../const';
+import { EscKeyEvent , UpdateType, UserAction } from '../const';
 import { remove, render, RenderPosition } from '../framework';
 import { EventItemEditView } from '../view';
 
@@ -29,7 +29,7 @@ export default class NewEventPresenter {
       this.#renderEventList = null;
     }
 
-    this.#eventItemEditComponent = new EventItemEditView(DEFAULT_EVENT);
+    this.#eventItemEditComponent = new EventItemEditView();
     this.#eventItemEditComponent.setSubmitHandler(this.#handleItemEditSubmit);
     this.#eventItemEditComponent.setRollupClickHandler(this.#handleItemEditRollupClick);
     this.#eventItemEditComponent.setDeleteClickHandler(this.#handleItemEditDeleteClick);

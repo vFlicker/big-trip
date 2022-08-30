@@ -14,9 +14,7 @@ export default class NewEventButtonView extends AbstractView {
   setClickHandler = (callback) => {
     this._callback.buttonClick = callback;
 
-    this
-      .element
-      .addEventListener('click', this.#clickHandler);
+    this.element.addEventListener('click', this.#clickHandler);
   };
 
   enable = () => {

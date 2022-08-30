@@ -268,7 +268,11 @@ export default class StatisticView extends AbstractView {
   removeElement = () => {
     super.removeElement();
 
-    if (this.#moneyChart !== null, this.#typeChart !== null, this.#timeChart !== null) {
+    if (
+      this.#moneyChart !== null,
+      this.#typeChart !== null,
+      this.#timeChart !== null
+    ) {
       this.#moneyChart = null;
       this.#typeChart = null;
       this.#timeChart = null;
@@ -280,7 +284,11 @@ export default class StatisticView extends AbstractView {
   };
 
   #setCharts = () => {
-    if (this.#moneyChart !== null, this.#typeChart !== null, this.#timeChart !== null) {
+    if (
+      this.#moneyChart !== null,
+      this.#typeChart !== null,
+      this.#timeChart !== null
+    ) {
       this.#moneyChart = null;
       this.#typeChart = null;
       this.#timeChart = null;

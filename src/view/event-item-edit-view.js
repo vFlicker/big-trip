@@ -1,10 +1,10 @@
+import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import { nanoid } from 'nanoid';
 
 import {
   DATEPICKER_BASIC_SETTINGS,
   DateTimeFormats,
-  DEFAULT_EVENT,
   ResetButtonText
 } from '../const';
 import DataStore from '../dataStorage';
@@ -18,6 +18,20 @@ import SmartView from './smart-view';
 
 
 import 'flatpickr/dist/flatpickr.min.css';
+
+const DEFAULT_EVENT = {
+  dateStart: dayjs().startOf('day').toDate(),
+  dateEnd: dayjs().startOf('day').toDate(),
+  destination: {
+    name: '',
+    description: '',
+    pictures: [],
+  },
+  isFavorite: false,
+  price: 0,
+  type: 'taxi',
+  offers: [],
+};
 
 // TODO: look at the naming of createFunctionsTemplate and them argument names
 const createEventTypeListTemplate = (id, activeType, availableOffers) => {
@@ -373,7 +387,7 @@ const createEventItemEditTemplate = (
 };
 
 export default class EventItemEditView extends SmartView {
-  constructor(event) {
+  constructor(event = DEFAULT_EVENT) {
     super();
 
     this._state = EventItemEditView.parseEventToState(event, DataStore.getOffers);
@@ -402,6 +416,32 @@ export default class EventItemEditView extends SmartView {
     this.#removeEndDatePicker();
   };
 
+  reset = (event) => {
+    this.updateState(EventItemEditView.parseEventToState(
+      event,
+      this._availableOffers
+    ));
+  };
+
+  setSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+
+    this
+      .element
+      .querySelector('form')
+      .addEventListener('submit', this.#submitHandler);
+  };
+
+  setRollupClickHandler = (callback) => {
+    const rollupElement = this.element.querySelector('.event__rollup-btn');
+
+    if (rollupElement) {
+      this._callback.rollupClick = callback;
+
+      rollupElement.addEventListener('click', this.#rollupClickHandler);
+    }
+  };
+
   setDeleteClickHandler = (callback) => {
     this._callback.deleteClick = callback;
 
@@ -411,31 +451,7 @@ export default class EventItemEditView extends SmartView {
       .addEventListener('click', this.#deleteClickHandler);
   };
 
-  setSubmitHandler = (callback) => {
-    this._callback.formSubmit = callback;
-
-    this
-      .element
-      .addEventListener('submit', this.#submitHandler);
-  };
-
-  setRollupClickHandler = (callback) => {
-    const rollupButton = this.element.querySelector('.event__rollup-btn');
-
-    if (rollupButton) {
-      this._callback.rollupClick = callback;
-
-      rollupButton.addEventListener('click', this.#rollupClickHandler);
-    }
-  };
-
-  reset = (event) => {
-    this.updateState(EventItemEditView.parseEventToState(
-      event,
-      this._availableOffers
-    ));
-  };
-
+  // TODO: private or public
   restoreHandlers = () => {
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setSubmitHandler(this._callback.formSubmit);
@@ -443,11 +459,6 @@ export default class EventItemEditView extends SmartView {
     this.#setStartDatePicker();
     this.#setEndDatePicker();
     this.#setInnerHandlers();
-  };
-
-  #deleteClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.deleteClick(EventItemEditView.parseStateToEvent(this._state));
   };
 
   #submitHandler = (evt) => {
@@ -458,6 +469,11 @@ export default class EventItemEditView extends SmartView {
   #rollupClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.rollupClick();
+  };
+
+  #deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteClick(EventItemEditView.parseStateToEvent(this._state));
   };
 
   #setStartDatePicker = () => {
