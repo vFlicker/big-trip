@@ -1,4 +1,3 @@
-export { default as AbstractView } from './abstract-view';
 export { default as BoardView } from './board-view';
 export { default as EventItemView } from './event-item-view';
 export { default as EventItemEditView } from './event-item-edit-view';

@@ -1,7 +1,7 @@
-import { AbstractView } from '../view';
+import { AbstractView } from './view';
 
 /**
- * @enum {string} List of possible render positions
+ * @enum {string} list of possible render positions
  */
 export const RenderPosition = {
   BEFOREBEGIN: 'beforebegin',
@@ -37,7 +37,10 @@ export const render = (component, container, place = RenderPosition.BEFOREEND) =
     throw new Error('Container element doesn\'t exist');
   }
 
-  console.log(container);
+  // TODO: remove this
+  if (container instanceof AbstractView) {
+    container = container.element;
+  }
 
   container.insertAdjacentElement(place, component.element);
 };

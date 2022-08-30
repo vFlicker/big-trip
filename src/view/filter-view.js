@@ -1,4 +1,4 @@
-import AbstractView from './abstract-view';
+import { AbstractView } from '../framework';
 
 const createFilterList = (filters) => {
   const getTemplate = ({ type, name, isChecked, isDisabled }) => (
