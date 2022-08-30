@@ -8,9 +8,11 @@ dayjs.extend(duration);
 
 const getDuration = (ms) => dayjs.duration(ms);
 
-export const compareDates = (dateStart, dateEnd) => dayjs(dateStart).isAfter(dateEnd);
+export const compareDates = (dateStart, dateEnd) =>
+  dayjs(dateStart).isAfter(dateEnd);
 
-const getDurationBetweenDates = (dateStart, dateEnd) => getDuration(getDateDifference(dateStart, dateEnd));
+const getDurationBetweenDates = (dateStart, dateEnd) =>
+  getDuration(getDateDifference(dateStart, dateEnd));
 
 export const humanizeDateTime = (date) => {
   const firstDate = humanizeDate(date, DateTimeFormats.FULL_DATE);
@@ -19,7 +21,6 @@ export const humanizeDateTime = (date) => {
 
   return `${firstDate}${union}${secondDate}`;
 };
-
 
 export const humanizeDurationBetweenDates = (dateStart, dateEnd) => {
   const durationBetweenDates = getDurationBetweenDates(dateStart, dateEnd);

@@ -6,27 +6,35 @@ export const getEventPeriod = (events) => {
   const lastEvent = events[events.length - 1];
 
   if (firstEvent && lastEvent) {
-    const humanizeFirstFrom = humanizeDate(firstEvent.dateStart, DateTimeFormats.MONTH_AND_DAY);
-    const humanizeFirstTo = humanizeDate(lastEvent.dateEnd, DateTimeFormats.MONTH_AND_DAY);
-
-    return (
-      `${humanizeFirstFrom} &nbsp;&mdash;&nbsp; ${humanizeFirstTo}`
+    const humanizeFirstFrom = humanizeDate(
+      firstEvent.dateStart,
+      DateTimeFormats.MONTH_AND_DAY
     );
+
+    const humanizeFirstTo = humanizeDate(
+      lastEvent.dateEnd,
+      DateTimeFormats.MONTH_AND_DAY
+    );
+
+    return `${humanizeFirstFrom} &nbsp;&mdash;&nbsp; ${humanizeFirstTo}`;
   }
 
   return 'trip date';
 };
 
 export const getTotalPrice = (events) => events.reduce((sum, event) => {
-  const offersPrice = event.offers.reduce((sum, offer) => sum += offer.price, 0);
+  const offersTotalPrice = event.offers.reduce((offersReducer, { price }) => {
+    const result = offersReducer + price;
+    return result;
+  }, 0);
 
-  return sum + event.price + offersPrice;
+  return sum + event.price + offersTotalPrice;
 }, 0);
 
 export const getTitle = (events) => {
   const allCities = events.map((event) => event.destination.name);
 
-  const filtredCities = allCities.reduce((array, city, index) => {
+  const filteredCities = allCities.reduce((array, city, index) => {
     if (city === allCities[index + 1]) {
       return array;
     }
@@ -35,12 +43,12 @@ export const getTitle = (events) => {
     return array;
   }, []);
 
-  if (filtredCities.length > 3) {
-    const firstCity = filtredCities[0];
-    const lastCity = filtredCities[filtredCities.length - 1];
+  if (filteredCities.length > 3) {
+    const firstCity = filteredCities[0];
+    const lastCity = filteredCities[filteredCities.length - 1];
 
     return `${firstCity} &mdash; ... &mdash; ${lastCity}`;
   }
 
-  return filtredCities.join(' &mdash; ');
+  return filteredCities.join(' &mdash; ');
 };
