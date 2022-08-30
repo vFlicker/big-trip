@@ -35,7 +35,7 @@ export class Api extends ApiService {
   };
 
   addEvent = async (event) => {
-    const response = this._load({
+    const response = await this._load({
       url: 'points',
       method: HttpMethod.POST,
       body: JSON.stringify(EventsModel.adaptToServer(event)),
