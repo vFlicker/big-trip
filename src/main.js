@@ -20,7 +20,6 @@ import {
 import { isOnline, showToast } from './utils';
 import { MenuView, NewEventButtonView } from './view';
 
-
 const tripElement = document.querySelector('.trip-main');
 const menuElement = tripElement.querySelector('.trip-controls__navigation');
 const filterElement = tripElement.querySelector('.trip-controls__filters');

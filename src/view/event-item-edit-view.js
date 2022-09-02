@@ -2,11 +2,7 @@ import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import { nanoid } from 'nanoid';
 
-import {
-  DATEPICKER_BASIC_SETTINGS,
-  DateTimeFormats,
-  ResetButtonText
-} from '../const';
+import { DateTimeFormats } from '../const';
 import { DataStore } from '../dataStorage';
 import {
   cloneArrayOfObjects,
@@ -18,6 +14,12 @@ import { SmartView } from './smart-view';
 
 
 import 'flatpickr/dist/flatpickr.min.css';
+
+const DATEPICKER_BASIC_SETTINGS = {
+  enableTime: true,
+  time_24hr: true,
+  dateFormat: 'm/d/y H:i',
+};
 
 const DEFAULT_EVENT = {
   dateStart: dayjs().startOf('day').toDate(),
@@ -31,6 +33,11 @@ const DEFAULT_EVENT = {
   price: 0,
   type: 'taxi',
   offers: [],
+};
+
+export const ResetButtonText = {
+  ADD: 'Cancel',
+  EDIT: 'Delete',
 };
 
 // TODO: look at the naming of createFunctionsTemplate and them argument names

@@ -1,7 +1,6 @@
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Chart from 'chart.js';
 
-import {STATISTIC_SETTINGS, StatisticTitles} from '../const';
 import { AbstractView } from '../framework';
 import {
   getCountOfUses,
@@ -11,6 +10,29 @@ import {
   getSumPriceByType
 } from '../utils';
 
+const STATISTIC_SETTINGS = {
+  backgroundColor: '#ffffff',
+  barHeight: 55,
+  barThickness: 44,
+  basicFontSize: 13,
+  dataAnchor: 'start',
+  dataLabelsAlign: 'start',
+  dataLabelsAnchor: 'end',
+  dataLabelsColor: '#000000',
+  fontColor: '#000000',
+  hoverBackgroundColor: '#ffffff',
+  minBarLength: 50,
+  padding: 5,
+  titleFontSize: 23,
+  titlePosition: 'left',
+  type: 'horizontalBar',
+};
+
+const StatisticTitles = {
+  TYPE: 'TYPE',
+  MONEY: 'MONEY',
+  TIME_SPENT: 'TIME-SPENT',
+};
 
 const renderMoneyChart = (moneyCtx, events) => {
   const uniqTypes = getEventTypes(events).map((type) => type.toUpperCase());

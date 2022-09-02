@@ -5,10 +5,12 @@ import { EventItemEditView } from '../view';
 export class NewEventPresenter {
   #eventListContainer = null;
   #changeData = null;
+
+  #eventItemEditComponent = null;
+
   #destroyCallback = null;
   #renderEventList = null;
   #renderNoEvents = null;
-  #eventItemEditComponent = null;
 
   constructor(eventListContainer, changeData) {
     this.#eventListContainer = eventListContainer;

@@ -1,15 +1,22 @@
-import { EscKeyEvent , Mode, UpdateType, UserAction } from '../const';
+import { EscKeyEvent, UpdateType, UserAction } from '../const';
 import { remove, render, replace } from '../framework';
 import { EventItemView, EventItemEditView } from '../view';
+
+const Mode = {
+  DEFAULT: 'default',
+  EDITING: 'editing',
+};
 
 export class EventPresenter {
   #eventListContainer = null;
   #changeData = null;
   #changeMode = null;
-  #mode = Mode.DEFAULT;
-  #event = null;
+
   #eventItemComponent = null;
   #eventItemEditComponent = null;
+
+  #event = null;
+  #mode = Mode.DEFAULT;
 
   constructor(eventListContainer, changeData, changeMode) {
     this.#eventListContainer = eventListContainer;
@@ -88,21 +95,8 @@ export class EventPresenter {
     });
   };
 
-  #replaceEventToForm = () => {
-    replace(this.#eventItemEditComponent, this.#eventItemComponent);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#changeMode();
-    this.#mode = Mode.EDITING;
-  };
-
-  #replaceFormToEvent = () => {
-    replace(this.#eventItemComponent, this.#eventItemEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = Mode.DEFAULT;
-  };
-
   #escKeyDownHandler = (evt) => {
-    if (evt.key === EscKeyEvent .ESCAPE || evt.key === EscKeyEvent .ESC) {
+    if (evt.key === EscKeyEvent.ESCAPE || evt.key === EscKeyEvent.ESC) {
       evt.preventDefault();
       this.#eventItemEditComponent.reset(this.#event);
       this.#replaceFormToEvent();
@@ -143,5 +137,18 @@ export class EventPresenter {
 
   #handleItemRollupClick = () => {
     this.#replaceEventToForm();
+  };
+
+  #replaceEventToForm = () => {
+    replace(this.#eventItemEditComponent, this.#eventItemComponent);
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#changeMode();
+    this.#mode = Mode.EDITING;
+  };
+
+  #replaceFormToEvent = () => {
+    replace(this.#eventItemComponent, this.#eventItemEditComponent);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
   };
 }

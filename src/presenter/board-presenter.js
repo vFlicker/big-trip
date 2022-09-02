@@ -16,21 +16,23 @@ import {
 import { EventPresenter } from './event-presenter';
 import { NewEventPresenter } from './new-event-presenter';
 
-
 export class BoardPresenter {
   #boardContainer = null;
   #eventsModel = null;
   #filterModel = null;
   #api = null;
-  #currentSortType = SortType.DAY;
-  #isLoading = true;
-  #sortComponent = null;
+
   #boardComponent = new BoardView();
   #eventListComponent = new EventListView();
   #loaderComponent = new LoaderView();
   #noEventComponent = new NoEventView();
-  #eventPresenter = {};
+  #sortComponent = null;
+
   #eventNewPresenter = null;
+
+  #eventPresenter = new Map();
+  #currentSortType = SortType.DAY;
+  #isLoading = true;
 
   constructor(boardContainer, eventsModel, filterModel, api) {
     this.#boardContainer = boardContainer;
@@ -41,41 +43,7 @@ export class BoardPresenter {
     this.#eventNewPresenter = new NewEventPresenter(this.#eventListComponent, this.#handleViewAction);
   }
 
-  init = () => {
-    render(this.#boardComponent, this.#boardContainer);
-
-    this.#eventsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
-
-    this.#renderBoard();
-  };
-
-  createEvent = (callback) => {
-    const events = this.#getEvents();
-    const eventCount = events.length;
-
-    if (eventCount === 0) {
-      remove(this.#noEventComponent);
-      this.#eventNewPresenter.init(callback, this.#renderEventList, this.#renderNoEvent);
-      return;
-    }
-
-    this.#currentSortType = SortType.DAY;
-    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#eventNewPresenter.init(callback);
-  };
-
-  destroy = () => {
-    this.#clearBoard({resetSortType: true});
-
-    remove(this.#eventListComponent);
-    remove(this.#boardComponent);
-
-    this.#eventsModel.removeObserver(this.#handleModelEvent);
-    this.#filterModel.removeObserver(this.#handleModelEvent);
-  };
-
-  #getEvents = () => {
+  get events() {
     const filterType = this.#filterModel.getFilter();
     const events = this.#eventsModel.getEvents();
     const filteredEvents = filter[filterType](events);
@@ -87,17 +55,49 @@ export class BoardPresenter {
         return filteredEvents.sort(sortByPrice);
       case SortType.DAY:
         return filteredEvents.sort(sortByDate);
+      default:
+        return filteredEvents;
     }
+  }
+
+  init = () => {
+    this.#eventsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+
+    this.#renderBoard();
+  };
+
+  createEvent = (callback) => {
+    if (!this.events.length) {
+      remove(this.#noEventComponent);
+      // TODO: remove 2 and 3 args
+      this.#eventNewPresenter.init(callback, this.#renderEventList, this.#renderNoEvent);
+      return;
+    }
+
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#eventNewPresenter.init(callback);
+  };
+
+  destroy = () => {
+    this.#clearBoard({ resetSortType: true });
+
+    remove(this.#eventListComponent);
+    remove(this.#boardComponent);
+
+    this.#eventsModel.removeObserver(this.#handleModelEvent);
+    this.#filterModel.removeObserver(this.#handleModelEvent);
   };
 
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this.#eventPresenter[update.id].setSaving();
+        this.#eventPresenter.get(update.id).setSaving();
         this.#api
           .updateEvent(update)
           .then((event) => this.#eventsModel.updateEvent(updateType, event))
-          .catch(() => this.#eventPresenter[update.id].setAborting());
+          .catch(() => this.#eventPresenter.get(update.id).setAborting());
         break;
       case UserAction.ADD_EVENT:
         this.#eventNewPresenter.setSaving();
@@ -107,11 +107,11 @@ export class BoardPresenter {
           .catch(() => this.#eventNewPresenter.setAborting());
         break;
       case UserAction.DELETE_EVENT:
-        this.#eventPresenter[update.id].setDeleting();
+        this.#eventPresenter.get(update.id).setDeleting();
         this.#api
           .deleteEvent(update)
           .then(() => this.#eventsModel.deleteEvent(updateType, update))
-          .catch(() => this.#eventPresenter[update.id].setAborting());
+          .catch(() => this.#eventPresenter.get(update.id).setAborting());
         break;
     }
   };
@@ -119,19 +119,19 @@ export class BoardPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#eventPresenter[data.id].init(data);
+        this.#eventPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
         this.#renderBoard();
         break;
       case UpdateType.MAJOR:
-        this.#clearBoard({resetSortType: true});
+        this.#clearBoard({ resetSortType: true });
         this.#renderBoard();
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        this.#clearBoard({resetSortType: true});
+        this.#clearBoard({ resetSortType: true });
         this.#renderBoard();
         break;
     }
@@ -139,10 +139,7 @@ export class BoardPresenter {
 
   #handleModeChange = () => {
     this.#eventNewPresenter.destroy();
-
-    Object
-      .values(this.#eventPresenter)
-      .forEach((presenter) => presenter.resetView());
+    this.#eventPresenter.forEach((presenter) => presenter.resetView());
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -155,14 +152,11 @@ export class BoardPresenter {
     this.#renderBoard();
   };
 
-  #clearBoard = ({resetSortType = false} = {}) => {
+  #clearBoard = ({ resetSortType = false } = {}) => {
     this.#eventNewPresenter.destroy();
 
-    Object
-      .values(this.#eventPresenter)
-      .forEach((presenter) => presenter.destroy());
-
-    this.#eventPresenter = {};
+    this.#eventPresenter.forEach((presenter) => presenter.destroy());
+    this.#eventPresenter.clear();
 
     remove(this.#sortComponent);
     remove(this.#loaderComponent);
@@ -174,22 +168,21 @@ export class BoardPresenter {
   };
 
   #renderBoard = () => {
+    render(this.#boardComponent, this.#boardContainer);
+
     if (this.#isLoading) {
       this.#renderLoader();
       return;
     }
 
-    const events = this.#getEvents();
-    const eventCount = events.length;
-
-    if (eventCount === 0) {
+    if (!this.events.length) {
       this.#renderNoEvent();
       return;
     }
 
     this.#renderSort();
     this.#renderEventList();
-    this.#renderEvents(events);
+    this.#renderEvents();
   };
 
   #renderEventList = () => {
@@ -204,11 +197,11 @@ export class BoardPresenter {
     );
 
     eventPresenter.init(event);
-    this.#eventPresenter[event.id] = eventPresenter;
+    this.#eventPresenter.set(event.id, eventPresenter);
   };
 
-  #renderEvents = (events) => {
-    events.forEach((event) => this.#renderEvent(event));
+  #renderEvents = () => {
+    this.events.forEach((event) => this.#renderEvent(event));
   };
 
   #renderLoader = () => {
@@ -220,10 +213,6 @@ export class BoardPresenter {
   };
 
   #renderSort = () => {
-    if (this.#sortComponent !== null) {
-      this.#sortComponent = null;
-    }
-
     this.#sortComponent = new SortView(this.#currentSortType);
     this.#sortComponent.setTypeChangeHandler(this.#handleSortTypeChange);
 

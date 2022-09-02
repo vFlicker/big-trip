@@ -21,23 +21,7 @@ export class FilterPresenter {
     this.#eventsModel.addObserver(this.#handleModelEvent);
   }
 
-  init = () => {
-    const filters = this.#getFilters();
-    const prevFilterComponent = this.#filterComponent;
-
-    this.#filterComponent = new FilterView(filters);
-    this.#filterComponent.setTypeChangeHandler(this.#handleFilterTypeChange);
-
-    if (prevFilterComponent === null) {
-      render(this.#filterComponent, this.#filterContainer);
-      return;
-    }
-
-    replace(this.#filterComponent, prevFilterComponent);
-    remove(prevFilterComponent);
-  };
-
-  #getFilters = () => {
+  get filters() {
     const events = this.#eventsModel.getEvents();
     const currentFilterType = this.#filterModel.getFilter();
 
@@ -47,8 +31,23 @@ export class FilterPresenter {
         type,
         name: ucFirst(type),
         isChecked: currentFilterType === type,
-        isDisabled: filter[type](events).length === 0,
+        isDisabled: !filter[type](events).length,
       }));
+  }
+
+  init = () => {
+    const prevFilterComponent = this.#filterComponent;
+
+    this.#filterComponent = new FilterView(this.filters);
+    this.#filterComponent.setTypeChangeHandler(this.#handleFilterTypeChange);
+
+    if (prevFilterComponent === null) {
+      render(this.#filterComponent, this.#filterContainer);
+      return;
+    }
+
+    replace(this.#filterComponent, prevFilterComponent);
+    remove(prevFilterComponent);
   };
 
   #handleModelEvent = () => {

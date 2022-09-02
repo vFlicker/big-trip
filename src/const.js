@@ -1,9 +1,3 @@
-export const DATEPICKER_BASIC_SETTINGS = {
-  enableTime: true,
-  time_24hr: true,
-  dateFormat: 'm/d/y H:i',
-};
-
 export const DateTimeFormats = {
   DAY: 'D',
   FULL_DATE_AND_TIME: 'MM/D/YY HH:mm',
@@ -28,46 +22,12 @@ export const MenuItem = {
   STATS: 'stats',
 };
 
-export const Mode = {
-  DEFAULT: 'default',
-  EDITING: 'editing',
-};
-
-export const ResetButtonText = {
-  ADD: 'Cancel',
-  EDIT: 'Delete',
-};
-
 export const SortType = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
   PRICE: 'price',
   OFFER: 'offer',
-};
-
-export const STATISTIC_SETTINGS = {
-  backgroundColor: '#ffffff',
-  barHeight: 55,
-  barThickness: 44,
-  basicFontSize: 13,
-  dataAnchor: 'start',
-  dataLabelsAlign: 'start',
-  dataLabelsAnchor: 'end',
-  dataLabelsColor: '#000000',
-  fontColor: '#000000',
-  hoverBackgroundColor: '#ffffff',
-  minBarLength: 50,
-  padding: 5,
-  titleFontSize: 23,
-  titlePosition: 'left',
-  type: 'horizontalBar',
-};
-
-export const StatisticTitles = {
-  TYPE: 'TYPE',
-  MONEY: 'MONEY',
-  TIME_SPENT: 'TIME-SPENT',
 };
 
 export const UpdateType = {
