@@ -458,8 +458,7 @@ export class EventItemEditView extends SmartView {
       .addEventListener('click', this.#deleteClickHandler);
   };
 
-  // TODO: private or public
-  restoreHandlers = () => {
+  _restoreHandlers = () => {
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setSubmitHandler(this._callback.formSubmit);
     this.setRollupClickHandler(this._callback.rollupClick);
@@ -567,7 +566,7 @@ export class EventItemEditView extends SmartView {
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
     const destination = this._availableDestination
-      .find((destination) => destination.name === evt.target.value);
+      .find(({ name }) => name === evt.target.value);
 
     if (!destination) {
       evt.target.setCustomValidity('The destination is unavailable');
@@ -608,9 +607,7 @@ export class EventItemEditView extends SmartView {
       }
     }
 
-    this.updateState({
-      offers,
-    }, true);
+    this._setState({ offers });
   };
 
   #priceInputHandler = (evt) => {
@@ -625,9 +622,7 @@ export class EventItemEditView extends SmartView {
 
     evt.target.setCustomValidity('');
 
-    this.updateState({
-      price,
-    }, true);
+    this._setState({ price });
   };
 
   #typeChangeHandler = (evt) => {
@@ -649,32 +644,15 @@ export class EventItemEditView extends SmartView {
     });
   };
 
-  static getOfferWithStatus(userType, userOffers, availableOffers) {
-    const availableOffersWithType = availableOffers.find((item) => item.type === userType);
-    const availableOffersByType = availableOffersWithType.offers;
-
-    return availableOffersByType.reduce((resultArray, availableOfferByType) => {
-      const hasOffer = userOffers.find((item) => item.title === availableOfferByType.title);
-
-      resultArray.push({
-        ...availableOfferByType,
-        id: nanoid(),
-        isChecked: Boolean(hasOffer),
-      });
-
-      return resultArray;
-    }, []);
-  }
-
   static parseEventToState(event, availableOffers) {
     const availableOffersWithType = availableOffers.find((item) => item.type === event.type);
     const availableOffersByType = availableOffersWithType.offers;
 
-    const hasDestinationDescription = event.destination.description.length !== 0;
-    const hasDestinationName = event.destination.name.length !== 0;
-    const hasDestinationPictures = event.destination.pictures.length !== 0;
+    const hasDestinationDescription = event.destination.description.length;
+    const hasDestinationName = event.destination.name.length;
+    const hasDestinationPictures = event.destination.pictures.length;
     const hasSectionDestination = hasDestinationDescription || hasDestinationPictures;
-    const hasSectionOffers = availableOffersByType.length !== 0;
+    const hasSectionOffers = availableOffersByType.length;
 
     return {
       ...event,
@@ -691,6 +669,25 @@ export class EventItemEditView extends SmartView {
       isSubmitDisabled: !hasDestinationName,
       offers: EventItemEditView.getOfferWithStatus(event.type, event.offers, availableOffers),
     };
+  }
+
+  // TODO: what is this?
+  static getOfferWithStatus(userType, userOffers, availableOffers) {
+    const availableOffersWithType = availableOffers.find(({ type }) => type === userType);
+    const availableOffersByType = availableOffersWithType.offers;
+
+    return availableOffersByType.reduce((resultArray, availableOfferByType) => {
+      const hasOffer = userOffers.find(({ title }) => title === availableOfferByType.title);
+
+      resultArray.push({
+        ...availableOfferByType,
+        // TODO: do we need nanoid?
+        id: nanoid(),
+        isChecked: Boolean(hasOffer),
+      });
+
+      return resultArray;
+    }, []);
   }
 
   static parseStateToEvent(state) {

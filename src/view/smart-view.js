@@ -2,27 +2,27 @@ import { AbstractView } from '../framework';
 
 // TODO: refactor this class
 export class SmartView extends AbstractView {
-  constructor() {
-    super();
+  _state = {};
 
-    this._state = {};
-  }
-
-  updateState = (update, justStateUpdating) => {
+  updateState = (update) => {
     if (!update) {
       return;
     }
 
-    this._state = { ...this._state, ...update };
+    this._setState(update);
 
-    if (justStateUpdating) {
-      return;
-    }
-
-    this.updateElement();
+    this.#rerenderElement();
   };
 
-  updateElement = () => {
+  _setState = (update) => {
+    this._state = { ...this._state, ...update };
+  };
+
+  _restoreHandlers = () => {
+    throw new Error('Abstract method not implemented: resetHandlers');
+  };
+
+  #rerenderElement = () => {
     const prevElement = this.element;
     const parent = prevElement.parentElement;
     this.removeElement();
@@ -31,10 +31,6 @@ export class SmartView extends AbstractView {
 
     parent.replaceChild(newElement, prevElement);
 
-    this.restoreHandlers();
-  };
-
-  restoreHandlers = () => {
-    throw new Error('Abstract method not implemented: resetHandlers');
+    this._restoreHandlers();
   };
 }
