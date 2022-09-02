@@ -7,7 +7,6 @@ export { LoaderView } from './loader-view';
 export { MenuView } from './menu-view';
 export { NewEventButtonView } from './new-event-button-view';
 export { NoEventView } from './no-event-view';
-export { SmartView } from './smart-view';
 export { SortView } from './sort-view';
 export { StatisticView } from './statistic-view';
 export { TripInfoView } from './trip-info-view';

@@ -10,7 +10,7 @@ import {
   humanizeDate,
   ucFirst
 } from '../utils';
-import { SmartView } from './smart-view';
+import { AbstractStatefulView } from '../framework';
 
 
 import 'flatpickr/dist/flatpickr.min.css';
@@ -393,7 +393,7 @@ const createEventItemEditTemplate = (
   );
 };
 
-export class EventItemEditView extends SmartView {
+export class EventItemEditView extends AbstractStatefulView {
   constructor(event = DEFAULT_EVENT) {
     super();
 
