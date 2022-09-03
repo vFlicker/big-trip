@@ -23,7 +23,7 @@ export class StatisticPresenter {
   };
 
   #renderStatistic = () => {
-    const events = this.#eventsModel.getEvents();
+    const events = this.#eventsModel.events;
     this.#statisticComponent = new StatisticView(events);
     render(this.#statisticComponent, this.#statisticContainer);
   };

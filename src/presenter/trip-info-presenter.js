@@ -38,7 +38,7 @@ export class TripInfoPresenter {
   };
 
   #getInfo = () => {
-    const sortedEvents = this.#eventsModel.getEvents().sort(sortByDate);
+    const sortedEvents = this.#eventsModel.events.sort(sortByDate);
 
     return {
       date: getEventPeriod(sortedEvents),

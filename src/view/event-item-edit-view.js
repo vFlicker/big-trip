@@ -4,13 +4,13 @@ import { nanoid } from 'nanoid';
 
 import { DateTimeFormats } from '../const';
 import { DataStore } from '../dataStorage';
+import { AbstractStatefulView } from '../framework';
 import {
   cloneArrayOfObjects,
   compareDates,
   humanizeDate,
   ucFirst
 } from '../utils';
-import { AbstractStatefulView } from '../framework';
 
 
 import 'flatpickr/dist/flatpickr.min.css';
@@ -394,14 +394,15 @@ const createEventItemEditTemplate = (
 };
 
 export class EventItemEditView extends AbstractStatefulView {
+  #availableDestination = DataStore.getDestinations;
+  #availableOffers = DataStore.getOffers;
+  #startDatePicker = null;
+  #endDatePicker = null;
+
   constructor(event = DEFAULT_EVENT) {
     super();
 
     this._state = EventItemEditView.parseEventToState(event, DataStore.getOffers);
-    this._availableDestination = DataStore.getDestinations;
-    this._availableOffers = DataStore.getOffers;
-    this._startDatePicker = null;
-    this._endDatePicker = null;
 
     this.#setInnerHandlers();
     this.#setStartDatePicker();
@@ -411,8 +412,8 @@ export class EventItemEditView extends AbstractStatefulView {
   get template() {
     return createEventItemEditTemplate(
       this._state,
-      this._availableDestination,
-      this._availableOffers
+      this.#availableDestination,
+      this.#availableOffers
     );
   }
 
@@ -426,7 +427,7 @@ export class EventItemEditView extends AbstractStatefulView {
   reset = (event) => {
     this.updateState(EventItemEditView.parseEventToState(
       event,
-      this._availableOffers
+      this.#availableOffers
     ));
   };
 
@@ -485,7 +486,7 @@ export class EventItemEditView extends AbstractStatefulView {
   #setStartDatePicker = () => {
     this.#removeStartDatePicker();
 
-    this._startDatePicker = flatpickr(
+    this.#startDatePicker = flatpickr(
       this.element.querySelector('.event__field-group--time input[name=event-start-time]'),
       {
         ...DATEPICKER_BASIC_SETTINGS,
@@ -501,7 +502,7 @@ export class EventItemEditView extends AbstractStatefulView {
 
     this.#removeEndDatePicker();
 
-    this._endDatePicker = flatpickr(
+    this.#endDatePicker = flatpickr(
       this.element.querySelector('.event__field-group--time input[name=event-end-time]'),
       {
         ...DATEPICKER_BASIC_SETTINGS,
@@ -513,16 +514,16 @@ export class EventItemEditView extends AbstractStatefulView {
   };
 
   #removeStartDatePicker = () => {
-    if (this._startDatePicker) {
-      this._startDatePicker.destroy();
-      this._startDatePicker = null;
+    if (this.#startDatePicker) {
+      this.#startDatePicker.destroy();
+      this.#startDatePicker = null;
     }
   };
 
   #removeEndDatePicker = () => {
-    if (this._endDatePicker) {
-      this._endDatePicker.destroy();
-      this._endDatePicker = null;
+    if (this.#endDatePicker) {
+      this.#endDatePicker.destroy();
+      this.#endDatePicker = null;
     }
   };
 
@@ -565,7 +566,7 @@ export class EventItemEditView extends AbstractStatefulView {
 
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
-    const destination = this._availableDestination
+    const destination = this.#availableDestination
       .find(({ name }) => name === evt.target.value);
 
     if (!destination) {
@@ -632,9 +633,9 @@ export class EventItemEditView extends AbstractStatefulView {
 
     evt.preventDefault();
     const eventType = evt.target.value;
-    const offers = EventItemEditView.getOfferWithStatus(eventType, [], this._availableOffers);
+    const offers = EventItemEditView.getOfferWithStatus(eventType, [], this.#availableOffers);
 
-    const hasSectionOffers = offers.length !== 0;
+    const hasSectionOffers = !offers.length;
 
     this.updateState({
       offers,

@@ -44,8 +44,8 @@ export class BoardPresenter {
   }
 
   get events() {
-    const filterType = this.#filterModel.getFilter();
-    const events = this.#eventsModel.getEvents();
+    const filterType = this.#filterModel.filter;
+    const events = this.#eventsModel.events;
     const filteredEvents = filter[filterType](events);
 
     switch (this.#currentSortType) {

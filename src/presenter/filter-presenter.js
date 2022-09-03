@@ -22,8 +22,8 @@ export class FilterPresenter {
   }
 
   get filters() {
-    const events = this.#eventsModel.getEvents();
-    const currentFilterType = this.#filterModel.getFilter();
+    const events = this.#eventsModel.events;
+    const currentFilterType = this.#filterModel.filter;
 
     return Object
       .keys(filter)
@@ -55,7 +55,7 @@ export class FilterPresenter {
   };
 
   #handleFilterTypeChange = (filterType) => {
-    if (this.#filterModel.getFilter() === filterType) {
+    if (this.#filterModel.filter === filterType) {
       return;
     }
 
