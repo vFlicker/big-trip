@@ -1,6 +1,6 @@
-export { BoardPresenter } from './board-presenter';
-export { EventPresenter } from './event-presenter';
-export { FilterPresenter } from './filter-presenter';
-export { NewEventPresenter } from './new-event-presenter';
-export { StatisticPresenter } from './statistic-presenter';
-export { TripInfoPresenter } from './trip-info-presenter';
+export * from './board-presenter';
+export * from './event-presenter';
+export * from './filter-presenter';
+export * from './new-event-presenter';
+export * from './statistic-presenter';
+export * from './trip-info-presenter';

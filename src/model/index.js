@@ -1,2 +1,2 @@
-export { EventsModel } from './events';
-export { FilterModel } from './filter';
+export * from './events-model';
+export * from './filter-model';

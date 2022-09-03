@@ -40,7 +40,13 @@ export class BoardPresenter {
     this.#filterModel = filterModel;
     this.#api = api;
 
-    this.#eventNewPresenter = new NewEventPresenter(this.#eventListComponent, this.#handleViewAction);
+    this.#eventNewPresenter = new NewEventPresenter(
+      this.#eventListComponent,
+      this.#handleViewAction,
+    );
+
+    this.#eventsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get events() {
@@ -61,9 +67,6 @@ export class BoardPresenter {
   }
 
   init = () => {
-    this.#eventsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
-
     this.#renderBoard();
   };
 
@@ -185,6 +188,7 @@ export class BoardPresenter {
     this.#renderEvents();
   };
 
+  // TODO: remove this method
   #renderEventList = () => {
     render(this.#eventListComponent, this.#boardComponent);
   };
