@@ -9,26 +9,17 @@ export class NewEventPresenter {
   #eventItemEditComponent = null;
 
   #destroyCallback = null;
-  #renderEventList = null;
-  #renderNoEvents = null;
 
   constructor(eventListContainer, changeData) {
     this.#eventListContainer = eventListContainer;
     this.#changeData = changeData;
   }
 
-  init = (callback, renderEventList, renderNoEvents) => {
+  init = (callback) => {
     this.#destroyCallback = callback;
-    this.#renderEventList = renderEventList;
-    this.#renderNoEvents = renderNoEvents;
 
     if (this.#eventItemEditComponent !== null) {
       return;
-    }
-
-    if (this.#renderEventList) {
-      this.#renderEventList();
-      this.#renderEventList = null;
     }
 
     this.#eventItemEditComponent = new EventItemEditView();
@@ -44,11 +35,6 @@ export class NewEventPresenter {
   destroy = () => {
     if (this.#eventItemEditComponent === null) {
       return;
-    }
-
-    if (this.#renderNoEvents) {
-      this.#renderNoEvents();
-      this.#renderNoEvents = null;
     }
 
     if (this.#destroyCallback) {
@@ -100,5 +86,7 @@ export class NewEventPresenter {
       UpdateType.MINOR,
       event,
     );
+
+    // this.destroy();
   };
 }

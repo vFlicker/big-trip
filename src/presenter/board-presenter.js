@@ -71,13 +71,6 @@ export class BoardPresenter {
   };
 
   createEvent = (callback) => {
-    if (!this.events.length) {
-      remove(this.#noEventComponent);
-      // TODO: remove 2 and 3 args
-      this.#eventNewPresenter.init(callback, this.#renderEventList, this.#renderNoEvent);
-      return;
-    }
-
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#eventNewPresenter.init(callback);
