@@ -1,4 +1,4 @@
-import { EventApiService } from './api/event-service';
+import { EventApiService } from './api/event-api-service';
 import {
   AUTHORIZATION,
   END_POINT,
@@ -99,10 +99,9 @@ tripInfoPresenter.init();
 boardPresenter.init();
 filterPresenter.init();
 
-eventsModel.init()
-  .finally(() => {
-    menuComponent.enable();
-    newEventButtonComponent.enable();
-    menuComponent.setClickHandler(handleMenuClick);
-    newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
-  });
+eventsModel.init().finally(() => {
+  menuComponent.enable();
+  newEventButtonComponent.enable();
+  menuComponent.setClickHandler(handleMenuClick);
+  newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
+});

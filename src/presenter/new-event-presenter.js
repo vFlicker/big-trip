@@ -87,6 +87,6 @@ export class NewEventPresenter {
       event,
     );
 
-    // this.destroy();
+    this.destroy();
   };
 }

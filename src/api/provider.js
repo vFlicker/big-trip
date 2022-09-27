@@ -1,7 +1,7 @@
 import { DataStore } from '../dataStorage';
 import { EventsModel } from '../model';
 import { isOnline } from '../utils';
-import { EventApiService } from './event-service';
+import { EventApiService } from './event-api-service';
 
 const createStoreStructure = (items) => items.reduce((acc, current) => ({
   ...acc,

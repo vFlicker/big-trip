@@ -1,5 +1,5 @@
 import { FilterType, SortType, UpdateType, UserAction } from '../const';
-import { remove, render } from '../framework';
+import { remove, render, UiBlocker } from '../framework';
 import {
   sortByPrice,
   sortByTime,
@@ -16,11 +16,15 @@ import {
 import { EventPresenter } from './event-presenter';
 import { NewEventPresenter } from './new-event-presenter';
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export class BoardPresenter {
   #boardContainer = null;
   #eventsModel = null;
   #filterModel = null;
-  #api = null;
 
   #boardComponent = new BoardView();
   #eventListComponent = new EventListView();
@@ -31,6 +35,7 @@ export class BoardPresenter {
   #eventNewPresenter = null;
 
   #eventPresenter = new Map();
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
   #currentSortType = SortType.DAY;
   #isLoading = true;
 
@@ -86,9 +91,12 @@ export class BoardPresenter {
   };
 
   #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         this.#eventPresenter.get(update.id).setSaving();
+
         try {
           await this.#eventsModel.updateEvent(updateType, update);
         } catch (err) {
@@ -106,6 +114,7 @@ export class BoardPresenter {
         break;
       case UserAction.DELETE_EVENT:
         this.#eventPresenter.get(update.id).setDeleting();
+
         try {
           this.#eventsModel.deleteEvent(updateType, update);
         } catch (error) {
@@ -113,6 +122,8 @@ export class BoardPresenter {
         }
         break;
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
