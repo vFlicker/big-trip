@@ -17,7 +17,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 const DATEPICKER_BASIC_SETTINGS = {
   enableTime: true,
-  time_24hr: true,
+  'time_24hr': true,
   dateFormat: 'm/d/y H:i',
 };
 

@@ -1,4 +1,4 @@
-import { EventService } from './api/event-service';
+import { EventApiService } from './api/event-service';
 import {
   AUTHORIZATION,
   END_POINT,
@@ -25,7 +25,7 @@ const menuElement = tripElement.querySelector('.trip-controls__navigation');
 const filterElement = tripElement.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.page-main .page-body__container');
 
-const api = new EventService(END_POINT, AUTHORIZATION);
+const api = new EventApiService(END_POINT, AUTHORIZATION);
 const eventsStorage = new Store(EVENTS_STORE_NAME, window.localStorage);
 const destinationStorage = new Store(
   DESTINATION_STORE_NAME,
@@ -39,7 +39,7 @@ const apiWithProvider = new Provider(
   offerStorage
 );
 
-const eventsModel = new EventsModel();
+const eventsModel = new EventsModel(apiWithProvider);
 const filterModel = new FilterModel();
 
 const menuComponent = new MenuView();
@@ -49,7 +49,6 @@ const boardPresenter = new BoardPresenter(
   mainElement,
   eventsModel,
   filterModel,
-  apiWithProvider,
 );
 const filterPresenter = new FilterPresenter(
   filterElement,
@@ -100,21 +99,10 @@ tripInfoPresenter.init();
 boardPresenter.init();
 filterPresenter.init();
 
-apiWithProvider.getAllData()
-  .then((events) => {
-    menuComponent.disable();
-    newEventButtonComponent.disable();
-    eventsModel.setEvents(UpdateType.INIT, events);
-  })
-  .catch(() => {
-    menuComponent.disable();
-    newEventButtonComponent.disable();
-    eventsModel.setEvents(UpdateType.INIT, []);
-  })
+eventsModel.init()
   .finally(() => {
     menuComponent.enable();
     newEventButtonComponent.enable();
     menuComponent.setClickHandler(handleMenuClick);
     newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
   });
-

@@ -34,11 +34,10 @@ export class BoardPresenter {
   #currentSortType = SortType.DAY;
   #isLoading = true;
 
-  constructor(boardContainer, eventsModel, filterModel, api) {
+  constructor(boardContainer, eventsModel, filterModel) {
     this.#boardContainer = boardContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
-    this.#api = api;
 
     this.#eventNewPresenter = new NewEventPresenter(
       this.#eventListComponent,
@@ -86,28 +85,32 @@ export class BoardPresenter {
     this.#filterModel.removeObserver(this.#handleModelEvent);
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         this.#eventPresenter.get(update.id).setSaving();
-        this.#api
-          .updateEvent(update)
-          .then((event) => this.#eventsModel.updateEvent(updateType, event))
-          .catch(() => this.#eventPresenter.get(update.id).setAborting());
+        try {
+          await this.#eventsModel.updateEvent(updateType, update);
+        } catch (err) {
+          this.#eventPresenter.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_EVENT:
         this.#eventNewPresenter.setSaving();
-        this.#api
-          .addEvent(update)
-          .then((event) => this.#eventsModel.addEvent(updateType, event))
-          .catch(() => this.#eventNewPresenter.setAborting());
+
+        try {
+          await this.#eventsModel.addEvent(updateType, update);
+        } catch (err) {
+          this.#eventNewPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_EVENT:
         this.#eventPresenter.get(update.id).setDeleting();
-        this.#api
-          .deleteEvent(update)
-          .then(() => this.#eventsModel.deleteEvent(updateType, update))
-          .catch(() => this.#eventPresenter.get(update.id).setAborting());
+        try {
+          this.#eventsModel.deleteEvent(updateType, update);
+        } catch (error) {
+          this.#eventPresenter.get(update.id).setAborting();
+        }
         break;
     }
   };
@@ -127,7 +130,7 @@ export class BoardPresenter {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        this.#clearBoard({ resetSortType: true });
+        remove(this.#loaderComponent);
         this.#renderBoard();
         break;
     }
