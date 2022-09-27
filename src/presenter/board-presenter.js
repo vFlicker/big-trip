@@ -195,7 +195,6 @@ export class BoardPresenter {
     this.#renderEvents();
   };
 
-  // TODO: remove this method
   #renderEventList = () => {
     render(this.#eventListComponent, this.#boardComponent);
   };

@@ -37,9 +37,7 @@ export class NewEventPresenter {
       return;
     }
 
-    if (this.#destroyCallback) {
-      this.#destroyCallback();
-    }
+    this.#destroyCallback?.();
 
     remove(this.#eventItemEditComponent);
     this.#eventItemEditComponent = null;
@@ -66,7 +64,7 @@ export class NewEventPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === EscKeyEvent .ESCAPE || evt.key === EscKeyEvent .ESC) {
+    if (evt.key === EscKeyEvent.ESCAPE || evt.key === EscKeyEvent.ESC) {
       evt.preventDefault();
       this.destroy();
     }
@@ -86,7 +84,5 @@ export class NewEventPresenter {
       UpdateType.MINOR,
       event,
     );
-
-    this.destroy();
   };
 }
