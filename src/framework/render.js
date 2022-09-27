@@ -37,11 +37,6 @@ export const render = (component, container, place = RenderPosition.BEFOREEND) =
     throw new Error('Container element doesn\'t exist');
   }
 
-  // TODO: remove this
-  if (container instanceof AbstractView) {
-    container = container.element;
-  }
-
   container.insertAdjacentElement(place, component.element);
 };
 

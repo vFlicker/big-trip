@@ -45,12 +45,9 @@ export class BoardPresenter {
     this.#filterModel = filterModel;
 
     this.#eventNewPresenter = new NewEventPresenter(
-      this.#eventListComponent,
+      this.#eventListComponent.element,
       this.#handleViewAction,
     );
-
-    this.#eventsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get events() {
@@ -71,6 +68,9 @@ export class BoardPresenter {
   }
 
   init = () => {
+    this.#eventsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+
     this.#renderBoard();
   };
 
@@ -83,7 +83,6 @@ export class BoardPresenter {
   destroy = () => {
     this.#clearBoard({ resetSortType: true });
 
-    remove(this.#eventListComponent);
     remove(this.#boardComponent);
 
     this.#eventsModel.removeObserver(this.#handleModelEvent);
@@ -102,6 +101,7 @@ export class BoardPresenter {
         } catch (err) {
           this.#eventPresenter.get(update.id).setAborting();
         }
+
         break;
       case UserAction.ADD_EVENT:
         this.#eventNewPresenter.setSaving();
@@ -111,6 +111,7 @@ export class BoardPresenter {
         } catch (err) {
           this.#eventNewPresenter.setAborting();
         }
+
         break;
       case UserAction.DELETE_EVENT:
         this.#eventPresenter.get(update.id).setDeleting();
@@ -120,6 +121,7 @@ export class BoardPresenter {
         } catch (error) {
           this.#eventPresenter.get(update.id).setAborting();
         }
+
         break;
     }
 
@@ -196,12 +198,12 @@ export class BoardPresenter {
   };
 
   #renderEventList = () => {
-    render(this.#eventListComponent, this.#boardComponent);
+    render(this.#eventListComponent, this.#boardComponent.element);
   };
 
   #renderEvent = (event) => {
     const eventPresenter = new EventPresenter(
-      this.#eventListComponent,
+      this.#eventListComponent.element,
       this.#handleViewAction,
       this.#handleModeChange,
     );
@@ -215,17 +217,17 @@ export class BoardPresenter {
   };
 
   #renderLoader = () => {
-    render(this.#loaderComponent, this.#boardComponent);
+    render(this.#loaderComponent, this.#boardComponent.element);
   };
 
   #renderNoEvent = () => {
-    render(this.#noEventComponent, this.#boardComponent);
+    render(this.#noEventComponent, this.#boardComponent.element);
   };
 
   #renderSort = () => {
     this.#sortComponent = new SortView(this.#currentSortType);
     this.#sortComponent.setTypeChangeHandler(this.#handleSortTypeChange);
 
-    render(this.#sortComponent, this.#boardComponent);
+    render(this.#sortComponent, this.#boardComponent.element);
   };
 }
