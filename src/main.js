@@ -105,3 +105,8 @@ eventsModel.init().finally(() => {
   menuComponent.setClickHandler(handleMenuClick);
   newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
 });
+
+// window.addEventListener('load', () => {
+//   navigator.serviceWorker.register('/sw.js');
+// });
+
