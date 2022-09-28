@@ -24,14 +24,14 @@ export class EventPresenter {
     this.#changeMode = changeMode;
   }
 
-  init = (event) => {
+  init = (destinations, offers, event) => {
     this.#event = event;
 
     const prevEventItemComponent = this.#eventItemComponent;
     const prevEventItemEditComponent = this.#eventItemEditComponent;
 
     this.#eventItemComponent = new EventItemView(event);
-    this.#eventItemEditComponent = new EventItemEditView(event);
+    this.#eventItemEditComponent = new EventItemEditView(destinations, offers, event);
 
     this.#eventItemComponent.setRollupClickHandler(this.#handleItemRollupClick);
     this.#eventItemComponent.setFavoriteClickHandler(this.#handleItemFavoriteClick);

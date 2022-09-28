@@ -2,22 +2,33 @@ import { UpdateType } from '../const';
 import { Observable } from '../framework';
 
 export class EventsModel extends Observable {
-  #ApiService = null;
+  #apiService = null;
 
   #events = [];
+  #destinations = [];
+  #offers = [];
 
-  constructor(eventService) {
+  constructor(apiService) {
     super();
 
-    this.#ApiService = eventService;
+    this.#apiService = apiService;
   }
 
   init = async () => {
     try {
-      const events = await this.#ApiService.getAllData();
+      const [events, destinations, offers] = await Promise.all([
+        this.#apiService.getEvents(),
+        this.#apiService.getDestinations(),
+        this.#apiService.getOffers(),
+      ]);
+
       this.#events = events.map(EventsModel.adaptToClient);
+      this.#destinations = destinations;
+      this.#offers = offers;
     } catch (err) {
       this.#events = [];
+      this.#destinations = [];
+      this.#offers = [];
     }
 
     this._notify(UpdateType.INIT);
@@ -27,9 +38,17 @@ export class EventsModel extends Observable {
     return this.#events;
   }
 
+  get destinations() {
+    return this.#destinations;
+  }
+
+  get offers() {
+    return this.#offers;
+  }
+
   addEvent = async (updateType, update) => {
     try {
-      const response = await this.#ApiService.addEvent(update);
+      const response = await this.#apiService.addEvent(update);
       const newEvent = EventsModel.adaptToClient(response);
 
       this.#events = [
@@ -51,7 +70,7 @@ export class EventsModel extends Observable {
     }
 
     try {
-      const response = await this.#ApiService.updateEvent(update);
+      const response = await this.#apiService.updateEvent(update);
       const updatedEvent = EventsModel.adaptToClient(response);
 
       this.#events = [
@@ -74,7 +93,7 @@ export class EventsModel extends Observable {
     }
 
     try {
-      await this.#ApiService.deleteEvent(update);
+      await this.#apiService.deleteEvent(update);
 
       this.#events = [
         ...this.#events.slice(0, index),

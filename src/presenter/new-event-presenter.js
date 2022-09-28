@@ -15,14 +15,14 @@ export class NewEventPresenter {
     this.#changeData = changeData;
   }
 
-  init = (callback) => {
+  init = (callback, destinations, offers) => {
     this.#destroyCallback = callback;
 
     if (this.#eventItemEditComponent !== null) {
       return;
     }
 
-    this.#eventItemEditComponent = new EventItemEditView();
+    this.#eventItemEditComponent = new EventItemEditView(destinations, offers);
     this.#eventItemEditComponent.setSubmitHandler(this.#handleItemEditSubmit);
     this.#eventItemEditComponent.setRollupClickHandler(this.#handleItemEditRollupClick);
     this.#eventItemEditComponent.setDeleteClickHandler(this.#handleItemEditDeleteClick);

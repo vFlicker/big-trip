@@ -67,6 +67,14 @@ export class BoardPresenter {
     }
   }
 
+  get destinations() {
+    return this.#eventsModel.destinations;
+  }
+
+  get offers() {
+    return this.#eventsModel.offers;
+  }
+
   init = () => {
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -77,7 +85,7 @@ export class BoardPresenter {
   createEvent = (callback) => {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#eventNewPresenter.init(callback);
+    this.#eventNewPresenter.init(callback, this.destinations, this.offers);
   };
 
   destroy = () => {
@@ -208,7 +216,7 @@ export class BoardPresenter {
       this.#handleModeChange,
     );
 
-    eventPresenter.init(event);
+    eventPresenter.init(this.destinations, this.offers, event);
     this.#eventPresenter.set(event.id, eventPresenter);
   };
 

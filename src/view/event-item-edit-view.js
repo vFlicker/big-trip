@@ -3,7 +3,6 @@ import flatpickr from 'flatpickr';
 import { nanoid } from 'nanoid';
 
 import { DateTimeFormats } from '../const';
-import { DataStore } from '../dataStorage';
 import { AbstractStatefulView } from '../framework';
 import {
   cloneArrayOfObjects,
@@ -394,15 +393,18 @@ const createEventItemEditTemplate = (
 };
 
 export class EventItemEditView extends AbstractStatefulView {
-  #availableDestination = DataStore.getDestinations;
-  #availableOffers = DataStore.getOffers;
+  #destinations = [];
+  #offers = [];
   #startDatePicker = null;
   #endDatePicker = null;
 
-  constructor(event = DEFAULT_EVENT) {
+  constructor(destinations, offers, event = DEFAULT_EVENT) {
     super();
 
-    this._state = EventItemEditView.parseEventToState(event, DataStore.getOffers);
+    this._state = EventItemEditView.parseEventToState(event, offers);
+
+    this.#destinations = destinations;
+    this.#offers = offers;
 
     this.#setInnerHandlers();
     this.#setStartDatePicker();
@@ -412,8 +414,8 @@ export class EventItemEditView extends AbstractStatefulView {
   get template() {
     return createEventItemEditTemplate(
       this._state,
-      this.#availableDestination,
-      this.#availableOffers
+      this.#destinations,
+      this.#offers
     );
   }
 
@@ -425,10 +427,7 @@ export class EventItemEditView extends AbstractStatefulView {
   };
 
   reset = (event) => {
-    this.updateState(EventItemEditView.parseEventToState(
-      event,
-      this.#availableOffers
-    ));
+    this.updateState(EventItemEditView.parseEventToState(event, this.#offers));
   };
 
   setSubmitHandler = (callback) => {
@@ -566,7 +565,7 @@ export class EventItemEditView extends AbstractStatefulView {
 
   #destinationInputHandler = (evt) => {
     evt.preventDefault();
-    const destination = this.#availableDestination
+    const destination = this.#destinations
       .find(({ name }) => name === evt.target.value);
 
     if (!destination) {
@@ -633,7 +632,7 @@ export class EventItemEditView extends AbstractStatefulView {
 
     evt.preventDefault();
     const eventType = evt.target.value;
-    const offers = EventItemEditView.getOfferWithStatus(eventType, [], this.#availableOffers);
+    const offers = EventItemEditView.getOfferWithStatus(eventType, [], this.#offers);
 
     const hasSectionOffers = !offers.length;
 

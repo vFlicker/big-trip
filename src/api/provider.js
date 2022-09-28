@@ -1,6 +1,5 @@
-import { DataStore } from '../dataStorage';
-import { EventsModel } from '../model';
 import { isOnline } from '../utils';
+import { ApiService } from './api-service';
 
 const createStoreStructure = (items) => items.reduce((acc, current) => ({
   ...acc,
@@ -24,30 +23,41 @@ export class Provider {
     this.#offerStorage = offerStorage;
   }
 
-  async getAllData() {
+  async getEvents() {
     if (!isOnline()) {
-      const storeEvents = Object.values(this.#eventsStorage.getItems());
-      const storeDestinations = this.#destinationStorage.getItems();
-      const storeOffers = this.#offerStorage.getItems();
-
-      DataStore.setDestinations = storeDestinations;
-      DataStore.setOffers = storeOffers;
-
-      return storeEvents.map(EventsModel.adaptToClient);
+      return Object.values(this.#eventsStorage.getItems());
     }
 
-    const [events, destinations, offers] = await this.#api.getAllData();
+    const events = await this.#api.getEvents();
 
     const eventItems = createStoreStructure(events);
-
     this.#eventsStorage.setItems(eventItems);
-    this.#destinationStorage.setItems(destinations);
-    this.#offerStorage.setItems(offers);
-
-    DataStore.setDestinations = destinations;
-    DataStore.setOffers = offers;
 
     return events;
+  }
+
+  async getDestinations() {
+    if (!isOnline()) {
+      return this.#destinationStorage.getItems();
+    }
+
+    const destinations = await this.#api.getDestinations();
+
+    this.#destinationStorage.setItems(destinations);
+
+    return destinations;
+  }
+
+  async getOffers() {
+    if (!isOnline()) {
+      return this.#offerStorage.getItems();
+    }
+
+    const offers = await this.#api.getOffers();
+
+    this.#offerStorage.setItems(offers);
+
+    return offers;
   }
 
   async addEvent(event) {
@@ -62,6 +72,19 @@ export class Provider {
     return newEvent;
   }
 
+  async updateEvent(event) {
+    if (!isOnline()) {
+      const adaptedEvent = ApiService.adaptToServer(event);
+      this.#eventsStorage.setItem(adaptedEvent.id, adaptedEvent);
+      return adaptedEvent;
+    }
+
+    const updatedEvent = await this.#api.updateEvent(event);
+    this.#eventsStorage.setItem(updatedEvent.id, updatedEvent);
+
+    return updatedEvent;
+  }
+
   async deleteEvent(event) {
     if (!isOnline()) {
       this.#eventsStorage.removeItem(event.id);
@@ -71,20 +94,6 @@ export class Provider {
     await this.#api.deleteEvent(event);
 
     this.#eventsStorage.removeItem(event.id);
-  }
-
-  async updateEvent(event) {
-    if (!isOnline()) {
-      this.#eventsStorage.setItem(event.id, { ...event });
-
-      return event;
-    }
-
-    const updatedEvent = await this.#api.updateEvent(event);
-
-    this.#eventsStorage.setItem(updatedEvent.id, updatedEvent);
-
-    return updatedEvent;
   }
 
   async sync() {
