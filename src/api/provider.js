@@ -1,103 +1,106 @@
 import { DataStore } from '../dataStorage';
 import { EventsModel } from '../model';
 import { isOnline } from '../utils';
-import { ApiService } from './api-service';
 
 const createStoreStructure = (items) => items.reduce((acc, current) => ({
   ...acc,
   [current.id]: current,
 }), {});
 
-const getSyncedEvents = (items) => items
-  .filter(({success}) => success)
-  .map(({payload}) => payload.point);
+const getSyncedEvents = (events) => events
+  .filter(({ success }) => success)
+  .map(({ payload }) => payload.point);
 
 export class Provider {
+  #api = null;
+  #eventsStorage = null;
+  #destinationStorage = null;
+  #offerStorage = null;
+
   constructor(api, eventsStorage, destinationStorage, offerStorage) {
-    this._api = api;
-    this._eventsStorage = eventsStorage;
-    this._destinationStorage = destinationStorage;
-    this._offerStorage = offerStorage;
+    this.#api = api;
+    this.#eventsStorage = eventsStorage;
+    this.#destinationStorage = destinationStorage;
+    this.#offerStorage = offerStorage;
   }
 
-  getAllData() {
-    if (isOnline()) {
-      return this._api.getAllData()
-        .then(([events, destinations, offers]) => {
-          const eventItems = createStoreStructure(events.map(ApiService.adaptToServer));
+  async getAllData() {
+    if (!isOnline()) {
+      const storeEvents = Object.values(this.#eventsStorage.getItems());
+      const storeDestinations = this.#destinationStorage.getItems();
+      const storeOffers = this.#offerStorage.getItems();
 
-          this._eventsStorage.setItems(eventItems);
-          DataStore.setDestinations = destinations;
-          DataStore.setOffers = offers;
-          this._destinationStorage.setItems(destinations);
-          this._offerStorage.setItems(offers);
+      DataStore.setDestinations = storeDestinations;
+      DataStore.setOffers = storeOffers;
 
-          return events;
-        });
+      return storeEvents.map(EventsModel.adaptToClient);
     }
 
-    const storeEvents = Object.values(this._eventsStorage.getItems());
-    const storeDestinations = this._destinationStorage.getItems();
-    const storeOffers = this._offerStorage.getItems();
-    DataStore.setDestinations = storeDestinations;
-    DataStore.setOffers = storeOffers;
+    const [events, destinations, offers] = await this.#api.getAllData();
 
-    return Promise.resolve(storeEvents.map(EventsModel.adaptToClient));
+    const eventItems = createStoreStructure(events);
+
+    this.#eventsStorage.setItems(eventItems);
+    this.#destinationStorage.setItems(destinations);
+    this.#offerStorage.setItems(offers);
+
+    DataStore.setDestinations = destinations;
+    DataStore.setOffers = offers;
+
+    return events;
   }
 
-  addEvent(event) {
-    if (isOnline()) {
-      return this._api.addEvent(event)
-        .then((newEvent) => {
-          this._eventsStorage.setItem(newEvent.id, ApiService.adaptToServer(newEvent));
-
-          return newEvent;
-        });
+  async addEvent(event) {
+    if (!isOnline()) {
+      return new Error('Add event failed');
     }
 
-    return Promise.reject(new Error('Add event failed'));
+    const newEvent = await this.#api.addEvent(event);
+
+    this.#eventsStorage.setItem(newEvent.id, newEvent);
+
+    return newEvent;
   }
 
-  deleteEvent(event) {
-    if (isOnline()) {
-      return this._api.deleteEvent(event)
-        .then(() => this._eventsStorage.removeItem(event.id));
+  async deleteEvent(event) {
+    if (!isOnline()) {
+      this.#eventsStorage.removeItem(event.id);
+      return;
     }
 
-    this._eventsStorage.removeItem(event.id);
+    await this.#api.deleteEvent(event);
 
-    return Promise.resolve();
+    this.#eventsStorage.removeItem(event.id);
   }
 
-  updateEvent(event) {
-    if (isOnline()) {
-      return this._api.updateEvent(event)
-        .then((updatedEvent) => {
-          this._eventsStorage.setItem(updatedEvent.id, ApiService.adaptToServer(updatedEvent));
+  async updateEvent(event) {
+    if (!isOnline()) {
+      this.#eventsStorage.setItem(event.id, { ...event });
 
-          return updatedEvent;
-        });
+      return event;
     }
 
-    this._eventsStorage.setItem(event.id, ApiService.adaptToServer({ ...event }));
+    const updatedEvent = await this.#api.updateEvent(event);
 
-    return Promise.resolve(event);
+    this.#eventsStorage.setItem(updatedEvent.id, updatedEvent);
+
+    return updatedEvent;
   }
 
-  sync() {
-    if (isOnline()) {
-      const storeEvents = Object.values(this._eventsStorage.getItems());
-
-      return this._api.sync(storeEvents)
-        .then((response) => {
-          const createdEvents = getSyncedEvents(response.created);
-          const updatedEvents = getSyncedEvents(response.updated);
-
-          const items = createStoreStructure([...createdEvents, ...updatedEvents]);
-          this._eventsStorage.setItems(items);
-        });
+  async sync() {
+    if (!isOnline()) {
+      return new Error('Sync data failed');
     }
 
-    return Promise.reject(new Error('Sync data failed'));
+    const storeEvents = Object.values(this.#eventsStorage.getItems());
+
+    const response = await this.#api.sync(storeEvents);
+    const { created, updated } = response;
+
+    const createdEvents = getSyncedEvents(created);
+    const updatedEvents = getSyncedEvents(updated);
+
+    const items = createStoreStructure([...createdEvents, ...updatedEvents]);
+    this.#eventsStorage.setItems(items);
   }
 }

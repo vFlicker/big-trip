@@ -33,12 +33,12 @@ export class ApiService {
    * @param {Headers} [config.headers] [config.headers] request headers
    * @returns {Promise<Response>}
    */
-  _load = async ({
+  async _load ({
     url,
     method = HttpMethod.GET,
     body = null,
     headers = new Headers(),
-  }) => {
+  }) {
     headers.append('Authorization', this.#authorization);
 
     const response = await fetch(
@@ -52,31 +52,33 @@ export class ApiService {
     } catch (err) {
       ApiService.catchError(err);
     }
-  };
+  }
 
   /**
    * Method for processing response
    * @param {Response} response response object
    * @returns {Promise<JSON>}
    */
-  static parseResponse = (response) => response.json();
+  static parseResponse(response) {
+    return response.json();
+  }
 
 
   /**
    * Method for checking the response
    * @param {Response} response response object
    */
-  static checkStatus = (response) => {
+  static checkStatus(response) {
     if (!response.ok) {
       throw new Error(`${response.status}: ${response.statusText}`);
     }
-  };
+  }
 
   /**
    * Error handling method
    * @param {Error} err error object
    */
-  static catchError = (err) => {
+  static catchError(err) {
     throw err;
-  };
+  }
 }
