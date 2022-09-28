@@ -1,6 +1,6 @@
-import { ApiService, HttpMethod } from '../framework';
+import { ApiService as _ApiService, HttpMethod } from '../framework';
 
-export class EventApiService extends ApiService {
+export class ApiService extends _ApiService {
   getAllData = async () => {
     const response = await Promise.all([
       this.#getEvents(),
@@ -15,7 +15,7 @@ export class EventApiService extends ApiService {
     const response = await this._load({
       url: 'points',
       method: HttpMethod.POST,
-      body: JSON.stringify(EventApiService.adaptToServer(event)),
+      body: JSON.stringify(ApiService.adaptToServer(event)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
@@ -27,7 +27,7 @@ export class EventApiService extends ApiService {
     const response = await this._load({
       url: `points/${event.id}`,
       method: HttpMethod.PUT,
-      body: JSON.stringify(EventApiService.adaptToServer(event)),
+      body: JSON.stringify(ApiService.adaptToServer(event)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 

@@ -1,7 +1,7 @@
 import { DataStore } from '../dataStorage';
 import { EventsModel } from '../model';
 import { isOnline } from '../utils';
-import { EventApiService } from './event-api-service';
+import { ApiService } from './api-service';
 
 const createStoreStructure = (items) => items.reduce((acc, current) => ({
   ...acc,
@@ -24,7 +24,7 @@ export class Provider {
     if (isOnline()) {
       return this._api.getAllData()
         .then(([events, destinations, offers]) => {
-          const eventItems = createStoreStructure(events.map(EventApiService.adaptToServer));
+          const eventItems = createStoreStructure(events.map(ApiService.adaptToServer));
 
           this._eventsStorage.setItems(eventItems);
           DataStore.setDestinations = destinations;
@@ -49,7 +49,7 @@ export class Provider {
     if (isOnline()) {
       return this._api.addEvent(event)
         .then((newEvent) => {
-          this._eventsStorage.setItem(newEvent.id, EventApiService.adaptToServer(newEvent));
+          this._eventsStorage.setItem(newEvent.id, ApiService.adaptToServer(newEvent));
 
           return newEvent;
         });
@@ -73,13 +73,13 @@ export class Provider {
     if (isOnline()) {
       return this._api.updateEvent(event)
         .then((updatedEvent) => {
-          this._eventsStorage.setItem(updatedEvent.id, EventApiService.adaptToServer(updatedEvent));
+          this._eventsStorage.setItem(updatedEvent.id, ApiService.adaptToServer(updatedEvent));
 
           return updatedEvent;
         });
     }
 
-    this._eventsStorage.setItem(event.id, EventApiService.adaptToServer({ ...event }));
+    this._eventsStorage.setItem(event.id, ApiService.adaptToServer({ ...event }));
 
     return Promise.resolve(event);
   }
