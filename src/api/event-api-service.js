@@ -1,6 +1,16 @@
 import { ApiService, HttpMethod } from '../framework';
 
 export class EventApiService extends ApiService {
+  getAllData = async () => {
+    const response = await Promise.all([
+      this.#getEvents(),
+      this.#getDestinations(),
+      this.#getOffers(),
+    ]);
+
+    return response;
+  };
+
   addEvent = async (event) => {
     const response = await this._load({
       url: 'points',
@@ -11,34 +21,6 @@ export class EventApiService extends ApiService {
 
     const parsedEvent = await ApiService.parseResponse(response);
     return parsedEvent;
-  };
-
-  getEvents = async () => {
-    const response = await this._load({ url: 'points' });
-    const events = await ApiService.parseResponse(response);
-    return events;
-  };
-
-  getDestinations = async () => {
-    const response = await this._load({ url: 'destinations' });
-    const parsedDestinations = await ApiService.parseResponse(response);
-    return parsedDestinations;
-  };
-
-  getOffers = async () => {
-    const response = await this._load({ url: 'offers '});
-    const parsedOffers = await ApiService.parseResponse(response);
-    return parsedOffers;
-  };
-
-  getAllData = async () => {
-    const response = await Promise.all([
-      this.getEvents(),
-      this.getDestinations(),
-      this.getOffers(),
-    ]);
-
-    return response;
   };
 
   updateEvent = async (event) => {
@@ -70,6 +52,24 @@ export class EventApiService extends ApiService {
 
     const parsedData = await ApiService.parseResponse(response);
     return parsedData;
+  };
+
+  #getEvents = async () => {
+    const response = await this._load({ url: 'points' });
+    const events = await ApiService.parseResponse(response);
+    return events;
+  };
+
+  #getDestinations = async () => {
+    const response = await this._load({ url: 'destinations' });
+    const parsedDestinations = await ApiService.parseResponse(response);
+    return parsedDestinations;
+  };
+
+  #getOffers = async () => {
+    const response = await this._load({ url: 'offers '});
+    const parsedOffers = await ApiService.parseResponse(response);
+    return parsedOffers;
   };
 
   static adaptToServer(event) {
