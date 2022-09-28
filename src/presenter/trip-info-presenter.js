@@ -1,6 +1,6 @@
 import { DateTimeFormats } from '../const';
 import { remove, render, RenderPosition, replace } from '../framework';
-import { humanizeDate, sortByDate } from '../utils';
+import { humanizeDate, sort } from '../utils';
 import { TripInfoView } from '../view';
 
 const getEventPeriod = (events) => {
@@ -86,7 +86,7 @@ export class TripInfoPresenter {
   };
 
   #getInfo = () => {
-    const sortedEvents = this.#eventsModel.events.sort(sortByDate);
+    const sortedEvents = this.#eventsModel.events.sort(sort.byDate);
 
     return {
       date: getEventPeriod(sortedEvents),

@@ -1,11 +1,6 @@
 import { FilterType, SortType, UpdateType, UserAction } from '../const';
 import { remove, render, UiBlocker } from '../framework';
-import {
-  sortByPrice,
-  sortByTime,
-  sortByDate,
-  filter
-} from '../utils';
+import { sort, filter } from '../utils';
 import {
   BoardView,
   EventListView,
@@ -57,11 +52,11 @@ export class BoardPresenter {
 
     switch (this.#currentSortType) {
       case SortType.TIME:
-        return filteredEvents.sort(sortByTime);
+        return filteredEvents.sort(sort.byTime);
       case SortType.PRICE:
-        return filteredEvents.sort(sortByPrice);
+        return filteredEvents.sort(sort.byPrice);
       case SortType.DAY:
-        return filteredEvents.sort(sortByDate);
+        return filteredEvents.sort(sort.byDate);
       default:
         return filteredEvents;
     }
