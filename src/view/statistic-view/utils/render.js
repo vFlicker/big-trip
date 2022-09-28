@@ -1,6 +1,13 @@
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Chart from 'chart.js';
-import { getDurationInMs, getEventTypes, getHumanizeDuration } from './common';
+
+import {
+  getCountOfUses,
+  getDurationInMs,
+  getEventTypes,
+  getHumanizeDuration,
+  getSumPriceByType
+} from './common';
 
 const STATISTIC_SETTINGS = {
   backgroundColor: '#ffffff',
@@ -32,7 +39,6 @@ export const renderMoneyChart = (moneyCtx, events) => {
 
   moneyCtx.height = STATISTIC_SETTINGS.barHeight * uniqTypes.length;
 
-  // TODO: put it in a separate file?
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: STATISTIC_SETTINGS.type,

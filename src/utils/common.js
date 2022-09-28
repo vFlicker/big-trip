@@ -4,6 +4,9 @@ import { DateTimeFormats } from '../const';
 
 export const cloneArrayOfObjects = (array) => array.map((obj) => ({ ...obj }));
 
+export const compareDates = (dateStart, dateEnd) =>
+  dayjs(dateStart).isAfter(dateEnd);
+
 export const getDateDifference = (dateStart, dateEnd) =>
   dayjs(dateEnd).diff(dayjs(dateStart));
 

@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 
+import { getDateDifference } from '../../../utils';
+
 const getUniqueItems = (items) => [...new Set(items)];
 
 const getFilteredEventByType = (events, type) =>

@@ -1,13 +1,17 @@
 import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
-import { nanoid } from 'nanoid';
+import { nanoid as generateId } from 'nanoid';
 
-import { DateTimeFormats } from '../../const';
-import { AbstractStatefulView } from '../../framework';
-import { cloneArrayOfObjects, humanizeDate, ucFirst } from '../../utils';
+import { DateTimeFormats } from '../const';
+import { AbstractStatefulView } from '../framework';
+import {
+  cloneArrayOfObjects,
+  compareDates,
+  humanizeDate,
+  ucFirst
+} from '../utils';
 
 import 'flatpickr/dist/flatpickr.min.css';
-import { compareDates } from './utils';
 
 const DATEPICKER_BASIC_SETTINGS = {
   enableTime: true,
@@ -34,7 +38,6 @@ const ResetButtonText = {
   EDIT: 'Delete',
 };
 
-// TODO: look at the naming of createFunctionsTemplate and them argument names
 const createEventTypeListTemplate = (id, activeType, availableOffers) => {
   const getTemplate = (type) => {
     const typeCheckStatus = type === activeType ? 'checked' : '';
@@ -72,7 +75,7 @@ const createEventDestinationListTemplate = (availableDestination) => {
 };
 
 const createEventOfferListTemplate = (type, offers) => {
-  const getTemplate = (type, offer) => {
+  const getTemplate = (eventName, offer) => {
     const { id, isChecked, price, title } = offer;
 
     const offerCheckStatus = isChecked ? 'checked' : '';
@@ -80,12 +83,12 @@ const createEventOfferListTemplate = (type, offers) => {
     return (
       `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden"
-          id="event-offer-${type}-${id}"
+          id="event-offer-${eventName}-${id}"
           type="checkbox"
-          name="event-offer-${type}"
+          name="event-offer-${eventName}"
           data-event-offer-id="${id}"
           ${offerCheckStatus}>
-        <label class="event__offer-label" for="event-offer-${type}-${id}">
+        <label class="event__offer-label" for="event-offer-${eventName}-${id}">
           <span class="event__offer-title">Add ${title}</span>
           +€&nbsp;
           <span class="event__offer-price">${price}</span>
@@ -665,7 +668,6 @@ export class EventItemEditView extends AbstractStatefulView {
     };
   }
 
-  // TODO: what is this?
   static getOfferWithStatus(userType, userOffers, availableOffers) {
     const availableOffersWithType = availableOffers.find(({ type }) => type === userType);
     const availableOffersByType = availableOffersWithType.offers;
@@ -675,8 +677,7 @@ export class EventItemEditView extends AbstractStatefulView {
 
       resultArray.push({
         ...availableOfferByType,
-        // TODO: do we need nanoid?
-        id: nanoid(),
+        id: generateId(),
         isChecked: Boolean(hasOffer),
       });
 
