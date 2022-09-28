@@ -2,17 +2,12 @@ import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import { nanoid } from 'nanoid';
 
-import { DateTimeFormats } from '../const';
-import { AbstractStatefulView } from '../framework';
-import {
-  cloneArrayOfObjects,
-  compareDates,
-  humanizeDate,
-  ucFirst
-} from '../utils';
-
+import { DateTimeFormats } from '../../const';
+import { AbstractStatefulView } from '../../framework';
+import { cloneArrayOfObjects, humanizeDate, ucFirst } from '../../utils';
 
 import 'flatpickr/dist/flatpickr.min.css';
+import { compareDates } from './utils';
 
 const DATEPICKER_BASIC_SETTINGS = {
   enableTime: true,
@@ -34,7 +29,7 @@ const DEFAULT_EVENT = {
   offers: [],
 };
 
-export const ResetButtonText = {
+const ResetButtonText = {
   ADD: 'Cancel',
   EDIT: 'Delete',
 };
@@ -284,7 +279,6 @@ const createEventItemEditTemplate = (
 
   const humanizedDateStart = humanizeDate(dateStart, DateTimeFormats.FULL_DATE_AND_TIME);
   const humanizedDateEnd = humanizeDate(dateEnd, DateTimeFormats.FULL_DATE_AND_TIME);
-
 
   return (
     `<li class="trip-events__item">

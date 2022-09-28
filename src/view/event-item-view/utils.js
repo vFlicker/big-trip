@@ -1,15 +1,12 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
-import { DateTimeFormats } from '../const';
-import { getDateDifference, humanizeDate } from './common';
+import { DateTimeFormats } from '../../const';
+import { getDateDifference, humanizeDate } from '../../utils';
 
 dayjs.extend(duration);
 
 const getDuration = (ms) => dayjs.duration(ms);
-
-export const compareDates = (dateStart, dateEnd) =>
-  dayjs(dateStart).isAfter(dateEnd);
 
 const getDurationBetweenDates = (dateStart, dateEnd) =>
   getDuration(getDateDifference(dateStart, dateEnd));

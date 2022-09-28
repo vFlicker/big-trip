@@ -9,7 +9,7 @@ import {
   Store,
 } from './api';
 import { FilterType, MenuItem, UpdateType } from './const';
-import { render } from './framework';
+import { render, showToast } from './framework';
 import { EventsModel, FilterModel } from './model';
 import {
   BoardPresenter,
@@ -17,7 +17,7 @@ import {
   StatisticPresenter,
   TripInfoPresenter,
 } from './presenter';
-import { isOnline, showToast } from './utils';
+import { isOnline } from './utils';
 import { MenuView, NewEventButtonView } from './view';
 
 const tripElement = document.querySelector('.trip-main');
