@@ -49,15 +49,15 @@ export class UiBlocker {
   }
 
   /** Method for blocking the interface */
-  block = () => {
+  block() {
     this.#startTime = Date.now();
     this.#timerId = setTimeout(() => {
       this.#addClass();
     }, this.#lowerLimit);
-  };
+  }
 
   /** Method to unlock interface */
-  unblock = () => {
+  unblock () {
     this.#endTime = Date.now();
     const duration = this.#endTime - this.#startTime;
 
@@ -72,15 +72,15 @@ export class UiBlocker {
     }
 
     setTimeout(this.#removeClass, this.#upperLimit - duration);
-  };
+  }
 
   /** Method that adds a CSS class to an element */
-  #addClass = () => {
+  #addClass() {
     this.#element.classList.add('ui-blocker--on');
-  };
+  }
 
   /** A method that removes a CSS class from an element*/
-  #removeClass = () => {
+  #removeClass() {
     this.#element.classList.remove('ui-blocker--on');
-  };
+  }
 }

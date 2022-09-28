@@ -5,7 +5,7 @@ const DESTINATION_STORE_VER = 'v1';
 const OFFERS_STORE_PREFIX = 'bigtrip-localstorage-offers';
 const OFFERS_STORE_VER = 'v1';
 
-export const AUTHORIZATION = 'Basic 48avd2449w934avd';
+export const AUTHORIZATION = 'Basic 48avd2149w934avd';
 export const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 
 export const DESTINATION_STORE_NAME = `${DESTINATION_STORE_PREFIX}-${DESTINATION_STORE_VER}`;

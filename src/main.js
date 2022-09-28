@@ -1,13 +1,13 @@
-import { ApiService } from './api/api-service';
 import {
+  ApiService,
   AUTHORIZATION,
+  DESTINATION_STORE_NAME,
   END_POINT,
   EVENTS_STORE_NAME,
-  DESTINATION_STORE_NAME,
-  OFFERS_STORE_NAME
-} from './api/const';
-import { Store } from './api/store';
-import { Provider } from './api/provider';
+  OFFERS_STORE_NAME,
+  Provider,
+  Store,
+} from './api';
 import { FilterType, MenuItem, UpdateType } from './const';
 import { render } from './framework';
 import { EventsModel, FilterModel } from './model';
@@ -26,12 +26,11 @@ const filterElement = tripElement.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.page-main .page-body__container');
 
 const api = new ApiService(END_POINT, AUTHORIZATION);
+
 const eventsStorage = new Store(EVENTS_STORE_NAME, window.localStorage);
-const destinationStorage = new Store(
-  DESTINATION_STORE_NAME,
-  window.localStorage
-);
+const destinationStorage = new Store(DESTINATION_STORE_NAME,window.localStorage);
 const offerStorage = new Store(OFFERS_STORE_NAME, window.localStorage);
+
 const apiWithProvider = new Provider(
   api,
   eventsStorage,
@@ -41,9 +40,6 @@ const apiWithProvider = new Provider(
 
 const eventsModel = new EventsModel(apiWithProvider);
 const filterModel = new FilterModel();
-
-const menuComponent = new MenuView();
-const newEventButtonComponent = new NewEventButtonView();
 
 const boardPresenter = new BoardPresenter(
   mainElement,
@@ -57,6 +53,9 @@ const filterPresenter = new FilterPresenter(
 );
 const statisticPresenter = new StatisticPresenter(mainElement, eventsModel);
 const tripInfoPresenter = new TripInfoPresenter(tripElement, eventsModel);
+
+const menuComponent = new MenuView();
+const newEventButtonComponent = new NewEventButtonView();
 
 const handleMenuClick = (menuItem) => {
   switch (menuItem) {
@@ -106,7 +105,16 @@ eventsModel.init().finally(() => {
   newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
 });
 
-// window.addEventListener('load', () => {
-//   navigator.serviceWorker.register('/sw.js');
-// });
+window.addEventListener('online', () => {
+  document.title = document.title.replace(' [offline]', '');
+  apiWithProvider.sync();
+});
+
+window.addEventListener('offline', () => {
+  document.title += ' [offline]';
+});
+
+window.addEventListener('load', () => {
+  navigator.serviceWorker.register('/sw.js');
+});
 

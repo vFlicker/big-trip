@@ -8,9 +8,9 @@ export class FilterModel extends Observable {
     return this.#activeFilter;
   }
 
-  setFilter = (updateType, filter) => {
+  setFilter(updateType, filter) {
     this.#activeFilter = filter;
 
     this._notify(updateType, filter);
-  };
+  }
 }

@@ -14,7 +14,19 @@ export class EventsModel extends Observable {
     this.#apiService = apiService;
   }
 
-  init = async () => {
+  get events() {
+    return this.#events;
+  }
+
+  get destinations() {
+    return this.#destinations;
+  }
+
+  get offers() {
+    return this.#offers;
+  }
+
+  async init() {
     try {
       const [events, destinations, offers] = await Promise.all([
         this.#apiService.getEvents(),
@@ -32,21 +44,9 @@ export class EventsModel extends Observable {
     }
 
     this._notify(UpdateType.INIT);
-  };
-
-  get events() {
-    return this.#events;
   }
 
-  get destinations() {
-    return this.#destinations;
-  }
-
-  get offers() {
-    return this.#offers;
-  }
-
-  addEvent = async (updateType, update) => {
+  async addEvent(updateType, update) {
     try {
       const response = await this.#apiService.addEvent(update);
       const newEvent = EventsModel.adaptToClient(response);
@@ -60,9 +60,9 @@ export class EventsModel extends Observable {
     } catch (err) {
       throw new Error('Can\'t delete task');
     }
-  };
+  }
 
-  updateEvent = async (updateType, update) => {
+  async updateEvent(updateType, update) {
     const index = this.#events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
@@ -83,9 +83,9 @@ export class EventsModel extends Observable {
     } catch (err) {
       throw new Error('Can\'t update task');
     }
-  };
+  }
 
-  deleteEvent = async (updateType, update) => {
+  async deleteEvent(updateType, update) {
     const index = this.#events.findIndex((event) => event.id === update.id);
 
     if (index === -1) {
@@ -104,7 +104,7 @@ export class EventsModel extends Observable {
     } catch (err) {
       throw new Error('Can\'t delete task');
     }
-  };
+  }
 
   static adaptToClient(event) {
     const adaptEvent = {
