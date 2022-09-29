@@ -70,11 +70,11 @@ export class BoardPresenter {
     return this.#eventsModel.offers;
   }
 
-  init = () => {
+  init = (isCreateEvent = false) => {
     this.#eventsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
 
-    this.#renderBoard();
+    this.#renderBoard(isCreateEvent);
   };
 
   createEvent = (callback) => {
@@ -182,7 +182,7 @@ export class BoardPresenter {
     }
   };
 
-  #renderBoard = () => {
+  #renderBoard = (isCreateEvent) => {
     render(this.#boardComponent, this.#boardContainer);
 
     if (this.#isLoading) {
@@ -190,7 +190,7 @@ export class BoardPresenter {
       return;
     }
 
-    if (!this.events.length) {
+    if (!this.events.length && !isCreateEvent) {
       this.#renderNoEvent();
       return;
     }

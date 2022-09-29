@@ -85,8 +85,7 @@ const newEventButtonClickHandler = () => {
   statisticPresenter.destroy();
   boardPresenter.destroy();
   menuComponent.setItem(MenuItem.TABLE);
-  filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-  boardPresenter.init();
+  boardPresenter.init(true);
   boardPresenter.createEvent(handleEventNewClose);
   newEventButtonComponent.disable();
 };
