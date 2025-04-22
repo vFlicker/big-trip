@@ -1,14 +1,5 @@
-import {
-  ApiService,
-  AUTHORIZATION,
-  DESTINATION_STORE_NAME,
-  END_POINT,
-  EVENTS_STORE_NAME,
-  OFFERS_STORE_NAME,
-  Provider,
-  Store,
-} from './api';
-import { FilterType, MenuItem, UpdateType } from './const';
+import { MockApiService } from './api/mock-api-service';
+import { MenuItem } from './const';
 import { render, showToast } from './framework';
 import { EventsModel, FilterModel } from './model';
 import {
@@ -25,20 +16,22 @@ const menuElement = tripElement.querySelector('.trip-controls__navigation');
 const filterElement = tripElement.querySelector('.trip-controls__filters');
 const mainElement = document.querySelector('.page-main .page-body__container');
 
-const api = new ApiService(END_POINT, AUTHORIZATION);
+// const api = new ApiService(END_POINT, AUTHORIZATION);
+const api = new MockApiService();
 
-const eventsStorage = new Store(EVENTS_STORE_NAME, window.localStorage);
-const destinationStorage = new Store(DESTINATION_STORE_NAME,window.localStorage);
-const offerStorage = new Store(OFFERS_STORE_NAME, window.localStorage);
+// const eventsStorage = new Store(EVENTS_STORE_NAME, window.localStorage);
+// const destinationStorage = new Store(DESTINATION_STORE_NAME,window.localStorage);
+// const offerStorage = new Store(OFFERS_STORE_NAME, window.localStorage);
 
-const apiWithProvider = new Provider(
-  api,
-  eventsStorage,
-  destinationStorage,
-  offerStorage
-);
+// const apiWithProvider = new Provider(
+//   api,
+//   eventsStorage,
+//   destinationStorage,
+//   offerStorage
+// );
 
-const eventsModel = new EventsModel(apiWithProvider);
+// const eventsModel = new EventsModel(apiWithProvider);
+const eventsModel = new EventsModel(api);
 const filterModel = new FilterModel();
 
 const boardPresenter = new BoardPresenter(
@@ -104,16 +97,16 @@ eventsModel.init().finally(() => {
   newEventButtonComponent.setClickHandler(newEventButtonClickHandler);
 });
 
-window.addEventListener('online', () => {
-  document.title = document.title.replace(' [offline]', '');
-  apiWithProvider.sync();
-});
+// window.addEventListener('online', () => {
+//   document.title = document.title.replace(' [offline]', '');
+//   apiWithProvider.sync();
+// });
 
-window.addEventListener('offline', () => {
-  document.title += ' [offline]';
-});
+// window.addEventListener('offline', () => {
+//   document.title += ' [offline]';
+// });
 
-window.addEventListener('load', () => {
-  navigator.serviceWorker.register('/sw.js');
-});
+// window.addEventListener('load', () => {
+//   navigator.serviceWorker.register('/sw.js');
+// });
 
