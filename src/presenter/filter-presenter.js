@@ -1,32 +1,26 @@
-import { UpdateType } from '../const';
-import {
-  filter,
-  ucFirst,
-} from '../utils';
+import { filter, ucFirst } from '../utils';
 import { FilterView } from '../view';
-import { Observer, remove, render, replace } from '../framework';
+import { remove, render, replace } from '../framework';
+import { UpdateType } from '../const';
 
-export class FilterPresenter extends Observer {
+export class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #eventsModel = null;
   #filterComponent = null;
 
   constructor(filterContainer, filterModel, eventsModel) {
-    super();
-
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#eventsModel = eventsModel;
 
-    this.#filterModel.subscribe(this);
-    this.#eventsModel.subscribe(this);
+    this.#filterModel.on('update', this.update);
+    this.#eventsModel.on('update', this.update);
   }
 
   get filters() {
     const events = this.#eventsModel.events;
     const currentFilterType = this.#filterModel.filter;
-
     return Object.keys(filter).map((type) => ({
       type,
       name: ucFirst(type),

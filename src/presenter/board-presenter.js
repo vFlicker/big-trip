@@ -1,5 +1,5 @@
 import { FilterType, SortType, UpdateType, UserAction } from '../const';
-import { Observer, remove, render, UiBlocker } from '../framework';
+import { remove, render, UiBlocker } from '../framework';
 import { sort, filter } from '../utils';
 import {
   BoardView,
@@ -16,7 +16,7 @@ const TimeLimit = {
   UPPER_LIMIT: 1000,
 };
 
-export class BoardPresenter extends Observer {
+export class BoardPresenter {
   #boardContainer = null;
   #eventsModel = null;
   #filterModel = null;
@@ -35,8 +35,6 @@ export class BoardPresenter extends Observer {
   #isLoading = true;
 
   constructor(boardContainer, eventsModel, filterModel) {
-    super();
-
     this.#boardContainer = boardContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
@@ -73,8 +71,8 @@ export class BoardPresenter extends Observer {
   }
 
   init = (isCreateEvent = false) => {
-    this.#eventsModel.subscribe(this);
-    this.#filterModel.subscribe(this);
+    this.#eventsModel.on('update', this.update);
+    this.#filterModel.on('update', this.update);
 
     this.#renderBoard(isCreateEvent);
   };
@@ -90,8 +88,8 @@ export class BoardPresenter extends Observer {
 
     remove(this.#boardComponent);
 
-    this.#eventsModel.unsubscribe(this);
-    this.#filterModel.unsubscribe(this);
+    this.#eventsModel.off('update', this.update);
+    this.#filterModel.off('update', this.update);
   };
 
   #handleViewAction = async (actionType, updateType, update) => {

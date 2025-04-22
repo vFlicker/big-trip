@@ -1,7 +1,7 @@
+import EventEmitter from 'events';
 import { UpdateType } from '../const';
-import { Observable } from '../framework';
 
-export class EventsModel extends Observable {
+export class EventsModel extends EventEmitter {
   #apiService = null;
 
   #events = [];
@@ -43,7 +43,7 @@ export class EventsModel extends Observable {
       this.#offers = [];
     }
 
-    this.notify(UpdateType.INIT);
+    this.emit('update', UpdateType.INIT);
   }
 
   async addEvent(updateType, update) {
@@ -53,7 +53,7 @@ export class EventsModel extends Observable {
 
       this.#events = [newEvent, ...this.#events];
 
-      this.notify(updateType, update);
+      this.emit('update', updateType, update);
     } catch (err) {
       throw new Error('Can\'t delete task');
     }
@@ -76,7 +76,7 @@ export class EventsModel extends Observable {
         ...this.#events.slice(index + 1),
       ];
 
-      this.notify(updateType, update);
+      this.emit('update', updateType, update);
     } catch (err) {
       throw new Error('Can\'t update task');
     }
@@ -97,7 +97,7 @@ export class EventsModel extends Observable {
         ...this.#events.slice(index + 1),
       ];
 
-      this.notify(updateType);
+      this.emit('update', updateType);
     } catch (err) {
       throw new Error('Can\'t delete task');
     }

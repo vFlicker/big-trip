@@ -1,7 +1,7 @@
+import EventEmitter from 'events';
 import { FilterType } from '../const';
-import { Observable } from '../framework';
 
-export class FilterModel extends Observable {
+export class FilterModel extends EventEmitter {
   #activeFilter = FilterType.EVERYTHING;
 
   get filter() {
@@ -10,7 +10,6 @@ export class FilterModel extends Observable {
 
   setFilter(updateType, filter) {
     this.#activeFilter = filter;
-
-    this.notify(updateType, filter);
+    this.emit('update', updateType, filter);
   }
 }
