@@ -14,8 +14,8 @@ export class FilterPresenter {
     this.#filterModel = filterModel;
     this.#eventsModel = eventsModel;
 
-    this.#filterModel.subscribe(this);
-    this.#eventsModel.subscribe(this);
+    this.#filterModel.addEventListener('update', this.update);
+    this.#eventsModel.addEventListener('update', this.update);
   }
 
   get filters() {

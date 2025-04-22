@@ -71,8 +71,8 @@ export class BoardPresenter {
   }
 
   init = (isCreateEvent = false) => {
-    this.#eventsModel.subscribe(this);
-    this.#filterModel.subscribe(this);
+    this.#eventsModel.addEventListener('update', this.update);
+    this.#filterModel.addEventListener('update', this.update);
 
     this.#renderBoard(isCreateEvent);
   };
@@ -88,8 +88,8 @@ export class BoardPresenter {
 
     remove(this.#boardComponent);
 
-    this.#eventsModel.unsubscribe(this);
-    this.#filterModel.unsubscribe(this);
+    this.#eventsModel.removeEventListener('update', this.update);
+    this.#filterModel.removeEventListener('update', this.update);
   };
 
   #handleViewAction = async (actionType, updateType, update) => {

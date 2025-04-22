@@ -64,7 +64,7 @@ export class TripInfoPresenter {
     this.#tripInfoContainer = tripInfoContainer;
     this.#eventsModel = eventsModel;
 
-    this.#eventsModel.subscribe(this);
+    this.#eventsModel.addEventListener('update', this.update);
   }
 
   init = () => {

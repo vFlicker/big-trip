@@ -14,12 +14,4 @@ export class FilterModel extends EventTarget {
       new CustomEvent('update', { detail: { updateType, filter } })
     );
   }
-
-  subscribe(observer) {
-    this.addEventListener('update', observer.update);
-  }
-
-  unsubscribe(observer) {
-    this.removeEventListener('update', observer.update);
-  }
 }

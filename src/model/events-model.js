@@ -107,14 +107,6 @@ export class EventsModel extends EventTarget {
     }
   }
 
-  subscribe(observer) {
-    this.addEventListener('update', observer.update);
-  }
-
-  unsubscribe(observer) {
-    this.removeEventListener('update', observer.update);
-  }
-
   static adaptToClient(event) {
     const adaptEvent = {
       ...event,
