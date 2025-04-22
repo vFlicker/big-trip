@@ -3,32 +3,47 @@
  */
 export class Observable {
   /**
-   * @type {Set<observerCallback>} set of observerCallback type
+   * @type {Set<Observer>} set of observers
    */
   #observers = new Set();
 
   /**
-   * Method that allows you to subscribe to an event
-   * @param {observerCallback} observer function that will be called when the event occurs
+   * Method for adding a subscriber to the list of observers
+   * @param {Observer} observer subscriber
    */
-  addObserver(observer) {
+  subscribe(observer) {
     this.#observers.add(observer);
   }
 
   /**
-   * Method for unsubscribing from an event
-   * @param {observerCallback} observer function that will be called when the event occurs
+   * Method for removing a subscriber from the list of observers
+   * @param {Observer} observer subscriber
    */
-  removeObserver(observer) {
+  unsubscribe(observer) {
     this.#observers.delete(observer);
   }
 
   /**
-   * Method for notifying subscribers about the occurrence of an event
-   * @param {*} event event type
-   * @param {*} payload additional information
+   * Method for notifying all subscribers about an event
+   * @param {string} event event name
+   * @param {any} payload event data
    */
-  _notify(event, payload) {
-    this.#observers.forEach((observer) => observer(event, payload));
+  notify(event, payload) {
+    for (const observer of this.#observers) {
+      observer.update(event, payload);
+    }
   }
 }
+
+/**
+ * A class that implements the Observer pattern.
+ */
+export class Observer {
+  /**
+   * Method that will be called when the event occurs
+   */
+  update() {
+    throw new Error('Observer.update is not implemented');
+  }
+}
+

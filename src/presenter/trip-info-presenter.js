@@ -1,5 +1,5 @@
 import { DateTimeFormats } from '../const';
-import { remove, render, RenderPosition, replace } from '../framework';
+import { Observer, remove, render, RenderPosition, replace } from '../framework';
 import { humanizeDate, sort } from '../utils';
 import { TripInfoView } from '../view';
 
@@ -55,16 +55,18 @@ const getTitle = (events) => {
   return filteredCities.join(' &mdash; ');
 };
 
-export class TripInfoPresenter {
+export class TripInfoPresenter extends Observer {
   #tripInfoContainer = null;
   #eventsModel = null;
   #tripInfoComponent = null;
 
   constructor(tripInfoContainer, eventsModel) {
+    super();
+
     this.#tripInfoContainer = tripInfoContainer;
     this.#eventsModel = eventsModel;
 
-    this.#eventsModel.addObserver(this.#handleModelEvent);
+    this.#eventsModel.subscribe(this);
   }
 
   init = () => {
@@ -81,7 +83,7 @@ export class TripInfoPresenter {
     remove(prevTripInfoComponent);
   };
 
-  #handleModelEvent = () => {
+  update = () => {
     this.init();
   };
 

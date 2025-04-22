@@ -4,35 +4,35 @@ import {
   ucFirst,
 } from '../utils';
 import { FilterView } from '../view';
-import { remove, render, replace } from '../framework';
+import { Observer, remove, render, replace } from '../framework';
 
-export class FilterPresenter {
+export class FilterPresenter extends Observer {
   #filterContainer = null;
   #filterModel = null;
   #eventsModel = null;
   #filterComponent = null;
 
   constructor(filterContainer, filterModel, eventsModel) {
+    super();
+
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#eventsModel = eventsModel;
 
-    this.#filterModel.addObserver(this.#handleModelEvent);
-    this.#eventsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.subscribe(this);
+    this.#eventsModel.subscribe(this);
   }
 
   get filters() {
     const events = this.#eventsModel.events;
     const currentFilterType = this.#filterModel.filter;
 
-    return Object
-      .keys(filter)
-      .map((type) => ({
-        type,
-        name: ucFirst(type),
-        isChecked: currentFilterType === type,
-        isDisabled: !filter[type](events).length,
-      }));
+    return Object.keys(filter).map((type) => ({
+      type,
+      name: ucFirst(type),
+      isChecked: currentFilterType === type,
+      isDisabled: !filter[type](events).length,
+    }));
   }
 
   init = () => {
@@ -50,7 +50,7 @@ export class FilterPresenter {
     remove(prevFilterComponent);
   };
 
-  #handleModelEvent = () => {
+  update = () => {
     this.init();
   };
 

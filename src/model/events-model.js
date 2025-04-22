@@ -43,7 +43,7 @@ export class EventsModel extends Observable {
       this.#offers = [];
     }
 
-    this._notify(UpdateType.INIT);
+    this.notify(UpdateType.INIT);
   }
 
   async addEvent(updateType, update) {
@@ -51,12 +51,9 @@ export class EventsModel extends Observable {
       const response = await this.#apiService.addEvent(update);
       const newEvent = EventsModel.adaptToClient(response);
 
-      this.#events = [
-        newEvent,
-        ...this.#events,
-      ];
+      this.#events = [newEvent, ...this.#events];
 
-      this._notify(updateType, update);
+      this.notify(updateType, update);
     } catch (err) {
       throw new Error('Can\'t delete task');
     }
@@ -79,7 +76,7 @@ export class EventsModel extends Observable {
         ...this.#events.slice(index + 1),
       ];
 
-      this._notify(updateType, update);
+      this.notify(updateType, update);
     } catch (err) {
       throw new Error('Can\'t update task');
     }
@@ -100,7 +97,7 @@ export class EventsModel extends Observable {
         ...this.#events.slice(index + 1),
       ];
 
-      this._notify(updateType);
+      this.notify(updateType);
     } catch (err) {
       throw new Error('Can\'t delete task');
     }

@@ -1,5 +1,5 @@
 import { FilterType, SortType, UpdateType, UserAction } from '../const';
-import { remove, render, UiBlocker } from '../framework';
+import { Observer, remove, render, UiBlocker } from '../framework';
 import { sort, filter } from '../utils';
 import {
   BoardView,
@@ -16,7 +16,7 @@ const TimeLimit = {
   UPPER_LIMIT: 1000,
 };
 
-export class BoardPresenter {
+export class BoardPresenter extends Observer {
   #boardContainer = null;
   #eventsModel = null;
   #filterModel = null;
@@ -35,6 +35,8 @@ export class BoardPresenter {
   #isLoading = true;
 
   constructor(boardContainer, eventsModel, filterModel) {
+    super();
+
     this.#boardContainer = boardContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
@@ -71,8 +73,8 @@ export class BoardPresenter {
   }
 
   init = (isCreateEvent = false) => {
-    this.#eventsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
+    this.#eventsModel.subscribe(this);
+    this.#filterModel.subscribe(this);
 
     this.#renderBoard(isCreateEvent);
   };
@@ -88,8 +90,8 @@ export class BoardPresenter {
 
     remove(this.#boardComponent);
 
-    this.#eventsModel.removeObserver(this.#handleModelEvent);
-    this.#filterModel.removeObserver(this.#handleModelEvent);
+    this.#eventsModel.unsubscribe(this);
+    this.#filterModel.unsubscribe(this);
   };
 
   #handleViewAction = async (actionType, updateType, update) => {
@@ -131,7 +133,7 @@ export class BoardPresenter {
     this.#uiBlocker.unblock();
   };
 
-  #handleModelEvent = (updateType, data) => {
+  update = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#eventPresenter.get(data.id).init(this.destinations, this.offers, data);
