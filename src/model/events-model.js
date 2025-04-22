@@ -1,7 +1,6 @@
 import { UpdateType } from '../const';
-import { Observable } from '../framework';
 
-export class EventsModel extends Observable {
+export class EventsModel extends EventTarget {
   #apiService = null;
 
   #events = [];
@@ -43,7 +42,9 @@ export class EventsModel extends Observable {
       this.#offers = [];
     }
 
-    this.notify(UpdateType.INIT);
+    this.dispatchEvent(
+      new CustomEvent('update', { detail: { updateType: UpdateType.INIT } })
+    );
   }
 
   async addEvent(updateType, update) {
@@ -52,8 +53,9 @@ export class EventsModel extends Observable {
       const newEvent = EventsModel.adaptToClient(response);
 
       this.#events = [newEvent, ...this.#events];
-
-      this.notify(updateType, update);
+      this.dispatchEvent(
+        new CustomEvent('update', { detail: { updateType, update } })
+      );
     } catch (err) {
       throw new Error('Can\'t delete task');
     }
@@ -76,7 +78,9 @@ export class EventsModel extends Observable {
         ...this.#events.slice(index + 1),
       ];
 
-      this.notify(updateType, update);
+      this.dispatchEvent(
+        new CustomEvent('update', { detail: { updateType, update } })
+      );
     } catch (err) {
       throw new Error('Can\'t update task');
     }
@@ -97,10 +101,18 @@ export class EventsModel extends Observable {
         ...this.#events.slice(index + 1),
       ];
 
-      this.notify(updateType);
+      this.dispatchEvent(new CustomEvent('update', { detail: { updateType } }));
     } catch (err) {
       throw new Error('Can\'t delete task');
     }
+  }
+
+  subscribe(observer) {
+    this.addEventListener('update', observer.update);
+  }
+
+  unsubscribe(observer) {
+    this.removeEventListener('update', observer.update);
   }
 
   static adaptToClient(event) {

@@ -1,20 +1,15 @@
 import { UpdateType } from '../const';
-import {
-  filter,
-  ucFirst,
-} from '../utils';
+import { filter, ucFirst } from '../utils';
 import { FilterView } from '../view';
-import { Observer, remove, render, replace } from '../framework';
+import { remove, render, replace } from '../framework';
 
-export class FilterPresenter extends Observer {
+export class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #eventsModel = null;
   #filterComponent = null;
 
   constructor(filterContainer, filterModel, eventsModel) {
-    super();
-
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#eventsModel = eventsModel;

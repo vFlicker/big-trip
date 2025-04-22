@@ -1,7 +1,6 @@
 import { FilterType } from '../const';
-import { Observable } from '../framework';
 
-export class FilterModel extends Observable {
+export class FilterModel extends EventTarget {
   #activeFilter = FilterType.EVERYTHING;
 
   get filter() {
@@ -11,6 +10,16 @@ export class FilterModel extends Observable {
   setFilter(updateType, filter) {
     this.#activeFilter = filter;
 
-    this.notify(updateType, filter);
+    this.dispatchEvent(
+      new CustomEvent('update', { detail: { updateType, filter } })
+    );
+  }
+
+  subscribe(observer) {
+    this.addEventListener('update', observer.update);
+  }
+
+  unsubscribe(observer) {
+    this.removeEventListener('update', observer.update);
   }
 }

@@ -1,5 +1,5 @@
 import { FilterType, SortType, UpdateType, UserAction } from '../const';
-import { Observer, remove, render, UiBlocker } from '../framework';
+import { remove, render, UiBlocker } from '../framework';
 import { sort, filter } from '../utils';
 import {
   BoardView,
@@ -16,7 +16,7 @@ const TimeLimit = {
   UPPER_LIMIT: 1000,
 };
 
-export class BoardPresenter extends Observer {
+export class BoardPresenter {
   #boardContainer = null;
   #eventsModel = null;
   #filterModel = null;
@@ -35,8 +35,6 @@ export class BoardPresenter extends Observer {
   #isLoading = true;
 
   constructor(boardContainer, eventsModel, filterModel) {
-    super();
-
     this.#boardContainer = boardContainer;
     this.#eventsModel = eventsModel;
     this.#filterModel = filterModel;
@@ -133,7 +131,8 @@ export class BoardPresenter extends Observer {
     this.#uiBlocker.unblock();
   };
 
-  update = (updateType, data) => {
+  update = (event) => {
+    const { updateType, update: data } = event.detail || {};
     switch (updateType) {
       case UpdateType.PATCH:
         this.#eventPresenter.get(data.id).init(this.destinations, this.offers, data);
